@@ -8,7 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 public class DriveBase {
-DcMotor topL=;
+    DcMotor topL;
+    DcMotor topR;
+    DcMotor bottomL;
+    DcMotor bottomR;
     // initialize motors
 
 
