@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
+
 public class DriveBase {
     DcMotor topL;
     DcMotor topR;
     DcMotor bottomL;
     DcMotor bottomR;
     //create array to allow for easy methods on all motors
-    DcMotor motors[]={topL,topR,bottomL,bottomR};
+
     // initialize motors
 
 
@@ -26,7 +27,20 @@ public class DriveBase {
     //motor BR with encoder, bottom gear right side
 
 
-public DriveBase(){
+public DriveBase() {
+
+
+}
+    public void init(){
+        topL=hardwareMap.dcMotor.get("topL");
+        topR=hardwareMap.dcMotor.get("topR");
+        bottomL=hardwareMap.dcMotor.get("bottomL");
+        bottomR=hardwareMap.dcMotor.get("bottomR");
+        DcMotor[] motors={topL,topR,bottomL,bottomR};
+        for(DcMotor i:motors){
+        i=
+    }
+
 
 }
 
