@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.*;
 
 public class DriveBase {
     DcMotor topL;
@@ -32,14 +33,12 @@ public DriveBase() {
 
 }
     public void init(){
-        topL=hardwareMap.dcMotor.get("topL");
-        topR=hardwareMap.dcMotor.get("topR");
-        bottomL=hardwareMap.dcMotor.get("bottomL");
-        bottomR=hardwareMap.dcMotor.get("bottomR");
+        topL= hardwareMap.dcMotor.get("topL");
+        topR= hardwareMap.dcMotor.get("topR");
+        bottomL= hardwareMap.dcMotor.get("bottomL");
+        bottomR= hardwareMap.dcMotor.get("bottomR");
         DcMotor[] motors={topL,topR,bottomL,bottomR};
-        for(DcMotor i:motors){
-        i=
-    }
+
 
 
 }
