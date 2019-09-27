@@ -15,13 +15,13 @@ public class DriveBase {
     // initialize motors
 
 
-    //motor 1 with encoder, top gear left side
+    //motor TL with encoder, top gear left side
 
-    //motor 2 with encoder, bottom gear left side
+    //motor BL with encoder, bottom gear left side
 
-    //motor 3 with encoder, top gear right side
+    //motor TR with encoder, top gear right side
 
-    //motor 4 with encoder, bottom gear right side
+    //motor BR with encoder, bottom gear right side
 
 
 public DriveBase(){
