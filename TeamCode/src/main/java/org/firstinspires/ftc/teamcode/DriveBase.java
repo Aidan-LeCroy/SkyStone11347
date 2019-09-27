@@ -12,6 +12,8 @@ public class DriveBase {
     DcMotor topR;
     DcMotor bottomL;
     DcMotor bottomR;
+    //create array to allow for easy methods on all motors
+    DcMotor motors[]={topL,topR,bottomL,bottomR};
     // initialize motors
 
 
