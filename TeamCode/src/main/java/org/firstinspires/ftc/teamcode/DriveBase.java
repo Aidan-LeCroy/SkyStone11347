@@ -7,9 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware;
-public class DiffBase {
-
+public class DriveBase {
+DcMotor topL=;
     // initialize motors
 
 
@@ -22,7 +21,7 @@ public class DiffBase {
     //motor 4 with encoder, bottom gear right side
 
 
-public DiffBase(){
+public DriveBase(){
 
 }
 
