@@ -28,16 +28,15 @@ public class DriveBase {
     //motor BR with encoder, bottom gear right side
 
 
-public DriveBase() {
-
+public DriveBase()  {
 
 }
-    public void init(){
+    public void inithardware(){
         topL= hardwareMap.dcMotor.get("topL");
         topR= hardwareMap.dcMotor.get("topR");
         bottomL= hardwareMap.dcMotor.get("bottomL");
         bottomR= hardwareMap.dcMotor.get("bottomR");
-        DcMotor[] motors={topL,topR,bottomL,bottomR};
+        DcMotor[] motors={topL,topR,bottomL,bottomR);
 
 
 
