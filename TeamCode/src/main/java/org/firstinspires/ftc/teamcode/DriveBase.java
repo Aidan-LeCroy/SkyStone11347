@@ -15,7 +15,7 @@ public class DriveBase {
     DcMotor bottomL;
     DcMotor bottomR;
     //create array to allow for easy methods on all motors
-
+    Module leftModule=new Module();
     // initialize motors
 
 
