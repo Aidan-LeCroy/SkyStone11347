@@ -21,7 +21,10 @@ public class DiffCore extends OpMode {
         DcMotor[] motors={topL,topR,bottomL,bottomR};
         for(DcMotor mot:motors) {
             mot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         }
     }
+    public void loop(){
+        // Not sure what to loop yet, probably debug stuff using RobotLog and telemetry updates, since this is not the main loop.
+    }
+
 }
