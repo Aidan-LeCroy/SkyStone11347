@@ -14,7 +14,9 @@ public class DiffCore extends OpMode {
     BNO055IMU imu;
     Cassete leftDrive=new Cassete();
     Cassete rightDrive=new Cassete();
-
+public enum Module{
+    leftCassete, rightCassete
+}
 
     public void init(){
         topL= hardwareMap.dcMotor.get("topL");
@@ -37,7 +39,7 @@ public class DiffCore extends OpMode {
 
     public int DiffDrive(double angle, double power){
         double beforeAngle=(rightDrive.getWheelAngle()+leftDrive.getWheelAngle())/2;
-
+        
     }
 
 
