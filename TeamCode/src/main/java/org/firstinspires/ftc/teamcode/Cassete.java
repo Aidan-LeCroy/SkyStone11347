@@ -7,6 +7,16 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Cassete {
+    double wheelAngle;
+    double topEncoder;
+    double bottomEncoder;
+
+    public double getWheelAngle(){
+        return wheelAngle;
+    }
+    public double getDeltaEncoder(DcMotor top,DcMotor bottom){
+        return ((top.getCurrentPosition()+bottom.getCurrentPosition())/2);
+    }
 
 
 
