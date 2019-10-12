@@ -15,10 +15,14 @@ public class DiffCore extends OpMode {
 
 
 
-
     public void init(){
-        Cassete leftDrive=new Cassete(new DcMotor (hardwareMap.get("topL")));
-        Cassete rightDrive=new Cassete();
+        DcMotor motor1=(DcMotor) hardwareMap.get("topL");
+        DcMotor motor2=(DcMotor) hardwareMap.get("bottomL");
+        DcMotor motor3=(DcMotor) hardwareMap.get("topR");
+        DcMotor motor4=(DcMotor) hardwareMap.get("bottomR");
+
+        Cassete leftDrive=new Cassete(motor1,motor2);
+        Cassete rightDrive=new Cassete(motor3,motor4);
 
         DcMotor[] motors={topL,topR,bottomL,bottomR};
         for(DcMotor mot:motors) {
@@ -33,8 +37,11 @@ public class DiffCore extends OpMode {
 
 // return 1 if wheel rotated clockwise, 0 if moved counterclockwise
 
-    public int DiffDrive(double angle, double power){
-        double beforeAngle=(rightDrive.getWheelAngle()+leftDrive.getWheelAngle())/2;
+    public void DiffAutoDrive(double angle, double power){
+
+    }
+    //when utilizing this method, get the stick position for the two values.
+    public void DiffTeleOpDrive(double stickX,double stickY){
 
     }
 

@@ -13,12 +13,12 @@ public class Cassete {
     private double currentTargetAngle = 0;
     private double angleToTurnAt = 0;
     private double currentForwardsPower = 0;
-    private DcMotor motor1;
-    private DcMotor motor2;
+    private DcMotor topmotor;
+    private DcMotor bottommotor;
 
     public Cassete(DcMotor motor1, DcMotor motor2) {
-        this.motor1 = motor1;
-        this.motor2 = motor2;
+        this.topmotor = motor1;
+        this.bottommotor = motor2;
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
@@ -46,8 +46,8 @@ public class Cassete {
         }
     }
         public void resetEncoders(){
-            motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
 
