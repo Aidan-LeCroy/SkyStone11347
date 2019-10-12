@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class TeleOp extends DiffCore {
 
-    Cassete leftCassete =new Cassete();
-    Cassete rightCassete =new Cassete();
-
+    DiffCore robot=new DiffCore();
+    
 
 
 public TeleOp()  {
