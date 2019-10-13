@@ -45,6 +45,7 @@ public class Cassete {
             currentTargetAngle = Math.atan2(yComponent, xComponent);
         }
     }
+
         public void resetEncoders(){
             topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

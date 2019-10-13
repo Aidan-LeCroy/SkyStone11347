@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class TeleOp extends DiffCore {
 
     DiffCore robot=new DiffCore();
-    
+
 
 
 public TeleOp()  {
