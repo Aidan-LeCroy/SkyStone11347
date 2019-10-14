@@ -16,7 +16,7 @@ public class Vector {
         return y;
     }
     public double getMagnitude(){
-        return Math.sqrt((x ^ 2)+(y ^ 2)); // returns the magnitude of the vector using the Pythagorean Theorem
+        return Math.sqrt((x*x)+(y*y)); // returns the magnitude of the vector using the Pythagorean Theorem
     }
     public double getAngle() {
         return (180/Math.PI)*Math.atan2(y,x); // returns the angle of the vector on the standard unit circle in radians

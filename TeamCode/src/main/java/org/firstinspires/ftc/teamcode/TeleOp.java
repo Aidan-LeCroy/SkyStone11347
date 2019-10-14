@@ -14,10 +14,6 @@ public TeleOp()  {
 
 }
     public void runOpMode(){
-
-
-
-
 }
 
 }
