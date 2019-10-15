@@ -13,7 +13,7 @@ public class DiffCore extends OpMode {
     DcMotor bottomR;
     BNO055IMU imu;
 
-
+    public static double masterScale=.2;
 
 
     public void init(){
