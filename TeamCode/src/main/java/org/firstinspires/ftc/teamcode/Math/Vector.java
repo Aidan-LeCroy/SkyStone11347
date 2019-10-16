@@ -19,7 +19,7 @@ public class Vector {
         return Math.sqrt((x*x)+(y*y)); // returns the magnitude of the vector using the Pythagorean Theorem
     }
     public double getAngle() {
-        return (180/Math.PI)*Math.atan2(y,x); // returns the angle of the vector on the standard unit circle in radians
+        return (180/Math.PI)*Math.atan2(y,x); // returns the angle of the vector on the standard unit circle in degrees
     }
     public Vector add(Vector vec){
         return new Vector(x + vec.getX(),y + vec.getY()); // combines two vectors

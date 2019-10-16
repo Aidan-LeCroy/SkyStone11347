@@ -1,3 +1,7 @@
+/*
+Cassette, in this case, refers to the motor-driven portion of the robot, which was named such due to its resemblance of a cassette tape.
+The "cassette" is a differential drive using two wheels. There are two motors, meaning that the two wheels must have the same angle and power at any point.
+ */
 package org.firstinspires.ftc.teamcode;
 import android.os.SystemClock;
 
@@ -36,7 +40,7 @@ public class Cassete {
     public Cassete(DcMotor motor1, DcMotor motor2) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
-        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
@@ -48,7 +52,7 @@ public class Cassete {
         return ((top.getCurrentPosition() + bottom.getCurrentPosition()) / 2.0);
     }
 
-    public void setDriveTrainDirection(double amountForwards, double amountSideWays,
+    public void setDriveTrainDirection(double amountForwards, double amountSideWays, // todo(?): use Math.vector in this function
                                        double amountTurn) {
 
         double xComponent = amountForwards * 1 + amountSideWays * 0 +
@@ -57,7 +61,7 @@ public class Cassete {
                 Math.sin(angleToTurnAt) * amountTurn;
 
 
-        currentForwardsPower = Math.hypot(xComponent, yComponent);
+        currentForwardsPower = Math.hypot(xComponent, yComponent); // the Pythagorean theorem
         if (Math.abs(currentForwardsPower) > 0.03) {
             currentTargetAngle = Math.atan2(yComponent, xComponent);
         }
