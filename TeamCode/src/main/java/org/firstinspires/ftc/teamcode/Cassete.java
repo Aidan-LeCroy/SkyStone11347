@@ -143,6 +143,17 @@ public class Cassete {
     public double getCurrentTurnVelocity() {
         return currentTurnVelocity;
     }
+    private void maximumPowerScale() {
+        double scaleAmount = 1;
+        if(motor1Power > 1 && motor1Power > motor2Power){
+            scaleAmount = 1/motor1Power;
+        }
+        if(motor2Power > 1 && motor2Power > motor1Power){
+            scaleAmount = 1/motor2Power;
+        }
+        motor1Power *= scaleAmount;
+        motor2Power *= scaleAmount;
+    }
 
 }
 
