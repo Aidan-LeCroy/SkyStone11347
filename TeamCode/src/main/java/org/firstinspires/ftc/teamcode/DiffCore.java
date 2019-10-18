@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU; // Adafruit BNO055 Inertial Motion Unit, aka the robot's eyes
+import com.qualcomm.hardware.bosch.BNO055IMU; // Bosch BNO055 Inertial Motion Unit, aka the robot's eyes
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -13,8 +13,7 @@ public class DiffCore extends OpMode {
     DcMotor bottomR;
     BNO055IMU imu;
 
-    public static double masterScale=.2;
-
+    public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, MASTER_SCALE = 0.2, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
 
     public void init(){
         DcMotor motor1=(DcMotor) hardwareMap.get("topL");
@@ -43,7 +42,10 @@ public class DiffCore extends OpMode {
 
     }
     //when utilizing this method, get the stick position for the two values.
-    public void DiffDrive(double stickX,double stickY){
+    public void DiffDrive(double stickXL,double stickYL, double stickXR, double stickYR){
+        Vector direction = new Vector(stickXL, stickYL);
+        Vector rotation = new Vector(stickXR, stickYR);
+        Vector dirrot = direction.add(rotation).scale(MASTER_SCALE);
 
     }
 
