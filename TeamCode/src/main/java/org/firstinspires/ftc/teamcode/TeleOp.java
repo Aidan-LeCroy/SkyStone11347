@@ -12,8 +12,7 @@ public class TeleOp extends DiffCore {
 
 public TeleOp()  {
 
-}
-    public void runOpMode(){
+
 }
 
 }
