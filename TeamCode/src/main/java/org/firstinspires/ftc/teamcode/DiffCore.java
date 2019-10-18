@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.hardware.Gamepad;
-
+import org.firstinspires.ftc.teamcode.Math.Vector;
 public class DiffCore extends OpMode {
     DcMotor topL;
     DcMotor topR;
