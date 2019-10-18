@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.TestDebugOpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-@TeleOp("Diff Rev1","Encoder Telemetry")
+@TeleOp(group="Diff Rev1",name="Encoder Telemetry")
 public class EncoderTest extends OpMode {
     DcMotor motor1;
     DcMotor motor2;

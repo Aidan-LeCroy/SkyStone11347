@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.Math;
 
 public class ModuleFunctions {
 
-    public double calculateAngle(double topPos,double botPos){
-
+    public static double calculateAngle(double topPos,double botPos){
+        return 0;
     }
-    public double subtractAngles(){
-
+    public static double subtractAngles(double angle1,double angle2){
+        return 0;
     }
 }
