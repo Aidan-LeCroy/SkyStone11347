@@ -11,6 +11,8 @@ public class TeleOp extends DiffCore {
 
 
 public TeleOp()  {
+    super.init();
+    super.loop();
 
 
 }

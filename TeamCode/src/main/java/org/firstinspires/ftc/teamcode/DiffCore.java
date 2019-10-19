@@ -26,10 +26,10 @@ public class DiffCore extends OpMode {
     public static double masterScale=.2;
 
     public void init(){
-        DcMotor motor1=(DcMotor) hardwareMap.get("topL");
-        DcMotor motor2=(DcMotor) hardwareMap.get("bottomL");
-        DcMotor motor3=(DcMotor) hardwareMap.get("topR");
-        DcMotor motor4=(DcMotor) hardwareMap.get("bottomR");
+        DcMotor motor1=hardwareMap.dcMotor.get("topL");
+        DcMotor motor2=hardwareMap.dcMotor.get("bottomL");
+        DcMotor motor3=hardwareMap.dcMotor.get("topR");
+        DcMotor motor4=hardwareMap.dcMotor.get("bottomR");
 
 
         leftDrive=new Cassete(motor1,motor2);

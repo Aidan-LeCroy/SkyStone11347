@@ -9,15 +9,15 @@ public class EncoderTest extends OpMode {
     DcMotor motor2;
     DcMotor motor3;
     DcMotor motor4;
-    DcMotor mot[]={motor1,motor2,motor3,motor4};
     double leftStick;
     double rightStick;
     final double  STICK_DEADZONE=.2;
     public void init(){
-         motor1=(DcMotor) hardwareMap.get("topL");
-         motor2=(DcMotor) hardwareMap.get("bottomL");
-         motor3=(DcMotor) hardwareMap.get("topR");
-         motor4=(DcMotor) hardwareMap.get("bottomR");
+        motor1=hardwareMap.dcMotor.get("topL");
+        motor2=hardwareMap.dcMotor.get("bottomL");
+        motor3=hardwareMap.dcMotor.get("topR");
+        motor4=hardwareMap.dcMotor.get("bottomR");
+        DcMotor mot[]={motor1,motor2,motor3,motor4};
         for(int i=0;i<mot.length;i++){
             mot[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             mot[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -43,12 +43,12 @@ public class EncoderTest extends OpMode {
         motor4.setPower(rightStick);
      }
      private void checkSticks(){
-        if(gamepad1.left_stick_y<=STICK_DEADZONE)
+        if(Math.abs(gamepad1.left_stick_y)<=STICK_DEADZONE)
             leftStick=0;
         else
             leftStick=gamepad1.left_stick_y;
-        if(gamepad1.right_stick_y<=STICK_DEADZONE)
-            rightStick=gamepad1.right_stick_y;
+        if(Math.abs(gamepad1.right_stick_y)<=STICK_DEADZONE)
+            rightStick=0;
         else
             rightStick=gamepad1.right_stick_y;
      }
