@@ -6,6 +6,6 @@ public class ModuleFunctions {
         return 0;
     }
     public static double subtractAngles(double angle1,double angle2){
-        return 0;
+        return (angle2-angle1);
     }
 }

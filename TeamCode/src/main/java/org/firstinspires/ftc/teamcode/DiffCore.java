@@ -13,7 +13,16 @@ public class DiffCore extends OpMode {
     DcMotor bottomR;
     BNO055IMU imu;
 
-    public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, MASTER_SCALE = 0.2, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
+    Cassete leftDrive;
+    Cassete rightDrive;
+
+    private double forwardsPower = 0;
+    private double sidewaysPower = 0;
+    private double amountTurn = 0;
+
+
+    public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
+    public static double masterScale=.2;
 
     public void init(){
         DcMotor motor1=(DcMotor) hardwareMap.get("topL");
@@ -22,8 +31,8 @@ public class DiffCore extends OpMode {
         DcMotor motor4=(DcMotor) hardwareMap.get("bottomR");
 
 
-        Cassete leftDrive=new Cassete(motor1,motor2);
-        Cassete rightDrive=new Cassete(motor3,motor4);
+        leftDrive=new Cassete(motor1,motor2);
+        rightDrive=new Cassete(motor3,motor4);
 
         DcMotor[] motors={topL,topR,bottomL,bottomR};
         for(DcMotor mot:motors) {
@@ -41,13 +50,27 @@ public class DiffCore extends OpMode {
     public void DiffAutoDrive(double angle, double power){
 
     }
-    //when utilizing this method, get the stick position for the two values.
-    public void DiffDrive(double stickXL,double stickYL, double stickXR, double stickYR){
-        Vector direction = new Vector(stickXL, stickYL);
-        Vector rotation = new Vector(stickXR, stickYR);
-        Vector dirrot = direction.add(rotation).scale(MASTER_SCALE);
+    //when utilizing this method, get the stick position for the two values. Might move this method to TeleOp, not quite sure yet, still figuring it out
+//    public void DiffDrive(double stickXL,double stickYL, double stickXR, double stickYR){
+//        Vector direction = new Vector(stickXL, stickYL);
+//        Vector rotation = new Vector(stickXR, stickYR);
+//        Vector dirrot = direction.add(rotation).scale(masterScale);
+//
+//    }
+    public void update(){
+        rightDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
+        leftDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
 
+        //update the modules
+//        rightDrive.update();
+//        leftDrive.update();
     }
 
+    public void fastMode() {
+        masterScale = 0.7;
+    }
+    public void slowMode(){
+        masterScale = 0.2;
+    }
 
 }

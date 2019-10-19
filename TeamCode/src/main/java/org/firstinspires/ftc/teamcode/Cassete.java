@@ -139,8 +139,8 @@ public class Cassete {
             wheelPower = 0;
         }
 
-        motor1Power = wheelPower * DiffCore.MASTER_SCALE + turnPower * 1.0;
-        motor2Power = -wheelPower * DiffCore.MASTER_SCALE + turnPower * 1.0;
+        motor1Power = wheelPower * DiffCore.masterScale + turnPower * 1.0;
+        motor2Power = -wheelPower * DiffCore.masterScale + turnPower * 1.0;
 
         maximumPowerScale();
     }
@@ -158,6 +158,13 @@ public class Cassete {
         motor1Power *= scaleAmount;
         motor2Power *= scaleAmount;
     }
+//    public void update() {
+//        calculateCurrentModuleRotationVelocity();
+//        calculatePowersFixed(currentTargetAngle, currentForwardsPower);
+//        calculatePowersWithTurn(currentTargetAngle, currentForwardsPower);
+//        applyPowers();
+//    }
+
 
 }
 
