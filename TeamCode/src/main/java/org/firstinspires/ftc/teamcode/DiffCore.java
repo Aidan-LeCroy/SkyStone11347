@@ -20,6 +20,7 @@ public class DiffCore extends OpMode {
     private double sidewaysPower = 0;
     private double amountTurn = 0;
 
+    private String scaleString;
 
     public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
     public static double masterScale=.2;
@@ -62,15 +63,17 @@ public class DiffCore extends OpMode {
         leftDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
 
         //update the modules
-//        rightDrive.update();
-//        leftDrive.update();
+        rightDrive.update();
+        leftDrive.update();
     }
 
     public void fastMode() {
         masterScale = 0.7;
+        scaleString="i am speed";
     }
     public void slowMode(){
         masterScale = 0.2;
+        scaleString="i am not speed";
     }
 
 }

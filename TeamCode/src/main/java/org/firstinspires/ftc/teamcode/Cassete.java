@@ -52,7 +52,7 @@ public class Cassete {
         return ((top.getCurrentPosition() + bottom.getCurrentPosition()) / 2.0);
     }
 
-    public void setDriveTrainDirection(double amountForwards, double amountSideWays, // todo(?): use Math.vector in this function
+    public void setDriveTrainDirection(double amountForwards, double amountSideWays, // TODO: use Math.vector in this function
                                        double amountTurn) {
 
         double xComponent = amountForwards * 1 + amountSideWays * 0 +
@@ -158,12 +158,31 @@ public class Cassete {
         motor1Power *= scaleAmount;
         motor2Power *= scaleAmount;
     }
-//    public void update() {
-//        calculateCurrentModuleRotationVelocity();
-//        calculatePowersFixed(currentTargetAngle, currentForwardsPower);
+    //the last angle we were at
+    private double previousMeasureVelocityAngle = 0;
+    //last time we updated the measure velocity
+    private long lastMeasureVelocityTime = 0;
+    private void calculateCurrentModuleRotationVelocity() {
+        long currTime = SystemClock.uptimeMillis();
+        if(currTime - lastMeasureVelocityTime > 40){
+            //measure the current turning speed of the module
+            currentTurnVelocity = ModuleFunctions.subtractAngles(currentAngle_rad,
+                    previousMeasureVelocityAngle)/((currTime - lastMeasureVelocityTime)/1000.0);
+
+            previousMeasureVelocityAngle = currentAngle_rad;
+            lastMeasureVelocityTime = currTime;
+        }
+    }
+    public void update() {
+        calculateCurrentModuleRotationVelocity();
+        calculatePowersFixed(currentTargetAngle, currentForwardsPower);
 //        calculatePowersWithTurn(currentTargetAngle, currentForwardsPower);
-//        applyPowers();
-//    }
+        applyPowers();
+    }
+    private void applyPowers(){
+        topmotor.setPower(motor1Power);
+        bottommotor.setPower(motor2Power);
+    }
 
 
 }
