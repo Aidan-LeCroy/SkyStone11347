@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.Math;
 
 public class ModuleFunctions {
-    //TODO: Make these methods do stuff.
 
+    public static final double ENCODERTICKPERREV=1000;
 
     public static double calculateAngle(double topPos,double botPos){
-        return 0;
+        double degAngle= (((((topPos+botPos)/2)%ENCODERTICKPERREV)/ENCODERTICKPERREV)*360);
+        return Math.toRadians(degAngle);
     }
+    // TODO: Figure out if this method is correct
     public static double subtractAngles(double angle1,double angle2){
-        return (angle2-angle1);
+        return Math.abs(angle2-angle1);
     }
 }

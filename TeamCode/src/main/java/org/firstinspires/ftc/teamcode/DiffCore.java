@@ -1,20 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU; // Bosch BNO055 Inertial Motion Unit, aka the robot's eyes
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.Math.Vector;
-public class DiffCore extends OpMode {
-    DcMotor topL;
-    DcMotor topR;
-    DcMotor bottomL;
-    DcMotor bottomR;
-    BNO055IMU imu;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-    Cassete leftDrive;
-    Cassete rightDrive;
+@TeleOp(name="core1.1",group="Diff")
+
+public class DiffCore extends OpMode {
+
+    BNO055IMU imu;
+    private DcMotor motor1,motor2,motor3,motor4;
+    private Cassete leftDrive;
+    private Cassete rightDrive;
 
     private double forwardsPower = 0;
     private double sidewaysPower = 0;
@@ -26,22 +28,22 @@ public class DiffCore extends OpMode {
     public static double masterScale=.2;
 
     public void init(){
-        DcMotor motor1=hardwareMap.dcMotor.get("topL");
-        DcMotor motor2=hardwareMap.dcMotor.get("bottomL");
-        DcMotor motor3=hardwareMap.dcMotor.get("topR");
-        DcMotor motor4=hardwareMap.dcMotor.get("bottomR");
+        motor1=hardwareMap.dcMotor.get("topL");
+        motor2=hardwareMap.dcMotor.get("bottomL");
+        motor3=hardwareMap.dcMotor.get("topR");
+        motor4=hardwareMap.dcMotor.get("bottomR");
 
 
         leftDrive=new Cassete(motor1,motor2);
         rightDrive=new Cassete(motor3,motor4);
 
-        DcMotor[] motors={topL,topR,bottomL,bottomR};
-        for(DcMotor mot:motors) {
-            mot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+
     }
     public void loop(){
-        // Not sure what to loop yet, probably debug stuff using RobotLog and telemetry updates, since this is not the main loop.
+        //main loop
+        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+//        DiffTurn(gamepad1.right_stick_x);
+        update();
 
     }
 
@@ -51,13 +53,17 @@ public class DiffCore extends OpMode {
     public void DiffAutoDrive(double angle, double power){
 
     }
-    //when utilizing this method, get the stick position for the two values. Might move this method to TeleOp, not quite sure yet, still figuring it out
-//    public void DiffDrive(double stickXL,double stickYL, double stickXR, double stickYR){
-//        Vector direction = new Vector(stickXL, stickYL);
-//        Vector rotation = new Vector(stickXR, stickYR);
-//        Vector dirrot = direction.add(rotation).scale(masterScale);
-//
-//    }
+    //when utilizing this method, get the stick position for the two values. Might move this method to DiffTeleOp, not quite sure yet, still figuring it out
+    //TODO: Test this, no clue if it works.
+
+    public void DiffDrive(double stickXL,double stickYL){
+        Vector direction = new Vector(stickXL, stickYL);
+        setForwardsPower(direction.getMagnitude());
+        double angle1=direction.getAngle();
+        setAmountTurn(angle1);
+
+    }
+
     public void update(){
         rightDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
         leftDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
@@ -66,6 +72,17 @@ public class DiffCore extends OpMode {
         rightDrive.update();
         leftDrive.update();
     }
+    public void setSidewaysPower(double power){
+        sidewaysPower = power;
+    }
+    public void setForwardsPower(double power){
+        forwardsPower = power;
+    }
+    public void setAmountTurn(double amount){
+        amountTurn = amount;
+    }
+
+
 
     public void fastMode() {
         masterScale = 0.7;

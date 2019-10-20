@@ -42,6 +42,9 @@ public class Cassete {
         this.bottommotor = motor2;
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     public double getWheelAngle() {
@@ -183,6 +186,7 @@ public class Cassete {
         topmotor.setPower(motor1Power);
         bottommotor.setPower(motor2Power);
     }
+
 
 
 }

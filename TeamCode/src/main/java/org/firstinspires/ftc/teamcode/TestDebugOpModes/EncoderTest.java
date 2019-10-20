@@ -46,11 +46,11 @@ public class EncoderTest extends OpMode {
         if(Math.abs(gamepad1.left_stick_y)<=STICK_DEADZONE)
             leftStick=0;
         else
-            leftStick=gamepad1.left_stick_y;
+            leftStick=gamepad1.left_stick_y*.5;
         if(Math.abs(gamepad1.right_stick_y)<=STICK_DEADZONE)
             rightStick=0;
         else
-            rightStick=gamepad1.right_stick_y;
+            rightStick=gamepad1.right_stick_y*.5;
      }
 
 }
