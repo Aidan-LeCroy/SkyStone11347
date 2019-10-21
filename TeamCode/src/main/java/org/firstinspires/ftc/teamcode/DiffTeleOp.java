@@ -12,6 +12,8 @@ public class DiffTeleOp extends DiffCore {
 
 
 public DiffTeleOp()  {
+    robot.slowMode();
+    robot.resetEncoders();
     super.init();
     super.loop();
 

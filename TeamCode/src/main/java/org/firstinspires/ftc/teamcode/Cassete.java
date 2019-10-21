@@ -37,9 +37,10 @@ public class Cassete {
     private double turnErrorSum = 0;
 
 
-    public Cassete(DcMotor motor1, DcMotor motor2) {
+    public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
+        this.angleToTurnAt=angletoTurnAt;
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -62,7 +63,7 @@ public class Cassete {
                 Math.cos(angleToTurnAt) * amountTurn;
         double yComponent = amountForwards * 0 + amountSideWays * 1 +
                 Math.sin(angleToTurnAt) * amountTurn;
-
+//cos horizontal, sin vertical
 
         currentForwardsPower = Math.hypot(xComponent, yComponent); // the Pythagorean theorem
         if (Math.abs(currentForwardsPower) > 0.03) {
@@ -185,6 +186,9 @@ public class Cassete {
     private void applyPowers(){
         topmotor.setPower(motor1Power);
         bottommotor.setPower(motor2Power);
+    }
+    public String getLogString(){
+        return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
     }
 
 

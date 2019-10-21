@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU; // Bosch BNO055 Inertial Motion Unit, aka the robot's eyes
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.Math.Vector;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -34,14 +32,15 @@ public class DiffCore extends OpMode {
         motor4=hardwareMap.dcMotor.get("bottomR");
 
 
-        leftDrive=new Cassete(motor1,motor2);
-        rightDrive=new Cassete(motor3,motor4);
+        leftDrive=new Cassete(motor1,motor2,Math.toRadians(180));
+        rightDrive=new Cassete(motor3,motor4,Math.toRadians(0));
 
 
     }
     public void loop(){
         //main loop
         DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        logMotorStats();
 //        DiffTurn(gamepad1.right_stick_x);
         update();
 
@@ -59,8 +58,9 @@ public class DiffCore extends OpMode {
     public void DiffDrive(double stickXL,double stickYL){
         Vector direction = new Vector(stickXL, stickYL);
         setForwardsPower(direction.getMagnitude());
+//        setSidewaysPower();
         double angle1=direction.getAngle();
-        setAmountTurn(angle1);
+//        setamountTurn(angle1);
 
     }
 
@@ -78,8 +78,17 @@ public class DiffCore extends OpMode {
     public void setForwardsPower(double power){
         forwardsPower = power;
     }
-    public void setAmountTurn(double amount){
+    public void setamountTurn(double amount){
         amountTurn = amount;
+    }
+    public void resetEncoders(){
+        leftDrive.resetEncoders();
+        rightDrive.resetEncoders();
+    }
+    public void logMotorStats(){
+        telemetry.addData("Left Drive: ",leftDrive.getLogString());
+        telemetry.addData("Right Drive: ",rightDrive.getLogString());
+
     }
 
 

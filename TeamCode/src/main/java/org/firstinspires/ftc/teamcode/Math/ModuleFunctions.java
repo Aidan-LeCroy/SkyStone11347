@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Math;
 
 public class ModuleFunctions {
 
-    public static final double ENCODERTICKPERREV=1000;
+    public static final double ENCODERTICKPERREV=305;
 
     public static double calculateAngle(double topPos,double botPos){
         double degAngle= (((((topPos+botPos)/2)%ENCODERTICKPERREV)/ENCODERTICKPERREV)*360);
