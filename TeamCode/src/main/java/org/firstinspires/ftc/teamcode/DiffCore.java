@@ -30,10 +30,10 @@ public class DiffCore extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
-
-
-        leftDrive=new Cassete(motor1,motor2,Math.toRadians(180));
-        rightDrive=new Cassete(motor3,motor4,Math.toRadians(0));
+        slowMode();
+        resetEncoders();
+        leftDrive=new Cassete(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
+        rightDrive=new Cassete(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
 
 
     }
@@ -41,7 +41,8 @@ public class DiffCore extends OpMode {
         //main loop
         DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         logMotorStats();
-//        DiffTurn(gamepad1.right_stick_x);
+
+        //        DiffTurn(gamepad1.right_stick_x);
         update();
 
     }
@@ -55,9 +56,9 @@ public class DiffCore extends OpMode {
     //when utilizing this method, get the stick position for the two values. Might move this method to DiffTeleOp, not quite sure yet, still figuring it out
     //TODO: Test this, no clue if it works.
 
-    public void DiffDrive(double stickXL,double stickYL){
-        Vector direction = new Vector(stickXL, stickYL);
-        setForwardsPower(direction.getMagnitude());
+    public void DiffDrive(double stickLX,double stickLY){
+        Vector direction = new Vector(stickLX, stickLY);
+        setforwardsPower(direction.getMagnitude());
 //        setSidewaysPower();
         double angle1=direction.getAngle();
 //        setamountTurn(angle1);
@@ -75,7 +76,7 @@ public class DiffCore extends OpMode {
     public void setSidewaysPower(double power){
         sidewaysPower = power;
     }
-    public void setForwardsPower(double power){
+    public void setforwardsPower(double power){
         forwardsPower = power;
     }
     public void setamountTurn(double amount){

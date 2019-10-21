@@ -7,6 +7,7 @@ import android.os.SystemClock;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Math.ModuleFunctions;
 public class Cassete {
@@ -35,9 +36,9 @@ public class Cassete {
     private double motor2Power = 0;
 
     private double turnErrorSum = 0;
+    private String moduleName;
 
-
-    public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt) {
+    public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt=angletoTurnAt;
@@ -45,7 +46,7 @@ public class Cassete {
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        moduleName=cassetename;
     }
 
     public double getWheelAngle() {
@@ -56,14 +57,14 @@ public class Cassete {
         return ((top.getCurrentPosition() + bottom.getCurrentPosition()) / 2.0);
     }
 
-    public void setDriveTrainDirection(double amountForwards, double amountSideWays, // TODO: use Math.vector in this function
+    void setDriveTrainDirection(double amountForwards, double amountSideWays, // TODO: use Math.vector in this function
                                        double amountTurn) {
 
         double xComponent = amountForwards * 1 + amountSideWays * 0 +
                 Math.cos(angleToTurnAt) * amountTurn;
         double yComponent = amountForwards * 0 + amountSideWays * 1 +
                 Math.sin(angleToTurnAt) * amountTurn;
-//cos horizontal, sin vertical
+    //cos horizontal, sin vertical
 
         currentForwardsPower = Math.hypot(xComponent, yComponent); // the Pythagorean theorem
         if (Math.abs(currentForwardsPower) > 0.03) {
@@ -186,6 +187,9 @@ public class Cassete {
     private void applyPowers(){
         topmotor.setPower(motor1Power);
         bottommotor.setPower(motor2Power);
+    }
+    public void robotLog(){
+        RobotLog.d(((int)SystemClock.uptimeMillis()/100)+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+);
     }
     public String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
