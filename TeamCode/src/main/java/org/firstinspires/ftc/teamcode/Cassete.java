@@ -46,10 +46,12 @@ public class Cassete {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt=angletoTurnAt;
-        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
-        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        topmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
+        bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         moduleName=cassetename;
     }
 
@@ -201,6 +203,10 @@ public class Cassete {
     }
     public String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
+    }
+    public void setDrivePower(double power){
+        topmotor.setPower(-power);
+        bottommotor.setPower(power);
     }
 
 

@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU; // Bosch BNO055 Inertial Motion Un
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Math.Vector;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="core1.1",group="Diff")
@@ -30,25 +29,30 @@ public class DiffCore extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
+        gamepad1.setJoystickDeadzone(.1f);
         slowMode();
-        resetEncoders();
         leftDrive=new Cassete(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
         rightDrive=new Cassete(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
-
+//        resetEncoders();
 
     }
     public void loop(){
         //main loop
 //        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
-        DiffTankDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
-
+        DiffTankDrive();
+        DiffTankTurn();
         logMotorStats();
+        leftDrive.robotLog();
+        rightDrive.robotLog();
 
-        //        DiffTurn(gamepad1.right_stick_x);
-        update();
+
+//        update();
 
     }
-
+    public void DiffTankTurn(){
+        leftDrive.setDrivePower(gamepad1.right_stick_x);
+        rightDrive.setDrivePower(-gamepad1.right_stick_x);
+    }
 
 
 
@@ -65,8 +69,9 @@ public class DiffCore extends OpMode {
 ////        setamountTurn(angle1);
 //
 //    }
-    public void DiffTankDrive(double stickLX,double stickLY){
-
+    public void DiffTankDrive(){
+        leftDrive.setDrivePower(gamepad1.left_stick_y);
+        rightDrive.setDrivePower(gamepad1.left_stick_y);
     }
 
     public void update(){
@@ -93,7 +98,6 @@ public class DiffCore extends OpMode {
     public void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
-
     }
 
 
@@ -105,6 +109,14 @@ public class DiffCore extends OpMode {
     public void slowMode(){
         masterScale = 0.2;
         scaleString="i am not speed";
+    }
+    //return true if input is detected on either stick
+    //false if otherwise
+    private boolean checkInputs(){
+        if(gamepad1.left_stick_x>.05||gamepad1.left_stick_y>.05||gamepad1.right_stick_x>.05||gamepad1.right_stick_y>.05)
+            return true;
+        else
+            return false;
     }
 
 }
