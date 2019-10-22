@@ -39,7 +39,9 @@ public class DiffCore extends OpMode {
     }
     public void loop(){
         //main loop
-        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+//        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        DiffTankDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+
         logMotorStats();
 
         //        DiffTurn(gamepad1.right_stick_x);
@@ -53,15 +55,17 @@ public class DiffCore extends OpMode {
     public void DiffAutoDrive(double angle, double power){
 
     }
-    //when utilizing this method, get the stick position for the two values. Might move this method to DiffTeleOp, not quite sure yet, still figuring it out
-    //TODO: Test this, no clue if it works.
-
-    public void DiffDrive(double stickLX,double stickLY){
-        Vector direction = new Vector(stickLX, stickLY);
-        setforwardsPower(direction.getMagnitude());
-//        setSidewaysPower();
-        double angle1=direction.getAngle();
-//        setamountTurn(angle1);
+    //TODO: Code does not work
+//WIP
+//    public void DiffDrive(double stickLX,double stickLY){
+//        Vector direction = new Vector(stickLX, stickLY);
+//        setforwardsPower(direction.getMagnitude());
+////        setSidewaysPower();
+//        double angle1=direction.getAngle();
+////        setamountTurn(angle1);
+//
+//    }
+    public void DiffTankDrive(double stickLX,double stickLY){
 
     }
 

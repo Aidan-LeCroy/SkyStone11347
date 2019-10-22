@@ -8,7 +8,7 @@ import android.os.SystemClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Math.ModuleFunctions;
 public class Cassete {
     private double wheelAngle;
@@ -37,6 +37,10 @@ public class Cassete {
 
     private double turnErrorSum = 0;
     private String moduleName;
+
+    boolean logtime=true;
+    double currenttime=0;
+    ElapsedTime timeSinceStart=new ElapsedTime();
 
     public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
         this.topmotor = motor1;
@@ -189,7 +193,11 @@ public class Cassete {
         bottommotor.setPower(motor2Power);
     }
     public void robotLog(){
-        RobotLog.d(((int)SystemClock.uptimeMillis()/100)+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+);
+        if((timeSinceStart.milliseconds()-50)>currenttime){
+        return;
+        }
+        RobotLog.d((timeSinceStart.seconds())+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+angleToTurnAt+" currentTargetAngle: "+currentTargetAngle+" currentTurnVelocity"+currentTurnVelocity);
+        currenttime=timeSinceStart.milliseconds();
     }
     public String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
