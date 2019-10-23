@@ -40,7 +40,7 @@ public class Cassete {
 
     boolean logtime=true;
     double currenttime=0;
-    ElapsedTime timeSinceStart=new ElapsedTime();
+    private ElapsedTime timeSinceStart=new ElapsedTime();
 
     public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
         this.topmotor = motor1;
@@ -194,19 +194,22 @@ public class Cassete {
         topmotor.setPower(motor1Power);
         bottommotor.setPower(motor2Power);
     }
-    public void robotLog(){
+    void robotLog(){
         if((timeSinceStart.milliseconds()-50)>currenttime){
         return;
         }
         RobotLog.d((timeSinceStart.seconds())+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+angleToTurnAt+" currentTargetAngle: "+currentTargetAngle+" currentTurnVelocity"+currentTurnVelocity);
         currenttime=timeSinceStart.milliseconds();
     }
-    public String getLogString(){
+    String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
     }
-    public void setDrivePower(double power){
+    void setDrivePower(double power){
         topmotor.setPower(-power);
         bottommotor.setPower(power);
+    }
+    public void resetRuntime(){
+        timeSinceStart.reset();
     }
 
 

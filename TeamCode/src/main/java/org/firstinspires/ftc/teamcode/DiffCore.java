@@ -5,13 +5,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="core1.1",group="Diff")
 
 public class DiffCore extends OpMode {
+    private ElapsedTime runtime = new ElapsedTime();
 
     BNO055IMU imu;
     private DcMotor motor1,motor2,motor3,motor4;
+    private DcMotor leftIntake, rightIntake;
     private Cassete leftDrive;
     private Cassete rightDrive;
 
@@ -29,6 +33,11 @@ public class DiffCore extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
+
+        leftIntake=hardwareMap.dcMotor.get("intakeL");
+        rightIntake=hardwareMap.dcMotor.get("intakeR");
+
+
         gamepad1.setJoystickDeadzone(.1f);
         slowMode();
         leftDrive=new Cassete(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
@@ -40,7 +49,7 @@ public class DiffCore extends OpMode {
         //main loop
 //        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         DiffTankDrive();
-        DiffTankTurn();
+//        DiffTankTurn();
         logMotorStats();
         leftDrive.robotLog();
         rightDrive.robotLog();
@@ -49,10 +58,15 @@ public class DiffCore extends OpMode {
 //        update();
 
     }
-    public void DiffTankTurn(){
-        leftDrive.setDrivePower(gamepad1.right_stick_x);
-        rightDrive.setDrivePower(-gamepad1.right_stick_x);
+    public void start(){
+        runtime.reset();
+        leftDrive.resetRuntime();
+        rightDrive.resetRuntime();
     }
+//    public void DiffTankTurn(){
+//        leftDrive.setDrivePower(gamepad1.right_stick_x);
+//        rightDrive.setDrivePower(-gamepad1.right_stick_x);
+//    }
 
 
 
@@ -70,8 +84,15 @@ public class DiffCore extends OpMode {
 //
 //    }
     public void DiffTankDrive(){
-        leftDrive.setDrivePower(gamepad1.left_stick_y);
-        rightDrive.setDrivePower(gamepad1.left_stick_y);
+        double leftPower;
+        double rightPower;
+        double drive = -gamepad1.left_stick_y;
+        double turn  =  gamepad1.right_stick_x;
+        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        leftDrive.setDrivePower(leftPower);
+        rightDrive.setDrivePower(rightPower);
+
     }
 
     public void update(){
@@ -98,6 +119,7 @@ public class DiffCore extends OpMode {
     public void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
+        telemetry.addData("Mode: ",scaleString);
     }
 
 
@@ -117,6 +139,19 @@ public class DiffCore extends OpMode {
             return true;
         else
             return false;
+    }
+    private void intake(){
+//        leftIntake.setPower(Range.clip(100*gamepad1.left_trigger,0,1));
+//        rightIntake.setPower(-Range.clip(100*gamepad1.right_trigger,-1,0));
+        if(gamepad1.right_trigger>.1) {
+            leftIntake.setPower(1);
+            rightIntake.setPower(-1);
+        }
+        else if(gamepad1.left_trigger>.1){
+            leftIntake.setPower(-1);
+            rightIntake.setPower(1);
+        }
+
     }
 
 }
