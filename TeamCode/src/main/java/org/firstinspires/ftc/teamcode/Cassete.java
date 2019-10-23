@@ -48,8 +48,8 @@ public class Cassete {
         this.angleToTurnAt=angletoTurnAt;
         topmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         moduleName=cassetename;

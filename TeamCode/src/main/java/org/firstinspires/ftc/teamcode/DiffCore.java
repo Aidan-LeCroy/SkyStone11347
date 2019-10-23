@@ -143,13 +143,16 @@ public class DiffCore extends OpMode {
     private void intake(){
 //        leftIntake.setPower(Range.clip(100*gamepad1.left_trigger,0,1));
 //        rightIntake.setPower(-Range.clip(100*gamepad1.right_trigger,-1,0));
+        int num=1;
+        if(gamepad1.a)
+            num=-1;
         if(gamepad1.right_trigger>.1) {
-            leftIntake.setPower(1);
-            rightIntake.setPower(-1);
+            leftIntake.setPower(num);
+            rightIntake.setPower(-num);
         }
         else if(gamepad1.left_trigger>.1){
-            leftIntake.setPower(-1);
-            rightIntake.setPower(1);
+            leftIntake.setPower(num);
+            rightIntake.setPower(-num);
         }
 
     }
