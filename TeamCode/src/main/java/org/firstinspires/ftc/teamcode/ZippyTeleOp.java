@@ -15,7 +15,9 @@ public class ZippyTeleOp extends OpMode {
         rightIntake=hardwareMap.dcMotor.get("rightIntake");
     }
     public void loop(){
-    
+    intake();
+    zippyDrive();
+    log();
     }
     private void intake(){
         double leftPower=gamepad1.left_trigger;
@@ -32,5 +34,7 @@ public class ZippyTeleOp extends OpMode {
         rightDrive.setPower(-gamepad1.right_stick_y);
     }
 
-    private void
+    private void log(){
+        telemetry.addData("zipp: ","leftEncoder: "+leftDrive.getCurrentPosition()+"rightEncoder: "+rightDrive.getCurrentPosition());
+    }
 }
