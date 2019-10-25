@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 //lol why did I make this
+@TeleOp(group="zippy",name="TeleOp")
 public class ZippyTeleOp extends OpMode {
     DcMotor leftDrive,rightDrive,leftIntake,rightIntake;
 
