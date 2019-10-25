@@ -14,6 +14,7 @@ public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     BNO055IMU imu;
+    //top left and bottom right motors bad.
     private DcMotor motor1,motor2,motor3,motor4;
     private DcMotor leftIntake, rightIntake;
     private Cassete leftDrive;
@@ -26,7 +27,7 @@ public class DiffCore extends OpMode {
     private String scaleString;
 
     public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
-    public static double masterScale=.2;
+    static double masterScale=.2;
 
     public void init(){
         motor1=hardwareMap.dcMotor.get("topL");
@@ -49,6 +50,7 @@ public class DiffCore extends OpMode {
         //main loop
 //        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         DiffTankDrive();
+        intake();
 //        DiffTankTurn();
         logMotorStats();
         leftDrive.robotLog();
@@ -83,16 +85,13 @@ public class DiffCore extends OpMode {
 ////        setamountTurn(angle1);
 //
 //    }
-    public void DiffTankDrive(){
+    private void DiffTankDrive(){
         double leftPower;
         double rightPower;
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        leftPower = -gamepad1.left_stick_y;
+        rightPower  = -gamepad1.right_stick_y;
         leftDrive.setDrivePower(leftPower);
         rightDrive.setDrivePower(rightPower);
-
     }
 
     public void update(){
@@ -143,18 +142,19 @@ public class DiffCore extends OpMode {
     private void intake(){
 //        leftIntake.setPower(Range.clip(100*gamepad1.left_trigger,0,1));
 //        rightIntake.setPower(-Range.clip(100*gamepad1.right_trigger,-1,0));
-        int num=1;
-        if(gamepad1.a)
-            num=-1;
-        if(gamepad1.right_trigger>.1) {
-            leftIntake.setPower(num);
-            rightIntake.setPower(-num);
+        double rightScalar=1;
+        double leftScalar=1;
+
+
+        if(gamepad1.right_bumper){
+            rightScalar=-1;
         }
-        else if(gamepad1.left_trigger>.1){
-            leftIntake.setPower(num);
-            rightIntake.setPower(-num);
+        if(gamepad1.left_bumper){
+            leftScalar=-1;
         }
 
+        leftIntake.setPower(-gamepad1.left_trigger*leftScalar);
+        rightIntake.setPower(gamepad1.right_trigger*rightScalar);
     }
 
 }

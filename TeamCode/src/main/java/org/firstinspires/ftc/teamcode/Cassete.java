@@ -4,6 +4,7 @@ The "cassette" is a differential drive using two wheels. There are two motors, m
  */
 package org.firstinspires.ftc.teamcode;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Math.ModuleFunctions;
 public class Cassete {
+
     private double wheelAngle;
     private double topEncoder;
     private double bottomEncoder;
@@ -46,13 +48,14 @@ public class Cassete {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt=angletoTurnAt;
+
         topmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        moduleName=cassetename;
+
     }
 
     public double getWheelAngle() {
@@ -198,15 +201,32 @@ public class Cassete {
         if((timeSinceStart.milliseconds()-50)>currenttime){
         return;
         }
-        RobotLog.d((timeSinceStart.seconds())+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+angleToTurnAt+" currentTargetAngle: "+currentTargetAngle+" currentTurnVelocity"+currentTurnVelocity);
+        Log.i("Cassete",timeSinceStart.seconds()+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+angleToTurnAt+" currentTargetAngle: "+currentTargetAngle+" currentTurnVelocity"+currentTurnVelocity);
         currenttime=timeSinceStart.milliseconds();
     }
     String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
     }
     void setDrivePower(double power){
+        double power2=power;
+        double topEncoder=topmotor.getCurrentPosition();
+        double bottomEncoder=bottommotor.getCurrentPosition();
+        double difference;
+        if(Math.abs(Math.abs(topEncoder)-Math.abs(bottomEncoder))<20){
+            // do nothing, do not adjust power
+        }
+        else if(Math.abs(topEncoder)>Math.abs(bottomEncoder)) {
+            difference = topEncoder - bottomEncoder;
+            Range.clip(power2-=difference*.01,0,1);
+        }
+        else if(Math.abs(bottomEncoder)>Math.abs(topEncoder)){
+            difference = bottomEncoder-topEncoder;
+            Range.clip(power-=difference*.01,0,1);
+        }
+
         topmotor.setPower(-power);
-        bottommotor.setPower(power);
+        bottommotor.setPower(-power2);
+
     }
     public void resetRuntime(){
         timeSinceStart.reset();
