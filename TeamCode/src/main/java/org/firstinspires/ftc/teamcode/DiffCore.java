@@ -5,13 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Math.Vector;
 
 @TeleOp(name="core1.1",group="Diff")
 
 public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
+
+    PIDCoefficients pid=new PIDCoefficients(1,1,1);
+
 
     BNO055IMU imu;
     //top left and bottom right motors bad.
@@ -48,10 +55,7 @@ public class DiffCore extends OpMode {
     }
     public void loop(){
         //main loop
-//        DiffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
-        DiffTankDrive();
         intake();
-//        DiffTankTurn();
         logMotorStats();
         leftDrive.robotLog();
         rightDrive.robotLog();
@@ -65,10 +69,6 @@ public class DiffCore extends OpMode {
         leftDrive.resetRuntime();
         rightDrive.resetRuntime();
     }
-//    public void DiffTankTurn(){
-//        leftDrive.setDrivePower(gamepad1.right_stick_x);
-//        rightDrive.setDrivePower(-gamepad1.right_stick_x);
-//    }
 
 
 
@@ -77,37 +77,21 @@ public class DiffCore extends OpMode {
     }
     //TODO: Code does not work
 //WIP
-//    public void DiffDrive(double stickLX,double stickLY){
-//        Vector direction = new Vector(stickLX, stickLY);
-//        setforwardsPower(direction.getMagnitude());
-////        setSidewaysPower();
-//        double angle1=direction.getAngle();
-////        setamountTurn(angle1);
-//
-//    }
-    private void DiffTankDrive(){
-        double leftPower;
-        double rightPower;
-        leftPower = -gamepad1.left_stick_y;
-        rightPower  = -gamepad1.right_stick_y;
-        leftDrive.setDrivePower(leftPower);
-        rightDrive.setDrivePower(rightPower);
+    public void DiffDrive(double stickLX,double stickLY,double rightstickX){
+        Vector direction = new Vector(stickLX, stickLY);
+        leftDrive.setSpeedMagnitude(direction.getMagnitude()*masterScale);
+        rightDrive.setSpeedMagnitude(-direction.getMagnitude()*masterScale);
+
+//        setSidewaysPower();
+        double angle1=direction.getAngle();
+        setTargetHeading(angle1);
     }
 
-    public void update(){
-        rightDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
-        leftDrive.setDriveTrainDirection(forwardsPower,sidewaysPower,amountTurn);
 
-        //update the modules
-        rightDrive.update();
-        leftDrive.update();
-    }
     public void setSidewaysPower(double power){
         sidewaysPower = power;
     }
-    public void setforwardsPower(double power){
-        forwardsPower = power;
-    }
+
     public void setamountTurn(double amount){
         amountTurn = amount;
     }

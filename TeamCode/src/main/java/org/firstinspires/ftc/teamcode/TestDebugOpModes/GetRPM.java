@@ -14,6 +14,8 @@ public class GetRPM extends OpMode {
     private ElapsedTime time=new ElapsedTime();
     private long n=1;
     private long n2=1;
+    double finT = 1;
+    double num = 0;
     private Telemetry.Line line1,line2,line3,line4;
     public void init(){
         motor1=hardwareMap.dcMotor.get("topL");
@@ -31,21 +33,32 @@ public class GetRPM extends OpMode {
 
     }
     public void loop(){
-        setMotors(gamepad1.left_stick_y);
-        getTPS(motor1,line1,"topL");
-        getTPS(motor2,line2,"bottomL");
-        getTPS(motor3,line3,"topR");
-        getTPS(motor4,line4,"bottomR");
+        setMotors(.75*gamepad1.left_stick_y);
+        telemetry.addData("topL" + ": ", Double.toString(getTPS1(motor1)));
+        telemetry.addData("bottomL" + ": ", Double.toString(getTPS1(motor2)));
+        telemetry.addData("topR" + ": ", Double.toString(getTPS1(motor3)));
+        telemetry.addData("bottomR" + ": ", Double.toString(getTPS1(motor4)));
     }
 
 
-    private void getTPS(DcMotor mot,Telemetry.Line line,String wah){
+    private void getTPS(DcMotor motor, String wah){
         long currenttime=Math.round(time.seconds());
         if(currenttime>n2){
-            line=telemetry.addLine("AverageTPS motor "+wah+": "+mot.getCurrentPosition()/n2);
+            telemetry.addLine("AverageTPS motor "+wah+": "+motor.getCurrentPosition()/n2);
             n2=currenttime;
         }
     }
+
+    double getTPS1(DcMotor motor){
+        if (finT - getRuntime() >= 1) {
+            num = motor.getCurrentPosition()/(finT - getRuntime());
+            finT = getRuntime();
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+        return num;
+    }
+
     private void setMotors(double power){
         motor1.setPower(power);
         motor2.setPower(power);
