@@ -84,7 +84,6 @@ public class DiffCore extends OpMode {
 
 //        setSidewaysPower();
         double angle1=direction.getAngle();
-        setTargetHeading(angle1);
     }
 
 
