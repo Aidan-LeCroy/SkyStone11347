@@ -31,6 +31,8 @@ public class DiffCore extends OpMode {
     private double sidewaysPower = 0;
     private double amountTurn = 0;
 
+    private double
+
     private String scaleString;
 
     public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
@@ -75,12 +77,12 @@ public class DiffCore extends OpMode {
     public void DiffAutoDrive(double angle, double power){
 
     }
-    //TODO: Code does not work
 //WIP
     public void DiffDrive(double stickLX,double stickLY,double rightstickX){
         Vector direction = new Vector(stickLX, stickLY);
         leftDrive.setSpeedMagnitude(direction.getMagnitude()*masterScale);
         rightDrive.setSpeedMagnitude(-direction.getMagnitude()*masterScale);
+
 
 //        setSidewaysPower();
         double angle1=direction.getAngle();

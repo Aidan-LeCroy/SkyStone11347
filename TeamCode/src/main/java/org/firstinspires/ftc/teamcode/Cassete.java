@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 
 public class Cassete {
 
@@ -22,7 +24,7 @@ public class Cassete {
     private DcMotor topmotor;
     private DcMotor bottommotor;
 
-    private double headConstant=1;
+    private double headConstant = 1;
 
     private double currentAngle_rad = 0; //real angle
     private double previousAngle_rad = 0; // angle from previous update, used for velocity
@@ -41,14 +43,14 @@ public class Cassete {
     private double turnErrorSum = 0;
     private String moduleName;
 
-    boolean logtime=true;
-    double currenttime=0;
-    private ElapsedTime timeSinceStart=new ElapsedTime();
+    boolean shouldILog = true;
+    double currenttime = 0;
+    private ElapsedTime timeSinceStart = new ElapsedTime();
 
     public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
-        this.angleToTurnAt=angletoTurnAt;
+        this.angleToTurnAt = angletoTurnAt;
 
         topmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -66,7 +68,7 @@ public class Cassete {
     }
 
     public void setSpeedMagnitude(double mag){
-        wheelPower=mag;
+        wheelPower = mag;
     }
     public void resetEncoders(){
         topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -80,8 +82,8 @@ public class Cassete {
         if((timeSinceStart.milliseconds()-50)>currenttime){
         return;
         }
-        Log.i("Cassete",timeSinceStart.seconds()+"seconds in"+"Cassete"+" ("+moduleName+"): "+" Current variables angletoturnat: "+angleToTurnAt+" currentTargetAngle: "+currentTargetAngle+" currentTurnVelocity"+currentTurnVelocity);
-        currenttime=timeSinceStart.milliseconds();
+        RobotLog.d("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angletoturnat: " + angleToTurnAt + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
+        currenttime = timeSinceStart.milliseconds();
     }
     String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
@@ -90,20 +92,16 @@ public class Cassete {
         timeSinceStart.reset();
     }
     public void setTargetHeading(double heading){
-        currentTargetAngle=heading;
+        currentTargetAngle = heading;
     }
     public void moduleRotationPID(){
-
     }
     public void updatePower(){
-        motor1Power=(moduleRotationPower+wheelPower);
-        motor2Power=(moduleRotationPower-wheelPower);
+        motor1Power = Range.clip(moduleRotationPower+wheelPower,-1,1);
+        motor2Power = Range.clip(moduleRotationPower-wheelPower,-1,1);
     }
     public double getHeading(){
         return (headConstant*(topmotor.getCurrentPosition()+bottommotor.getCurrentPosition()));
     }
-
-
-
 }
 
