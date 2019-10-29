@@ -11,11 +11,11 @@ public class DiffTeleOp extends DiffCore {
 
 
 
-public DiffTeleOp()  {
-    super.init();
-    super.loop();
+    public DiffTeleOp()  {
+        super.init();
+        super.loop();
 
 
-}
+    }
 
 }

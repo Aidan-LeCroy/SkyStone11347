@@ -12,4 +12,14 @@ public class ModuleFunctions {
     public static double subtractAngles(double angle1,double angle2){
         return Math.abs(angle2-angle1);
     }
+    public static double negateAngle(double angle) {
+        while (angle > Math.PI) {
+            if (angle > Math.PI) {
+                return (angle - (2 * Math.PI))
+            } else {
+                return angle
+            }
+        }
+    }
+
 }
