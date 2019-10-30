@@ -101,6 +101,14 @@ public class Cassete {
         double degreeHeading = ((reciprocal*(encoderAvg%HEADCONSTANT))*360);
         return Math.toRadians(degreeHeading);
     }
+    public double subtractAngles(double ang,double subAng){
+        double angle=ang-subAng;
+
+        if(ang-subAng>(2*Math.PI)){
+            return angle % (2*Math.PI);
+        }
+        return Math.abs(angle);
+    }
     //expanded to make more clear, (1/constant)*(A+B) reduced
 }
 
