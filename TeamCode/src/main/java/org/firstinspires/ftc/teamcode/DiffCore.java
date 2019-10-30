@@ -30,9 +30,7 @@ public class DiffCore extends OpMode {
     private double forwardsPower = 0;
     private double sidewaysPower = 0;
     private double amountTurn = 0;
-
-    private double
-
+    
     private String scaleString;
 
     public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
