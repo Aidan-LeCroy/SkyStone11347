@@ -18,13 +18,14 @@ public class Cassete {
 
     private double angleToTurnAt = 0;
 
+    private static final float HEADCONSTANT=(187.0/768.0);
+
     private double wheelPower;
     private double moduleRotationPower;
 
     private DcMotor topmotor;
     private DcMotor bottommotor;
 
-    private double headConstant = 1;
 
     private double currentAngle_rad = 0; //real angle
     private double previousAngle_rad = 0; // angle from previous update, used for velocity
@@ -63,9 +64,6 @@ public class Cassete {
 
 
 
-    public double getDeltaEncoder(DcMotor top, DcMotor bottom) {
-        return ((top.getCurrentPosition() + bottom.getCurrentPosition()) / 2.0);
-    }
 
     public void setSpeedMagnitude(double mag){
         wheelPower = mag;
@@ -96,12 +94,16 @@ public class Cassete {
     }
     public void moduleRotationPID(){
     }
-    public void updatePower(){
-        motor1Power = Range.clip(moduleRotationPower+wheelPower,-1,1);
-        motor2Power = Range.clip(moduleRotationPower-wheelPower,-1,1);
+    public void updatePower() {
+        motor1Power = Range.clip(moduleRotationPower + wheelPower, -1, 1);
+        motor2Power = Range.clip(moduleRotationPower - wheelPower, -1, 1);
     }
     public double getHeading(){
-        return (headConstant*(topmotor.getCurrentPosition()+bottommotor.getCurrentPosition()));
+        double encoderAvg = topmotor.getCurrentPosition()+bottommotor.getCurrentPosition()/2;
+        double reciprocal = 1/HEADCONSTANT;
+        double degreeHeading=((reciprocal*(encoderAvg%HEADCONSTANT))*360);
+        return Math.toRadians(degreeHeading);
     }
+    //expanded to make more clear, (1/constant)*(A+B)
 }
 
