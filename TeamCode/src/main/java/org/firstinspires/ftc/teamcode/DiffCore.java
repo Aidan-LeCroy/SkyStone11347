@@ -140,4 +140,5 @@ public class DiffCore extends OpMode {
         rightIntake.setPower(gamepad1.right_trigger*rightScalar);
     }
 
+
 }

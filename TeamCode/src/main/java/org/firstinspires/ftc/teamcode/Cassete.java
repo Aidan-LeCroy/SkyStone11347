@@ -41,7 +41,6 @@ public class Cassete {
     private double motor1Power = 0;
     private double motor2Power = 0;
 
-    private double turnErrorSum = 0;
     private String moduleName;
 
     boolean shouldILog = true;
@@ -62,9 +61,9 @@ public class Cassete {
 
 
 
-    public void setSpeedMagnitude(double mag){
-        wheelPower = mag;
-    }
+
+
+
     public void resetEncoders(){
         topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -89,26 +88,59 @@ public class Cassete {
     public void setTargetHeading(double heading){
         currentTargetAngle = heading;
     }
-    public void moduleRotationPID(){
+    //the current error sum when turning toward the target
+    private double turnErrorSum = 0;
+
+    public void calcPowers(double targetAnglerad,double wheelPower) {
+
+        setHeading();
+        angleError=subtractAngles(targetAnglerad,currentAngle_rad);
+        if(Math.abs(angleError)>20){
+            wheelPower=0;
+        }
+        motor1Power = wheelPower*DiffCore.masterScale+moduleRotationPower*1.0;
+        motor2Power = -(wheelPower*DiffCore.masterScale)+moduleRotationPower*1.0;
+        //* 1.0 is to make sure it performs double multiplication.
+        maximumPowerScale();
     }
-    public void updatePower() {
-        motor1Power = Range.clip(moduleRotationPower + wheelPower, -1, 1);
-        motor2Power = Range.clip(moduleRotationPower - wheelPower, -1, 1);
+    private void maximumPowerScale() {
+        double scaleAmount = 1;
+        if(motor1Power > 1 && motor1Power > motor2Power){
+            scaleAmount = 1/motor1Power;
+        }
+        if(motor2Power > 1 && motor2Power > motor1Power){
+            scaleAmount = 1/motor2Power;
+        }
+        motor1Power *= scaleAmount;
+        motor2Power *= scaleAmount;
     }
-    public double getHeading(){
+
+    /**
+     * @return the heading in radians from 0 to 2 PI
+     */
+    public void setHeading(){
         double encoderAvg = topmotor.getCurrentPosition()+bottommotor.getCurrentPosition()/2;
         double reciprocal = 1/HEADCONSTANT;
         double degreeHeading = ((reciprocal*(encoderAvg%HEADCONSTANT))*360);
-        return Math.toRadians(degreeHeading);
+        currentAngle_rad=Math.toRadians(degreeHeading);
     }
+
+    /**
+     *
+     * @param ang angle to begin with
+     * @param subAng angle to subtract from ang
+     * @return the difference in a positive number from 0 to 2 PI
+     */
     public double subtractAngles(double ang,double subAng){
         double angle=ang-subAng;
 
-        if(ang-subAng>(2*Math.PI)){
+        if(angle>(2*Math.PI)){
             return angle % (2*Math.PI);
         }
         return Math.abs(angle);
     }
     //expanded to make more clear, (1/constant)*(A+B) reduced
+
+
 }
 
