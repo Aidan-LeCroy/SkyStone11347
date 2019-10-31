@@ -3,6 +3,7 @@ Cassette, in this case, refers to the motor-driven portion of the robot, which w
 The "cassette" is a differential drive using two wheels. There are two motors, meaning that the two wheels must have the same angle and power at any point.
  */
 package org.firstinspires.ftc.teamcode;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -31,7 +32,6 @@ public class Cassete {
     private double previousAngle_rad = 0; // angle from previous update, used for velocity
 
     private double angleError = 0;
-    private double turnPower = 0; //not user input, calculated based on error
     private double currentTurnVelocity = 0; //current rate at which the module is turning
 
     private long currentTimeNanos = 0; //current time on the clock
@@ -91,10 +91,38 @@ public class Cassete {
     //the current error sum when turning toward the target
     private double turnErrorSum = 0;
 
+    // PID LOOP!!!
+
+    double Pgain=.05;
+    double Igain=.075;
+    double Dgain=.22;
     public void calcPowers(double targetAnglerad,double wheelPower) {
+        currentTimeNanos = SystemClock.elapsedRealtimeNanos();
+        elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
+        if(elapsedTimeThisUpdate < 0.003){
+            return;//don't do anything if it is too fast
+        }
+        //remember the time to calculate delta the next update
+        lastTimeNanos = currentTimeNanos;
+        //if there has been an outrageously long amount of time, don't bother
+        if(elapsedTimeThisUpdate > 1){
+            return;
+        }
 
         setHeading();
         angleError=subtractAngles(targetAnglerad,currentAngle_rad);
+        double angleErrorVelocity = angleError -
+                ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
+                        * Dgain);//myRobot.getDouble("d"));
+        turnErrorSum += angleError * elapsedTimeThisUpdate;
+        moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
+
+
+        moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
+                * Pgain;//myRobot.getDouble("p");
+        moduleRotationPower += turnErrorSum * Igain;//
+
+
         if(Math.abs(angleError)>20){
             wheelPower=0;
         }
@@ -126,7 +154,6 @@ public class Cassete {
     }
 
     /**
-     *
      * @param ang angle to begin with
      * @param subAng angle to subtract from ang
      * @return the difference in a positive number from 0 to 2 PI
@@ -138,6 +165,23 @@ public class Cassete {
             return angle % (2*Math.PI);
         }
         return Math.abs(angle);
+    }
+    private double previousMeasureVelocityAngle = 0;
+    //last time we updated the measure velocity
+    private long lastMeasureVelocityTime = 0;
+    private void calculateCurrentModuleRotationVelocity() {
+        long currTime = SystemClock.uptimeMillis();
+        if (currTime - lastMeasureVelocityTime > 40) {
+            //measure the current turning speed of the module
+            currentTurnVelocity = subtractAngles(currentAngle_rad,
+                    previousMeasureVelocityAngle) / ((currTime - lastMeasureVelocityTime) / 1000.0);
+
+            previousMeasureVelocityAngle = currentAngle_rad;
+            lastMeasureVelocityTime = currTime;
+        }
+    }
+    public double getCurrentTurnVelocity() {
+        return currentTurnVelocity;
     }
     //expanded to make more clear, (1/constant)*(A+B) reduced
 
