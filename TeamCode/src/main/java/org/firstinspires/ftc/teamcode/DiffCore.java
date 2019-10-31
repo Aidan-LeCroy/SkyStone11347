@@ -64,8 +64,8 @@ public class DiffCore extends OpMode {
         Vector direction = new Vector(stickLX, stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
-        leftDrive.update();
-        rightDrive.update();
+        leftDrive.update(wheelAngle,wheelMagnitude);
+        rightDrive.update(wheelAngle,-wheelMagnitude);
     }
 
     public void resetEncoders(){

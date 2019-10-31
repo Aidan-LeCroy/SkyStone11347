@@ -4,7 +4,7 @@ The "cassette" is a differential drive using two wheels. There are two motors, m
  */
 package org.firstinspires.ftc.teamcode;
 import android.os.SystemClock;
-import android.util.Log;
+
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,8 +13,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 public class Cassete {
 
-    private double topEncoder;
-    private double bottomEncoder;
     private double currentTargetAngle = 0;
 
     private double angleToTurnAt = 0;
@@ -64,7 +62,7 @@ public class Cassete {
 
 
 
-    public void resetEncoders(){
+    void resetEncoders(){
         topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
@@ -82,21 +80,20 @@ public class Cassete {
     String getLogString(){
         return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
     }
-    public void resetRuntime(){
+    void resetRuntime(){
         timeSinceStart.reset();
     }
-    public void setTargetHeading(double heading){
-        currentTargetAngle = heading;
-    }
+
     //the current error sum when turning toward the target
     private double turnErrorSum = 0;
 
     // PID LOOP!!!
 
-    double Pgain=.05;
-    double Igain=.075;
-    double Dgain=.22;
-    public void calcPowers(double targetAnglerad,double wheelPower) {
+    //Proportional, Integral, Differential
+    private double Pgain=.05;
+    private double Igain=.075;
+    private double Dgain=.22;
+    private void calcPowers(double targetAnglerad,double wheelPower) {
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
         elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
@@ -158,13 +155,13 @@ public class Cassete {
     /**
      *  changed currentAngle_rad to the heading in radians from 0 to 2 PI
      */
-    private void setHeading(){
-        double encoderAvg = topmotor.getCurrentPosition()+bottommotor.getCurrentPosition()/2;
-        double reciprocal = 1/HEADCONSTANT;
-        double degreeHeading = ((reciprocal*(encoderAvg%HEADCONSTANT))*360);
-        currentAngle_rad=Math.toRadians(degreeHeading);
+    private void setHeading() {
+        double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2;
+        double reciprocal = 1 / HEADCONSTANT;
+        double degreeHeading = ((reciprocal * (encoderAvg % HEADCONSTANT)) * 360);
+        currentAngle_rad = Math.toRadians(degreeHeading);
     }
-    public void
+
 
     /**
      * @param ang angle to begin with
@@ -196,8 +193,10 @@ public class Cassete {
     private double getCurrentTurnVelocity() {
         return currentTurnVelocity;
     }
-    private void update(){
-        
+    void update(double targangle,double forwardpow){
+        calculateCurrentModuleRotationVelocity();
+        calcPowers(targangle,forwardpow);
+        applyPowers();
     }
     //expanded to make more clear, (1/constant)*(A+B) reduced
 
