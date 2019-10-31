@@ -111,18 +111,30 @@ public class Cassete {
 
         setHeading();
         angleError=subtractAngles(targetAnglerad,currentAngle_rad);
+        //we should never turn more than 180 degrees, just reverse the direction
+        while (Math.abs(angleError) > Math.toRadians(90)) {
+            if(currentTargetAngle > currentAngle_rad){
+                currentTargetAngle -= Math.toRadians(180);
+            }else{
+                currentTargetAngle += Math.toRadians(180);
+            }
+            wheelPower *= -1;
+            angleError = subtractAngles(currentTargetAngle,currentAngle_rad);
+        }
+// TODO: UNDERSTAND EVERYTHING FROM HERE
         double angleErrorVelocity = angleError -
                 ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
-                        * Dgain);//myRobot.getDouble("d"));
+                        * Dgain);
         turnErrorSum += angleError * elapsedTimeThisUpdate;
         moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
 
         moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
-                * Pgain;//myRobot.getDouble("p");
-        moduleRotationPower += turnErrorSum * Igain;//
+                * Pgain;
+        moduleRotationPower += turnErrorSum * Igain;
 
-
+// TODO: TO HERE
+        // if it has to rotate too much, you don't want the robot to run off.
         if(Math.abs(angleError)>20){
             wheelPower=0;
         }
@@ -144,21 +156,22 @@ public class Cassete {
     }
 
     /**
-     * @return the heading in radians from 0 to 2 PI
+     *  changed currentAngle_rad to the heading in radians from 0 to 2 PI
      */
-    public void setHeading(){
+    private void setHeading(){
         double encoderAvg = topmotor.getCurrentPosition()+bottommotor.getCurrentPosition()/2;
         double reciprocal = 1/HEADCONSTANT;
         double degreeHeading = ((reciprocal*(encoderAvg%HEADCONSTANT))*360);
         currentAngle_rad=Math.toRadians(degreeHeading);
     }
+    public void
 
     /**
      * @param ang angle to begin with
      * @param subAng angle to subtract from ang
      * @return the difference in a positive number from 0 to 2 PI
      */
-    public double subtractAngles(double ang,double subAng){
+    private double subtractAngles(double ang,double subAng){
         double angle=ang-subAng;
 
         if(angle>(2*Math.PI)){
@@ -180,8 +193,11 @@ public class Cassete {
             lastMeasureVelocityTime = currTime;
         }
     }
-    public double getCurrentTurnVelocity() {
+    private double getCurrentTurnVelocity() {
         return currentTurnVelocity;
+    }
+    private void update(){
+        
     }
     //expanded to make more clear, (1/constant)*(A+B) reduced
 

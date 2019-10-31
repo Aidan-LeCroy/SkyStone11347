@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU; // Bosch BNO055 Inertial Motion Unit, aka the robot's eyes
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
 
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
@@ -16,24 +13,13 @@ import org.firstinspires.ftc.teamcode.Math.Vector;
 
 public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
-
-    PIDCoefficients pid=new PIDCoefficients(1,1,1);
-
-
-    BNO055IMU imu;
     //top left and bottom right motors bad.
     private DcMotor motor1,motor2,motor3,motor4;
     private DcMotor leftIntake, rightIntake;
     private Cassete leftDrive;
     private Cassete rightDrive;
-
-    private double forwardsPower = 0;
-    private double sidewaysPower = 0;
-    private double amountTurn = 0;
-
     private String scaleString;
 
-    public static double WHEEL_CIRCUMFERENCE = 90 * Math.PI, RATIO = 4, RPM, LENGTH, WIDTH, HEIGHT; // change as design changes, use mm
     static double masterScale=.2;
 
     public void init(){
@@ -55,7 +41,7 @@ public class DiffCore extends OpMode {
     }
     public void loop(){
         //main loop
-        intake();
+        diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         logMotorStats();
         leftDrive.robotLog();
         rightDrive.robotLog();
@@ -72,28 +58,16 @@ public class DiffCore extends OpMode {
 
 
 
-    public void DiffAutoDrive(double angle, double power){
 
-    }
 //WIP
-    public void DiffDrive(double stickLX,double stickLY,double rightstickX){
+    public void diffDrive(double stickLX,double stickLY) {
         Vector direction = new Vector(stickLX, stickLY);
-        leftDrive.setSpeedMagnitude(direction.getMagnitude()*masterScale);
-        rightDrive.setSpeedMagnitude(-direction.getMagnitude()*masterScale);
-
-
-//        setSidewaysPower();
-        double angle1=direction.getAngle();
+        double wheelMagnitude = direction.getMagnitude();
+        double wheelAngle = direction.getAngle(true);
+        leftDrive.update();
+        rightDrive.update();
     }
 
-
-    public void setSidewaysPower(double power){
-        sidewaysPower = power;
-    }
-
-    public void setamountTurn(double amount){
-        amountTurn = amount;
-    }
     public void resetEncoders(){
         leftDrive.resetEncoders();
         rightDrive.resetEncoders();
