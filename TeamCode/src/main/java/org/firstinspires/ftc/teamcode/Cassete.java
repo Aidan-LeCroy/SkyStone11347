@@ -198,7 +198,4 @@ public class Cassete {
         applyPowers();
     }
     //expanded to make more clear, (1/constant)*(A+B) reduced
-
-
 }
-
