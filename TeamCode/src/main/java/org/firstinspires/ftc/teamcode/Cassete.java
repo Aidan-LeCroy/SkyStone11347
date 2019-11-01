@@ -80,7 +80,7 @@ public class Cassete {
         currenttime = timeSinceStart.milliseconds();
     }
     String getLogString(){
-        return "top power: "+motor1Power+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+motor2Power+"bottom encoder: "+bottommotor.getCurrentPosition();
+        return "top power: "+(Math.round(motor1Power*100.0))/100+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+(Math.round(motor2Power*100.0))/100+"bottom encoder: "+bottommotor.getCurrentPosition();
     }
     void resetRuntime(){
         timeSinceStart.reset();
