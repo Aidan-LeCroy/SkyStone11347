@@ -75,7 +75,10 @@ public class DiffCore extends OpMode {
 
 
     public void DiffAutoDrive(double angle, double power){
-
+        pass;
+    }
+    public double PIDError(double input, double p, double i, double d) {
+        
     }
 //WIP
     public void DiffDrive(double stickLX,double stickLY,double rightstickX){
