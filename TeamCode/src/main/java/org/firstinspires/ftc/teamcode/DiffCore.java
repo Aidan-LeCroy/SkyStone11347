@@ -67,12 +67,12 @@ public class DiffCore extends OpMode {
         leftDrive.update(wheelAngle,wheelMagnitude);
         rightDrive.update(wheelAngle,-wheelMagnitude);
     }
-
-    public void resetEncoders(){
+    // will use for zeroing purposes.
+    private void resetEncoders(){
         leftDrive.resetEncoders();
         rightDrive.resetEncoders();
     }
-    public void logMotorStats(){
+    private void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
         telemetry.addData("Mode: ",scaleString);
@@ -80,39 +80,16 @@ public class DiffCore extends OpMode {
 
 
 
-    public void fastMode() {
+    private void fastMode() {
         masterScale = 0.7;
         scaleString="i am speed";
     }
-    public void slowMode(){
+    private void slowMode(){
         masterScale = 0.2;
         scaleString="i am not speed";
     }
     //return true if input is detected on either stick
     //false if otherwise
-    private boolean checkInputs(){
-        if(gamepad1.left_stick_x>.05||gamepad1.left_stick_y>.05||gamepad1.right_stick_x>.05||gamepad1.right_stick_y>.05)
-            return true;
-        else
-            return false;
-    }
-    private void intake(){
-//        leftIntake.setPower(Range.clip(100*gamepad1.left_trigger,0,1));
-//        rightIntake.setPower(-Range.clip(100*gamepad1.right_trigger,-1,0));
-        double rightScalar=1;
-        double leftScalar=1;
-
-
-        if(gamepad1.right_bumper){
-            rightScalar=-1;
-        }
-        if(gamepad1.left_bumper){
-            leftScalar=-1;
-        }
-
-        leftIntake.setPower(-gamepad1.left_trigger*leftScalar);
-        rightIntake.setPower(gamepad1.right_trigger*rightScalar);
-    }
 
 
 }

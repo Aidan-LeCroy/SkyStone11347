@@ -90,10 +90,11 @@ public class Cassete {
     // PID LOOP!!!
 
     //Proportional, Integral, Differential
-    private double Pgain=.05;
-    private double Igain=.075;
-    private double Dgain=.22;
+
     private void calcPowers(double targetAnglerad,double wheelPower) {
+        double Pgain=.05;
+        double Igain=.075;
+        double Dgain=.22;
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
         elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
