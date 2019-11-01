@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
-@TeleOp(name="core1.1",group="Diff")
+@TeleOp(name="core1.4.9",group="Diff")
 
 public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
@@ -58,7 +58,7 @@ public class DiffCore extends OpMode {
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);
-        rightDrive.update(wheelAngle,-wheelMagnitude);
+//        rightDrive.update(wheelAngle,-wheelMagnitude);
     }
     // will use for zeroing purposes.
      void resetEncoders(){
