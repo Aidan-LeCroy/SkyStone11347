@@ -65,6 +65,8 @@ public class Cassete {
     void resetEncoders(){
         topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        topmotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bottommotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
        private void applyPowers(){
         topmotor.setPower(motor1Power);
@@ -184,8 +186,7 @@ public class Cassete {
         long currTime = SystemClock.uptimeMillis();
         if (currTime - lastMeasureVelocityTime > 40) {
             //measure the current turning speed of the module
-            currentTurnVelocity = subtractAngles(currentAngle_rad,
-                    previousMeasureVelocityAngle) / ((currTime - lastMeasureVelocityTime) / 1000.0);
+            currentTurnVelocity = subtractAngles(currentAngle_rad, previousMeasureVelocityAngle) / ((currTime - lastMeasureVelocityTime) / 1000.0);
 
             previousMeasureVelocityAngle = currentAngle_rad;
             lastMeasureVelocityTime = currTime;

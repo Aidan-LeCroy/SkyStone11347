@@ -15,7 +15,6 @@ public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     //top left and bottom right motors bad.
     private DcMotor motor1,motor2,motor3,motor4;
-    private DcMotor leftIntake, rightIntake;
     private Cassete leftDrive;
     private Cassete rightDrive;
     private String scaleString;
@@ -28,15 +27,11 @@ public class DiffCore extends OpMode {
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
 
-        leftIntake=hardwareMap.dcMotor.get("intakeL");
-        rightIntake=hardwareMap.dcMotor.get("intakeR");
-
-
         gamepad1.setJoystickDeadzone(.1f);
         slowMode();
         leftDrive=new Cassete(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
         rightDrive=new Cassete(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
-//        resetEncoders();
+        resetEncoders();
 
     }
     public void loop(){
@@ -60,7 +55,7 @@ public class DiffCore extends OpMode {
 
 
 //WIP
-    public void diffDrive(double stickLX,double stickLY) {
+    private void diffDrive(double stickLX,double stickLY) {
         Vector direction = new Vector(stickLX, stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
@@ -68,7 +63,7 @@ public class DiffCore extends OpMode {
         rightDrive.update(wheelAngle,-wheelMagnitude);
     }
     // will use for zeroing purposes.
-    private void resetEncoders(){
+     void resetEncoders(){
         leftDrive.resetEncoders();
         rightDrive.resetEncoders();
     }
@@ -84,7 +79,7 @@ public class DiffCore extends OpMode {
         masterScale = 0.7;
         scaleString="i am speed";
     }
-    private void slowMode(){
+    void slowMode(){
         masterScale = 0.2;
         scaleString="i am not speed";
     }
