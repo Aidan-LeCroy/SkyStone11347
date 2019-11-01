@@ -54,10 +54,11 @@ public class Cassete {
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
-
     }
 
+    public void beginTelemetry(){
+        telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
+    }
 
 
 
