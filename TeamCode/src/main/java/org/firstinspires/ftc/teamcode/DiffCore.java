@@ -38,8 +38,6 @@ public class DiffCore extends OpMode {
         //main loop
         diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         logMotorStats();
-        leftDrive.robotLog();
-        rightDrive.robotLog();
 
 
 //        update();

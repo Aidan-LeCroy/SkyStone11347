@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Cassete {
 
     private double currentTargetAngle = 0;
@@ -38,12 +40,10 @@ public class Cassete {
 
     private double motor1Power = 0;
     private double motor2Power = 0;
-
     private String moduleName;
 
-    boolean shouldILog = true;
-    double currenttime = 0;
     private ElapsedTime timeSinceStart = new ElapsedTime();
+    Telemetry telemetry;
 
     public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
         this.topmotor = motor1;
@@ -54,6 +54,8 @@ public class Cassete {
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
+
     }
 
 
@@ -72,13 +74,8 @@ public class Cassete {
         topmotor.setPower(motor1Power);
         bottommotor.setPower(motor2Power);
     }
-    void robotLog(){
-        if((timeSinceStart.milliseconds()-50)>currenttime){
-        return;
-        }
-        RobotLog.d("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angletoturnat: " + angleToTurnAt + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
-        currenttime = timeSinceStart.milliseconds();
-    }
+
+
     String getLogString(){
         return "top power: "+(Math.round(motor1Power*100.0))/100+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+(Math.round(motor2Power*100.0))/100+"bottom encoder: "+bottommotor.getCurrentPosition();
     }
