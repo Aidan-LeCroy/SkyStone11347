@@ -38,6 +38,7 @@ public class DiffCore extends OpMode {
         //main loop
         diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         logMotorStats();
+        leftDrive.basicTelemetry();
 
 
 //        update();
@@ -46,7 +47,6 @@ public class DiffCore extends OpMode {
     public void start(){
         runtime.reset();
         leftDrive.resetRuntime();
-        leftDrive.beginTelemetry();
 //        rightDrive.resetRuntime();
     }
 

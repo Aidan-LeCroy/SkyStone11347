@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
-
+import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Cassete {
@@ -43,6 +43,7 @@ public class Cassete {
     private String moduleName;
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
+    private FtcDashboard dashboard;
     Telemetry telemetry;
 
     public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
@@ -54,9 +55,13 @@ public class Cassete {
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        dashboard=FtcDashboard.getInstance();
+        telemetry = dashboard.getTelemetry();
     }
 
-    public void beginTelemetry(){
+    public void basicTelemetry(){
+        if(timeSinceStart.seconds()<=1)
+            return;
         telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
     }
 
