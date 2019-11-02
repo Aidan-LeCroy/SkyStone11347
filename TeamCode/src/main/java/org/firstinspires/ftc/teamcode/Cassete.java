@@ -40,7 +40,7 @@ public class Cassete {
 
     private double motor1Power = 0;
     private double motor2Power = 0;
-    private String moduleName;
+    private String moduleName="nil";
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
     private FtcDashboard dashboard;
@@ -55,15 +55,13 @@ public class Cassete {
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        dashboard=FtcDashboard.getInstance();
-        telemetry = dashboard.getTelemetry();
+
     }
 
     public void basicTelemetry(){
         if(timeSinceStart.seconds()<=1)
             return;
-
-        telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
+        telemetry.addData("Cassete",(""+timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity));
     }
 
 
