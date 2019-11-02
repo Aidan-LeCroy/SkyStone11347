@@ -62,6 +62,7 @@ public class Cassete {
     public void basicTelemetry(){
         if(timeSinceStart.seconds()<=1)
             return;
+
         telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
     }
 
