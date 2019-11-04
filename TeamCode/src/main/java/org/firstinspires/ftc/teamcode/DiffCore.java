@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
 @TeleOp(name="core1.4.9",group="Diff")
@@ -20,7 +22,8 @@ public class DiffCore extends OpMode {
     private String scaleString;
 
     static double masterScale=.2;
-
+    FtcDashboard dashboard=FtcDashboard.getInstance();
+    private Telemetry dashTelemetry=dashboard.getTelemetry();
     public void init(){
         motor1=hardwareMap.dcMotor.get("topL");
         motor2=hardwareMap.dcMotor.get("bottomL");
@@ -48,7 +51,10 @@ public class DiffCore extends OpMode {
         leftDrive.resetRuntime();
 //        rightDrive.resetRuntime();
         telemetry.addData("Cassete: ",leftDrive.basicTelemetry());
+        dashTelemetry.addData("Cassete: ",leftDrive.basicTelemetry());
 //        telemetry.addData("Cassete: ",rightDrive.basicTelemetry());
+//        dashTelemetry.addData("Cassete: ",rightDrive.basicTelemetry());
+    
 
     }
 
