@@ -44,7 +44,6 @@ public class Cassete {
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
     private FtcDashboard dashboard;
-    Telemetry telemetry;
 
     public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
         this.topmotor = motor1;
@@ -58,17 +57,15 @@ public class Cassete {
 
     }
 
-    public void basicTelemetry(){
-        if(timeSinceStart.seconds()<=1)
-            return;
-        telemetry.addData("Cassete",(""+timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity));
+    String basicTelemetry(){
+        return (""+timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
     }
 
 
 
 
 
-
+// F = ma
     void resetEncoders(){
         topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -166,7 +163,7 @@ public class Cassete {
         double degreeHeading = ((reciprocal * (encoderAvg % HEADCONSTANT)) * 360);
         currentAngle_rad = Math.toRadians(degreeHeading);
     }
-
+//expanded to make more clear, (1/constant)*(A+B) reduced
 
     /**
      * @param ang angle to begin with
@@ -202,5 +199,5 @@ public class Cassete {
         calcPowers(targangle,forwardpow);
         applyPowers();
     }
-    //expanded to make more clear, (1/constant)*(A+B) reduced
+
 }

@@ -38,7 +38,6 @@ public class DiffCore extends OpMode {
         //main loop
         diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         logMotorStats();
-        leftDrive.basicTelemetry();
 
 
 //        update();
@@ -48,6 +47,9 @@ public class DiffCore extends OpMode {
         runtime.reset();
         leftDrive.resetRuntime();
 //        rightDrive.resetRuntime();
+        telemetry.addData("Cassete: ",leftDrive.basicTelemetry());
+//        telemetry.addData("Cassete: ",rightDrive.basicTelemetry());
+
     }
 
 
@@ -82,8 +84,4 @@ public class DiffCore extends OpMode {
         masterScale = 0.2;
         scaleString="i am not speed";
     }
-    //return true if input is detected on either stick
-    //false if otherwise
-
-
 }
