@@ -36,7 +36,6 @@ public class Cassete {
 
     private long currentTimeNanos = 0; //current time on the clock
     private long lastTimeNanos = 0; //previous update's clock time
-    private double elapsedTimeThisUpdate = 0; //time of the update
 
     private double motor1Power = 0;
     private double motor2Power = 0;
@@ -97,7 +96,7 @@ public class Cassete {
         double Igain=.075;
         double Dgain=.22;
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
-        elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
+        double elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
             return;//don't do anything if it is too fast
         }
@@ -134,12 +133,13 @@ public class Cassete {
 
 // TODO: TO HERE
         // if it has to rotate too much, you don't want the robot to run off.
-        if(Math.abs(angleError)>20){
+        if(Math.toDegrees(Math.abs(angleError))>20){
             wheelPower=0;
         }
-        motor1Power = wheelPower*DiffCore.masterScale+moduleRotationPower*1.0;
-        motor2Power = -(wheelPower*DiffCore.masterScale)+moduleRotationPower*1.0;
-        //* 1.0 is to make sure it performs double multiplication.
+        wheelPower*=DiffCore.masterScale;
+        motor1Power = wheelPower+moduleRotationPower*1.0;
+        motor2Power = -wheelPower+moduleRotationPower*1.0;
+        //*1.0 is to make sure it performs double multiplication.
         maximumPowerScale();
     }
     private void maximumPowerScale() {
