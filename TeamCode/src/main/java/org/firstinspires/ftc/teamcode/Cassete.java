@@ -92,6 +92,7 @@ public class Cassete {
     //Proportional, Integral, Differential
 
     private void calcPowers(double targetAnglerad,double wheelPower) {
+        //PID coefficients
         double Pgain=.05;
         double Igain=.075;
         double Dgain=.22;
@@ -120,15 +121,17 @@ public class Cassete {
             angleError = subtractAngles(currentTargetAngle,currentAngle_rad);
         }
 // TODO: UNDERSTAND EVERYTHING FROM HERE
+        //derivative
         double angleErrorVelocity = angleError -
                 ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
                         * Dgain);
         turnErrorSum += angleError * elapsedTimeThisUpdate;
         moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
-
+        //proportional
         moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
                 * Pgain;
+        //Integral
         moduleRotationPower += turnErrorSum * Igain;
 
 // TODO: TO HERE
