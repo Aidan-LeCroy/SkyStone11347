@@ -22,13 +22,15 @@ public class DiffCore extends OpMode {
     private String scaleString;
 
     static double masterScale=.2;
-    FtcDashboard dashboard=FtcDashboard.getInstance();
-    private Telemetry dashTelemetry=dashboard.getTelemetry();
+    private FtcDashboard dashboard;
+    private Telemetry dashTelemetry;
     public void init(){
         motor1=hardwareMap.dcMotor.get("topL");
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
+        dashboard=FtcDashboard.getInstance();
+        dashTelemetry=dashboard.getTelemetry();
 
         gamepad1.setJoystickDeadzone(.1f);
         slowMode();
@@ -54,7 +56,7 @@ public class DiffCore extends OpMode {
         dashTelemetry.addData("Cassete: ",leftDrive.basicTelemetry());
 //        telemetry.addData("Cassete: ",rightDrive.basicTelemetry());
 //        dashTelemetry.addData("Cassete: ",rightDrive.basicTelemetry());
-    
+
 
     }
 
