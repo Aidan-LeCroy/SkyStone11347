@@ -103,7 +103,7 @@ public class Cassete {
         }
         //remember the time to calculate delta the next update
         lastTimeNanos = currentTimeNanos;
-        //if there has been an outrageously long amount of time, don't bother
+        //if  there has been an outrageously long amount of time, don't bother
         if(elapsedTimeThisUpdate > 1){
             return;
         }
@@ -126,7 +126,7 @@ public class Cassete {
                 ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
                         * Dgain);
         turnErrorSum += angleError * elapsedTimeThisUpdate;
-        moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
+       moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
         //proportional
         moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
