@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -18,7 +19,7 @@ public class DiffCore extends OpMode {
     //top left and bottom right motors bad.
     private DcMotor motor1,motor2,motor3,motor4;
     private Cassete leftDrive;
-//    private Cassete rightDrive;
+    private Cassete rightDrive;
     private String scaleString;
 
     static double masterScale=.2;
@@ -29,13 +30,14 @@ public class DiffCore extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
-        dashboard=FtcDashboard.getInstance();
-        dashTelemetry=dashboard.getTelemetry();
+
+        telemetry=new MultipleTelemetry(telemetry,FtcDashboard.getInstance().getTelemetry());
 
         gamepad1.setJoystickDeadzone(.1f);
         slowMode();
         leftDrive=new Cassete(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
-//        rightDrive=new Cassete(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
+        rightDrive=new Cassete(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
+
         resetEncoders();
 
     }
@@ -43,42 +45,39 @@ public class DiffCore extends OpMode {
         //main loop
         diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
         logMotorStats();
-
-
+        logCasseteStats();
 //        update();
 
     }
     public void start(){
         runtime.reset();
         leftDrive.resetRuntime();
-//        rightDrive.resetRuntime();
-        telemetry.addData("Cassete: ",leftDrive.basicTelemetry());
-        dashTelemetry.addData("Cassete: ",leftDrive.basicTelemetry());
-//        telemetry.addData("Cassete: ",rightDrive.basicTelemetry());
-//        dashTelemetry.addData("Cassete: ",rightDrive.basicTelemetry());
-
-
+        rightDrive.resetRuntime();
     }
 
 
 
 
 //WIP
+    private void logCasseteStats(){
+        telemetry.addData("Cassete1: ",leftDrive.basicTelemetry());
+        telemetry.addData("Cassete2: ",rightDrive.basicTelemetry());
+    }
     private void diffDrive(double stickLX,double stickLY) {
         Vector direction = new Vector(stickLX, stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);
-////        rightDrive.update(wheelAngle,-wheelMagnitude);
+        rightDrive.update(wheelAngle,-wheelMagnitude);
     }
     // will use for zeroing purposes.
      void resetEncoders(){
         leftDrive.resetEncoders();
-//        rightDrive.resetEncoders();
+        rightDrive.resetEncoders();
     }
     private void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
-////        telemetry.addData("Right Drive: ",rightDrive.getLogString());
+        telemetry.addData("Right Drive: ",rightDrive.getLogString());
         telemetry.addData("Mode: ",scaleString);
     }
 

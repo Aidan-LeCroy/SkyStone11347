@@ -19,8 +19,11 @@ public class EncoderTest extends OpMode {
         motor4=hardwareMap.dcMotor.get("bottomR");
         DcMotor mot[]={motor1,motor2,motor3,motor4};
         for(int i=0;i<mot.length;i++){
+
             mot[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            mot[i].setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             mot[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         }
     }
 

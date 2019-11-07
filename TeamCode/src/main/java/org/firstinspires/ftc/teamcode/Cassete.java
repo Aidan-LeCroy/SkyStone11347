@@ -57,7 +57,7 @@ public class Cassete {
     }
 
     String basicTelemetry(){
-        return (""+timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
+        return (""+Math.round(timeSinceStart.seconds()) + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity+" current angle in degrees "+Math.toDegrees(currentAngle_rad));
     }
 
 
