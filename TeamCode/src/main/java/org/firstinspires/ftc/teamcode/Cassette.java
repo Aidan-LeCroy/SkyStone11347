@@ -13,7 +13,10 @@ import com.qualcomm.robotcore.util.RobotLog;
 import com.acmerobotics.dashboard.FtcDashboard;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class Cassete {
+import java.net.PortUnreachableException;
+import java.util.Locale;
+
+public  class Cassette {
 
     private double currentTargetAngle = 0;
 
@@ -44,20 +47,30 @@ public class Cassete {
     private ElapsedTime timeSinceStart = new ElapsedTime();
     private FtcDashboard dashboard;
 
-    public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
+    public Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt = angletoTurnAt;
-
+        moduleName=cassettename;
         topmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+    // %2.2f means 2 spaces to the accuracy of 2 decimal places. Numbers are right justified.
+    String basicTelemetry() {
+        return String.format(Locale.ENGLISH,"%d seconds in Cassette (%s) | Current Vars | " +
+                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ModuleRotationPower %1.2f WheelPower %1.2f",timeSinceStart.seconds(),moduleName,
+                angleError,currentTargetAngle,currentTurnVelocity,Math.toDegrees(currentTurnVelocity),Math.toDegrees(currentAngle_rad),moduleRotationPower,wheelPower);
+//        return (""+(int)timeSinceStart.seconds() + "seconds in Cassette (" + moduleName + ") | Current variables | " +
+//                "AngleError : " + angleError +
+//                " TargetAngle: " + currentTargetAngle +
+//                " TurnVelocity: " + currentTurnVelocity+
+//                " Angle: "+Math.toDegrees(currentAngle_rad))+
+//                " ModuleRotationPower "+moduleRotationPower+
+//                " WheelPower "+wheelPower;
 
-    String basicTelemetry(){
-        return (""+(int)timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity+" current angle in degrees "+Math.toDegrees(currentAngle_rad));
     }
 
 
@@ -91,7 +104,8 @@ public class Cassete {
 
     //Proportional, Integral, Differential
 
-    private void calcPowers(double targetAnglerad,double wheelPower) {
+    private void calcPowers(double targetAngle_rad,double wheelPower) {
+        currentTargetAngle=targetAngle_rad;
         //PID coefficients
         double Pgain=.05;
         double Igain=.075;
@@ -109,7 +123,7 @@ public class Cassete {
         }
 
         setHeading();
-        angleError=subtractAngles(targetAnglerad,currentAngle_rad);
+        angleError=subtractAngles(targetAngle_rad,currentAngle_rad);
         //we should never turn more than 180 degrees, just reverse the direction
         while (Math.abs(angleError) > Math.toRadians(90)) {
             if(currentTargetAngle > currentAngle_rad){
@@ -161,7 +175,7 @@ public class Cassete {
      *  changed currentAngle_rad to the heading in radians from 0 to 2 PI
      */
     private void setHeading() {
-        double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2;
+        double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2.0;
         double reciprocal = 1 / HEADCONSTANT;
         double degreeHeading = ((reciprocal * (encoderAvg % HEADCONSTANT)) * 360);
         currentAngle_rad = Math.toRadians(degreeHeading);
