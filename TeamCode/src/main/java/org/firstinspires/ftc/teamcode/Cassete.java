@@ -57,7 +57,7 @@ public class Cassete {
     }
 
     String basicTelemetry(){
-        return (""+Math.round(timeSinceStart.seconds()) + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity+" current angle in degrees "+Math.toDegrees(currentAngle_rad));
+        return (""+(int)timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity+" current angle in degrees "+Math.toDegrees(currentAngle_rad));
     }
 
 
@@ -184,7 +184,7 @@ public class Cassete {
     private double previousMeasureVelocityAngle = 0;
     //last time we updated the measure velocity
     private long lastMeasureVelocityTime = 0;
-    private void calculateCurrentModuleRotationVelocity() {
+    private double calculateCurrentModuleRotationVelocity() {
         long currTime = SystemClock.uptimeMillis();
         if (currTime - lastMeasureVelocityTime > 40) {
             //measure the current turning speed of the module
@@ -192,6 +192,7 @@ public class Cassete {
 
             previousMeasureVelocityAngle = currentAngle_rad;
             lastMeasureVelocityTime = currTime;
+            return currentTurnVelocity;
         }
     }
     private double getCurrentTurnVelocity() {
