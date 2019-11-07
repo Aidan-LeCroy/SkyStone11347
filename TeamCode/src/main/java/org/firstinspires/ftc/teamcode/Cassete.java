@@ -184,15 +184,13 @@ public class Cassete {
     private double previousMeasureVelocityAngle = 0;
     //last time we updated the measure velocity
     private long lastMeasureVelocityTime = 0;
-    private double calculateCurrentModuleRotationVelocity() {
+    private void calculateCurrentModuleRotationVelocity() {
         long currTime = SystemClock.uptimeMillis();
         if (currTime - lastMeasureVelocityTime > 40) {
             //measure the current turning speed of the module
             currentTurnVelocity = subtractAngles(currentAngle_rad, previousMeasureVelocityAngle) / ((currTime - lastMeasureVelocityTime) / 1000.0);
-
             previousMeasureVelocityAngle = currentAngle_rad;
             lastMeasureVelocityTime = currTime;
-            return currentTurnVelocity;
         }
     }
     private double getCurrentTurnVelocity() {
