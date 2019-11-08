@@ -61,7 +61,7 @@ public  class Cassette {
     // %2.2f means 2 spaces to the accuracy of 2 decimal places. Numbers are right justified.
     String basicTelemetry() {
         return String.format(Locale.ENGLISH,"%d seconds in Cassette (%s) | Current Vars | " +
-                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ModuleRotationPower %1.2f WheelPower %1.2f",timeSinceStart.seconds(),moduleName,
+                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ModuleRotationPower %1.2f WheelPower %1.2f",(int)timeSinceStart.seconds(),moduleName,
                 angleError,currentTargetAngle,currentTurnVelocity,Math.toDegrees(currentTurnVelocity),Math.toDegrees(currentAngle_rad),moduleRotationPower,wheelPower);
 //        return (""+(int)timeSinceStart.seconds() + "seconds in Cassette (" + moduleName + ") | Current variables | " +
 //                "AngleError : " + angleError +
