@@ -64,7 +64,7 @@ public class DiffCore extends OpMode {
         telemetry.addData("Cassete2: ",rightDrive.basicTelemetry());
     }
     private void diffDrive(double stickLX,double stickLY) {
-        Vector direction = new Vector(stickLX, stickLY);
+        Vector direction = new Vector(-stickLX, -stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);

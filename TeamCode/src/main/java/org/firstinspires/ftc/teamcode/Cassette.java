@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import java.net.PortUnreachableException;
 import java.util.Locale;
 
-public  class Cassette {
+ class Cassette {
 
     private double currentTargetAngle = 0;
 
@@ -61,16 +61,9 @@ public  class Cassette {
     // %2.2f means 2 spaces to the accuracy of 2 decimal places. Numbers are right justified.
     String basicTelemetry() {
         return String.format(Locale.ENGLISH,"%d seconds in Cassette (%s) | Current Vars | " +
-                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ModuleRotationPower %1.2f WheelPower %1.2f",(int)timeSinceStart.seconds(),moduleName,
-                angleError,currentTargetAngle,currentTurnVelocity,Math.toDegrees(currentTurnVelocity),Math.toDegrees(currentAngle_rad),moduleRotationPower,wheelPower);
-//        return (""+(int)timeSinceStart.seconds() + "seconds in Cassette (" + moduleName + ") | Current variables | " +
-//                "AngleError : " + angleError +
-//                " TargetAngle: " + currentTargetAngle +
-//                " TurnVelocity: " + currentTurnVelocity+
-//                " Angle: "+Math.toDegrees(currentAngle_rad))+
-//                " ModuleRotationPower "+moduleRotationPower+
-//                " WheelPower "+wheelPower;
-
+                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ",(int)timeSinceStart.seconds(),moduleName,
+                angleError,currentTargetAngle,Math.toDegrees(currentTurnVelocity), Math.toDegrees(currentAngle_rad))
+                +String.format(Locale.ENGLISH,"ModuleRotationPower %1.2f WheelPower %1.2f",moduleRotationPower,wheelPower);
     }
 
 
@@ -113,15 +106,14 @@ public  class Cassette {
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
         double elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
-            return;//don't do anything if it is too fast
+            return;
         }
-        //remember the time to calculate delta the next update
+        //remember time
         lastTimeNanos = currentTimeNanos;
-        //if  there has been an outrageously long amount of time, don't bother
+        //if time elapsed is greater than 1 second, just stop lol
         if(elapsedTimeThisUpdate > 1){
             return;
         }
-
         setHeading();
         angleError=subtractAngles(targetAngle_rad,currentAngle_rad);
         //we should never turn more than 180 degrees, just reverse the direction
@@ -174,7 +166,7 @@ public  class Cassette {
     /**
      *  changed currentAngle_rad to the heading in radians from 0 to 2 PI
      */
-    private void setHeading() {
+    private void setHeading(){
         double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2.0;
         double reciprocal = 1 / HEADCONSTANT;
         double degreeHeading = ((reciprocal * (encoderAvg % HEADCONSTANT)) * 360);
@@ -215,5 +207,4 @@ public  class Cassette {
         calcPowers(targangle,forwardpow);
         applyPowers();
     }
-
 }
