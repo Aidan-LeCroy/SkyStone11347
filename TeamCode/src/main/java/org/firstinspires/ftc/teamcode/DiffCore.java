@@ -34,7 +34,7 @@ public class DiffCore extends OpMode {
         telemetry=new MultipleTelemetry(telemetry,FtcDashboard.getInstance().getTelemetry());
 
         gamepad1.setJoystickDeadzone(.1f);
-        slowMode();
+        fastMode();
         leftDrive=new Cassette(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
         rightDrive=new Cassette(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
 
@@ -88,7 +88,7 @@ public class DiffCore extends OpMode {
         masterScale = 0.7;
         scaleString="i am speed";
     }
-    void slowMode(){
+    private void slowMode(){
         masterScale = 0.2;
         scaleString="i am not speed";
     }

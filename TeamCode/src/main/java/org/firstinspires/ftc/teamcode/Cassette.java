@@ -9,18 +9,12 @@ import android.os.SystemClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.acmerobotics.dashboard.FtcDashboard;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.net.PortUnreachableException;
 import java.util.Locale;
-
- class Cassette {
+class Cassette {
 
     private double currentTargetAngle = 0;
-
-    private double angleToTurnAt = 0;
+@SuppressWarnings("unused")
+    private double angleToTurnAt;
 
     private static final double HEADCONSTANT = (41888.0/192.0);
 
@@ -29,11 +23,7 @@ import java.util.Locale;
 
     private DcMotor topmotor;
     private DcMotor bottommotor;
-
-
     private double currentAngle_rad = 0; //real angle in radians
-    private double previousAngle_rad = 0; // angle from previous update, used for velocity
-
     private double angleError = 0;
     private double currentTurnVelocity = 0; //current rate at which the module is turning
 
@@ -42,12 +32,10 @@ import java.util.Locale;
 
     private double motor1Power = 0;
     private double motor2Power = 0;
-    private String moduleName="nil";
+    private String moduleName;
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
-    private FtcDashboard dashboard;
-
-    public Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
+    Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt = angletoTurnAt;
@@ -62,7 +50,7 @@ import java.util.Locale;
     String basicTelemetry() {
         return String.format(Locale.ENGLISH,"%d seconds in Cassette (%s) | Current Vars | " +
                 "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ",(int)timeSinceStart.seconds(),moduleName,
-                angleError,currentTargetAngle,Math.toDegrees(currentTurnVelocity), Math.toDegrees(currentAngle_rad))
+                Math.toDegrees(angleError),Math.toDegrees(currentTargetAngle),Math.toDegrees(currentTurnVelocity), Math.toDegrees(currentAngle_rad))
                 +String.format(Locale.ENGLISH,"ModuleRotationPower %1.2f WheelPower %1.2f",moduleRotationPower,wheelPower);
     }
 
@@ -84,7 +72,7 @@ import java.util.Locale;
 
 
     String getLogString(){
-        return "top power: "+(Math.round(motor1Power*100.0))/100+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+(Math.round(motor2Power*100.0))/100+"bottom encoder: "+bottommotor.getCurrentPosition();
+        return String.format(Locale.ENGLISH,"top power: %2.2f bottom power: %2.2f \ntop encoder: %d bottom encoder: %d",motor1Power,motor2Power,topmotor.getCurrentPosition(),bottommotor.getCurrentPosition());
     }
     void resetRuntime(){
         timeSinceStart.reset();
@@ -93,16 +81,15 @@ import java.util.Locale;
     //the current error sum when turning toward the target
     private double turnErrorSum = 0;
 
-    // PID LOOP!!!
-
     //Proportional, Integral, Differential
 
-    private void calcPowers(double targetAngle_rad,double wheelPower) {
+    private void    calcPowers(double targetAngle_rad,double wheelPower1) {
+        wheelPower=wheelPower1;
         currentTargetAngle=targetAngle_rad;
         //PID coefficients
         double Pgain=.05;
-        double Igain=.075;
-        double Dgain=.22;
+        double Igain=0.0;//.075
+        double Dgain=0.0;//.22
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
         double elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
@@ -110,7 +97,7 @@ import java.util.Locale;
         }
         //remember time
         lastTimeNanos = currentTimeNanos;
-        //if time elapsed is greater than 1 second, just stop lol
+        //if time elapsed is greater than 1 second, just stop.
         if(elapsedTimeThisUpdate > 1){
             return;
         }
@@ -127,17 +114,18 @@ import java.util.Locale;
             angleError = subtractAngles(currentTargetAngle,currentAngle_rad);
         }
 // TODO: UNDERSTAND EVERYTHING FROM HERE
-        //derivative
+
         double angleErrorVelocity = angleError -
                 ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
                         * Dgain);
+        //derivative
         turnErrorSum += angleError * elapsedTimeThisUpdate;
        moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
-        //proportional
+//        proportional
         moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
                 * Pgain;
-        //Integral
+//        Integral
         moduleRotationPower += turnErrorSum * Igain;
 
 // TODO: TO HERE
@@ -182,8 +170,8 @@ import java.util.Locale;
     private double subtractAngles(double ang,double subAng){
         double angle=ang-subAng;
 
-        if(angle>(2*Math.PI)){
-            return angle % (2*Math.PI);
+        if(angle>(2.0*Math.PI)){
+            return angle % (2.0*Math.PI);
         }
         return Math.abs(angle);
     }
