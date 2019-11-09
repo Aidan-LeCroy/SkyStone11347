@@ -9,61 +9,54 @@ import android.os.SystemClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-public class Cassete {
+import java.util.Locale;
+class Cassette {
 
     private double currentTargetAngle = 0;
+    private double angleToTurnAt;
 
-    private double angleToTurnAt = 0;
-
-    private static final double HEADCONSTANT = (41888.0/192.0);
 
     private double wheelPower;
     private double moduleRotationPower;
 
     private DcMotor topmotor;
     private DcMotor bottommotor;
-
-
     private double currentAngle_rad = 0; //real angle in radians
-    private double previousAngle_rad = 0; // angle from previous update, used for velocity
-
     private double angleError = 0;
     private double currentTurnVelocity = 0; //current rate at which the module is turning
 
     private long currentTimeNanos = 0; //current time on the clock
     private long lastTimeNanos = 0; //previous update's clock time
-    private double elapsedTimeThisUpdate = 0; //time of the update
 
     private double motor1Power = 0;
     private double motor2Power = 0;
     private String moduleName;
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
-    Telemetry telemetry;
-
-    public Cassete(DcMotor motor1, DcMotor motor2, double angletoTurnAt,String cassetename) {
+    Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt = angletoTurnAt;
-
+        moduleName=cassettename;
         topmotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT); // FLOAT means motor doesn't move or resist movement from outside forces
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        telemetry.addData("Cassete", timeSinceStart.seconds() + "seconds in" + "Cassete" + " (" + moduleName + "): " + " Current variables angleError: " + angleError + " currentTargetAngle: " + currentTargetAngle + " currentTurnVelocity" + currentTurnVelocity);
 
+    }
+    // %2.2f means 2 spaces to the accuracy of 2 decimal places. Numbers are right justified.
+    String basicTelemetry() {
+        return String.format(Locale.ENGLISH,"%d seconds in Cassette (%s) | Current Vars | " +
+                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ",(int)timeSinceStart.seconds(),moduleName,
+                Math.toDegrees(angleError),Math.toDegrees(currentTargetAngle),Math.toDegrees(currentTurnVelocity), Math.toDegrees(currentAngle_rad))
+                +String.format(Locale.ENGLISH,"ModuleRotationPower %1.2f WheelPower %1.2f",moduleRotationPower,wheelPower);
     }
 
 
 
 
 
-
-
+// F = ma
     void resetEncoders(){
         topmotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bottommotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -77,7 +70,7 @@ public class Cassete {
 
 
     String getLogString(){
-        return "top power: "+(Math.round(motor1Power*100.0))/100+", top encoder: "+topmotor.getCurrentPosition()+"\nbottom power: "+(Math.round(motor2Power*100.0))/100+"bottom encoder: "+bottommotor.getCurrentPosition();
+        return String.format(Locale.ENGLISH,"top power: %2.2f bottom power: %2.2f \ntop encoder: %d bottom encoder: %d",motor1Power,motor2Power,topmotor.getCurrentPosition(),bottommotor.getCurrentPosition());
     }
     void resetRuntime(){
         timeSinceStart.reset();
@@ -86,28 +79,28 @@ public class Cassete {
     //the current error sum when turning toward the target
     private double turnErrorSum = 0;
 
-    // PID LOOP!!!
-
     //Proportional, Integral, Differential
 
-    private void calcPowers(double targetAnglerad,double wheelPower) {
+    private void    calcPowers(double targetAngle_rad,double wheelPower1) {
+        wheelPower=wheelPower1;
+        currentTargetAngle=targetAngle_rad;
+        //PID coefficients
         double Pgain=.05;
-        double Igain=.075;
-        double Dgain=.22;
+        double Igain=0.0;//.075
+        double Dgain=0.0;//.22
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
-        elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
+        double elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
-            return;//don't do anything if it is too fast
+            return;
         }
-        //remember the time to calculate delta the next update
+        //remember time
         lastTimeNanos = currentTimeNanos;
-        //if there has been an outrageously long amount of time, don't bother
+        //if time elapsed is greater than 1 second, just stop.
         if(elapsedTimeThisUpdate > 1){
             return;
         }
-
         setHeading();
-        angleError=subtractAngles(targetAnglerad,currentAngle_rad);
+        angleError=subtractAngles(targetAngle_rad,currentAngle_rad);
         //we should never turn more than 180 degrees, just reverse the direction
         while (Math.abs(angleError) > Math.toRadians(90)) {
             if(currentTargetAngle > currentAngle_rad){
@@ -119,25 +112,29 @@ public class Cassete {
             angleError = subtractAngles(currentTargetAngle,currentAngle_rad);
         }
 // TODO: UNDERSTAND EVERYTHING FROM HERE
+
         double angleErrorVelocity = angleError -
                 ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
                         * Dgain);
+        //derivative
         turnErrorSum += angleError * elapsedTimeThisUpdate;
-        moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
+       moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
-
+//        proportional
         moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
                 * Pgain;
+//        Integral
         moduleRotationPower += turnErrorSum * Igain;
 
 // TODO: TO HERE
         // if it has to rotate too much, you don't want the robot to run off.
-        if(Math.abs(angleError)>20){
+        if(Math.toDegrees(Math.abs(angleError))>20){
             wheelPower=0;
         }
-        motor1Power = wheelPower*DiffCore.masterScale+moduleRotationPower*1.0;
-        motor2Power = -(wheelPower*DiffCore.masterScale)+moduleRotationPower*1.0;
-        //* 1.0 is to make sure it performs double multiplication.
+        wheelPower*=DiffCore.masterScale;
+        motor1Power = wheelPower+moduleRotationPower*1.0;
+        motor2Power = -wheelPower+moduleRotationPower*1.0;
+        //*1.0 is to make sure it performs double multiplication.
         maximumPowerScale();
     }
     private void maximumPowerScale() {
@@ -155,13 +152,13 @@ public class Cassete {
     /**
      *  changed currentAngle_rad to the heading in radians from 0 to 2 PI
      */
-    private void setHeading() {
-        double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2;
-        double reciprocal = 1 / HEADCONSTANT;
-        double degreeHeading = ((reciprocal * (encoderAvg % HEADCONSTANT)) * 360);
+    private void setHeading(){
+        double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2.0;
+        double reciprocal = 1 / DiffConstants.HEADCONSTANT;
+        double degreeHeading = ((reciprocal * (encoderAvg % DiffConstants.HEADCONSTANT)) * 360);
         currentAngle_rad = Math.toRadians(degreeHeading);
     }
-
+//expanded to make more clear, (1/constant)*(A+B) reduced
 
     /**
      * @param ang angle to begin with
@@ -171,8 +168,8 @@ public class Cassete {
     private double subtractAngles(double ang,double subAng){
         double angle=ang-subAng;
 
-        if(angle>(2*Math.PI)){
-            return angle % (2*Math.PI);
+        if(angle>(2.0*Math.PI)){
+            return angle % (2.0*Math.PI);
         }
         return Math.abs(angle);
     }
@@ -184,7 +181,6 @@ public class Cassete {
         if (currTime - lastMeasureVelocityTime > 40) {
             //measure the current turning speed of the module
             currentTurnVelocity = subtractAngles(currentAngle_rad, previousMeasureVelocityAngle) / ((currTime - lastMeasureVelocityTime) / 1000.0);
-
             previousMeasureVelocityAngle = currentAngle_rad;
             lastMeasureVelocityTime = currTime;
         }
@@ -197,5 +193,4 @@ public class Cassete {
         calcPowers(targangle,forwardpow);
         applyPowers();
     }
-    //expanded to make more clear, (1/constant)*(A+B) reduced
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.IncludedOpmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /*
  * Demonstration of the dashboard's field overlay display capabilities.
  */
-@Config
+//@Config
 @Autonomous
 public class OrbitOpMode extends LinearOpMode {
     public static double ORBITAL_FREQUENCY = 0.05;
