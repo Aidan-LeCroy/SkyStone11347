@@ -35,8 +35,8 @@ public class DiffCore extends OpMode {
 
         gamepad1.setJoystickDeadzone(.1f);
         fastMode();
-        leftDrive=new Cassette(motor1,motor2,Math.toRadians(180),"LEFTDRIVE");
-        rightDrive=new Cassette(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE");
+        leftDrive=new Cassette(motor1,motor2,Math.toRadians(180),"LEFTDRIVE",false);
+        rightDrive=new Cassette(motor3,motor4,Math.toRadians(0),"RIGHTDRIVE",true);
 
         resetEncoders();
 

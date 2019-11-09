@@ -33,7 +33,7 @@ class Cassette {
     private String moduleName;
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
-    Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
+    Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename, boolean isSlave) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt = angletoTurnAt;
