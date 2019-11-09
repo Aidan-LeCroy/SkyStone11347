@@ -80,6 +80,7 @@ public class DiffCore extends OpMode {
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
         telemetry.addData("Mode: ",scaleString);
+
     }
 
 

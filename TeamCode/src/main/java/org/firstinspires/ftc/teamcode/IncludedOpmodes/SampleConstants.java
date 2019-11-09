@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.IncludedOpmodes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /*
  * Some additional constants for testing.
  */
-@Config
+//@Config
 public class SampleConstants {
     public static DcMotorSimple.Direction DIR = DcMotorSimple.Direction.FORWARD;
     public static boolean FF_ENABLED = false;

@@ -13,10 +13,8 @@ import java.util.Locale;
 class Cassette {
 
     private double currentTargetAngle = 0;
-@SuppressWarnings("unused")
     private double angleToTurnAt;
 
-    private static final double HEADCONSTANT = (41888.0/192.0);
 
     private double wheelPower;
     private double moduleRotationPower;
@@ -156,8 +154,8 @@ class Cassette {
      */
     private void setHeading(){
         double encoderAvg = topmotor.getCurrentPosition() + bottommotor.getCurrentPosition() / 2.0;
-        double reciprocal = 1 / HEADCONSTANT;
-        double degreeHeading = ((reciprocal * (encoderAvg % HEADCONSTANT)) * 360);
+        double reciprocal = 1 / DiffConstants.HEADCONSTANT;
+        double degreeHeading = ((reciprocal * (encoderAvg % DiffConstants.HEADCONSTANT)) * 360);
         currentAngle_rad = Math.toRadians(degreeHeading);
     }
 //expanded to make more clear, (1/constant)*(A+B) reduced
