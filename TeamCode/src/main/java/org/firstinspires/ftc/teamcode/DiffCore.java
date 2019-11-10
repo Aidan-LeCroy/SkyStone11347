@@ -74,7 +74,7 @@ public class DiffCore extends OpMode {
         rightDrive.update(wheelAngle,-wheelMagnitude);
     }
     // will use for zeroing purposes.
-     void resetEncoders(){
+     private void resetEncoders(){
         leftDrive.resetEncoders();
         rightDrive.resetEncoders();
     }
