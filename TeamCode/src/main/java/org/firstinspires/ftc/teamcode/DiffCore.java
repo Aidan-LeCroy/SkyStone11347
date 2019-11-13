@@ -61,8 +61,11 @@ public class DiffCore extends OpMode {
         logMotorStats();
         logCasseteStats();
 //        update();
-
     }
+
+    public void update() {}
+
+
     public void start(){
         runtime.reset();
         leftDrive.resetRuntime();
@@ -70,7 +73,7 @@ public class DiffCore extends OpMode {
     }
 
 
-    public void DiffAutoDrive(double angle, double power){
+    @Deprecated public void DiffAutoDrive(double angle, double power){
 
     }
 
