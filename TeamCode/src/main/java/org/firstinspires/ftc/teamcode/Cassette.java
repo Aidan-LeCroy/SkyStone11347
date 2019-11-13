@@ -42,6 +42,11 @@ class Cassette {
         bottommotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 //        topmotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        bottommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*
+        if (isSlave) {
+            //this means the motors don't get their own commands and instead run based on commands given to another cassette
+        }
+        */
 
     }
     // %2.2f means 2 spaces to the accuracy of 2 decimal places. Numbers are right justified.
@@ -81,7 +86,7 @@ class Cassette {
 
     //Proportional, Integral, Differential
 
-    private void    calcPowers(double targetAngle_rad,double wheelPower1) {
+    private void calcPowers(double targetAngle_rad,double wheelPower1) {
         wheelPower=wheelPower1;
         currentTargetAngle=targetAngle_rad;
         //PID coefficients
@@ -128,9 +133,7 @@ class Cassette {
 
 // TODO: TO HERE
         // if it has to rotate too much, you don't want the robot to run off.
-        if(Math.toDegrees(Math.abs(angleError))>20){
-            wheelPower=0;
-        }
+        wheelPower = (Math.toDegrees(Math.abs(angleError))>20) ? 0 : wheelPower;
         wheelPower*=DiffCore.masterScale;
         motor1Power = wheelPower+moduleRotationPower;
         motor2Power = -wheelPower+moduleRotationPower;
@@ -139,7 +142,7 @@ class Cassette {
     private void maximumPowerScale() {
         double scaleAmount = 1;
         if(motor1Power > 1 && motor1Power > motor2Power){
-            scaleAmount = 1/motor1Power;
+            scaleAmount = 1/motor1Power; // wouldn't it be simpler to just set the motor powers to 1?
         }
         if(motor2Power > 1 && motor2Power > motor1Power){
             scaleAmount = 1/motor2Power;
@@ -166,11 +169,7 @@ class Cassette {
      */
     private double subtractAngles(double ang,double subAng){
         double angle=ang-subAng;
-
-        if(angle>(2.0*Math.PI)){
-            return angle % (2.0*Math.PI);
-        }
-        return Math.abs(angle);
+        return (angle > (2.0 * Math.PI)) ? angle % (2.0 * Math.PI) : Math.abs(angle);
     }
     private double previousMeasureVelocityAngle = 0;
     //last time we updated the measure velocity
