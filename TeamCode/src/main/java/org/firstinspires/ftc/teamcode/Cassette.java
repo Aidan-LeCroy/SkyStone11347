@@ -9,6 +9,9 @@ import android.os.SystemClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Math.MiniPID;
+
 import java.util.Locale;
 class Cassette {
 
@@ -32,6 +35,8 @@ class Cassette {
     private double motor2Power = 0;
     private String moduleName;
 
+    private MiniPID pid;
+
     private ElapsedTime timeSinceStart = new ElapsedTime();
     Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename, boolean isSlave) {
         this.topmotor = motor1;
@@ -46,8 +51,8 @@ class Cassette {
     }
     // %2.2f means 2 spaces to the accuracy of 2 decimal places. Numbers are right justified.
     String basicTelemetry() {
-        return String.format(Locale.ENGLISH,"%d seconds in Cassette (%s) | Current Vars | " +
-                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ",(int)timeSinceStart.seconds(),moduleName,
+        return String.format(Locale.ENGLISH,"Cassette (%s) | Current Vars | " +
+                "AngleError: %2.2f TargetAngle:%2.2f TurnVelocity:%2.2f Angle:%2.2f ",moduleName,
                 Math.toDegrees(angleError),Math.toDegrees(currentTargetAngle),Math.toDegrees(currentTurnVelocity), Math.toDegrees(currentAngle_rad))
                 +String.format(Locale.ENGLISH,"ModuleRotationPower %1.2f WheelPower %1.2f",moduleRotationPower,wheelPower);
     }
@@ -82,12 +87,16 @@ class Cassette {
     //Proportional, Integral, Differential
 
     private void    calcPowers(double targetAngle_rad,double wheelPower1) {
+
         wheelPower=wheelPower1;
         currentTargetAngle=targetAngle_rad;
         //PID coefficients
         double Pgain=.05;
-        double Igain=0.0;//.075
-        double Dgain=0.0;//.22
+        double Igain=0.075;//.075
+        double Dgain=0.22;//.22
+        pid=new MiniPID(Pgain,Igain,Dgain,getCurrentTurnVelocity());
+        pid.setOutputLimits(-1,1);
+
         currentTimeNanos = SystemClock.elapsedRealtimeNanos();
         double elapsedTimeThisUpdate = (currentTimeNanos - lastTimeNanos)/1e9;
         if(elapsedTimeThisUpdate < 0.003){
@@ -111,27 +120,15 @@ class Cassette {
             wheelPower *= -1;
             angleError = subtractAngles(currentTargetAngle,currentAngle_rad);
         }
-// TODO: UNDERSTAND EVERYTHING FROM HERE
 
-        double angleErrorVelocity = angleError -
-                ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
-                        * Dgain);
-        //derivative
-        turnErrorSum += angleError * elapsedTimeThisUpdate;
-        moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
-//        proportional
-        moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
-                * Pgain;
-//        Integral
-        moduleRotationPower += turnErrorSum * Igain;
 
-// TODO: TO HERE
         // if it has to rotate too much, you don't want the robot to run off.
         if(Math.toDegrees(Math.abs(angleError))>20){
             wheelPower=0;
         }
         wheelPower*=DiffCore.masterScale;
+        moduleRotationPower=pid.getOutput(currentAngle_rad,currentTargetAngle);
         motor1Power = wheelPower+moduleRotationPower;
         motor2Power = -wheelPower+moduleRotationPower;
         maximumPowerScale();

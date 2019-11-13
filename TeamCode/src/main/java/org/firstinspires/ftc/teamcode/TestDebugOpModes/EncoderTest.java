@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.DiffConstants;
+import org.firstinspires.ftc.teamcode.Math.Vector;
+
 @TeleOp(group="Diff Rev1",name="Encoder Telemetry")
 public class EncoderTest extends OpMode {
     private DcMotor motor1;
@@ -32,9 +34,10 @@ public class EncoderTest extends OpMode {
     }
 
     public void loop(){
+        checkSticks();
         drive(leftStick,rightStick);
         log();
-        checkSticks();
+
     }
 
     private void log(){
@@ -44,6 +47,8 @@ public class EncoderTest extends OpMode {
         telemetry.addData("Bottom Right:",motor4.getCurrentPosition());
         telemetry.addData("Left Angle",setHeading(motor1,motor2));
         telemetry.addData("Right Angle",setHeading(motor3,motor4));
+        Vector lStick=new Vector(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        telemetry.addData("1:lstickheading",lStick.getAngle(false));
 
     }
 //    private static final double HEADCONSTANT = (41888.0/192.0);

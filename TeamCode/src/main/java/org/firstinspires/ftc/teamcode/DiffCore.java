@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -25,6 +27,18 @@ public class DiffCore extends OpMode {
     static double masterScale=.2;
     private FtcDashboard dashboard;
     private Telemetry dashTelemetry;
+
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
+    private Gamepad gamepad1,gamepad2;
+
+    public DiffCore(OpMode opmode){
+
+        hardwareMap=opmode.hardwareMap;
+        telemetry=opmode.telemetry;
+        gamepad1=opmode.gamepad1;
+        gamepad2=opmode.gamepad2;
+    }
     public void init(){
         motor1=hardwareMap.dcMotor.get("topL");
         motor2=hardwareMap.dcMotor.get("bottomL");
@@ -67,7 +81,7 @@ public class DiffCore extends OpMode {
         telemetry.addData("Cassete2: ",rightDrive.basicTelemetry());
     }
     private void diffDrive(double stickLX,double stickLY) {
-        Vector direction = new Vector(-stickLX, -stickLY);
+        Vector direction = new Vector(stickLX, -stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);
