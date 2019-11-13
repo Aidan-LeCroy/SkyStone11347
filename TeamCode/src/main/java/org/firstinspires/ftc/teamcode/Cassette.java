@@ -9,9 +9,6 @@ import android.os.SystemClock;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.Math.MiniPID;
-
 import java.util.Locale;
 class Cassette {
 
@@ -34,10 +31,9 @@ class Cassette {
     private double motor1Power = 0;
     private double motor2Power = 0;
     private String moduleName;
-    private MiniPID pid=new MiniPID(.05,.075,.22,0);
+
     private ElapsedTime timeSinceStart = new ElapsedTime();
     Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
-
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt = angletoTurnAt;
@@ -86,7 +82,6 @@ class Cassette {
     //Proportional, Integral, Differential
 
     private void    calcPowers(double targetAngle_rad,double wheelPower1) {
-        
         wheelPower=wheelPower1;
         currentTargetAngle=targetAngle_rad;
         //PID coefficients
@@ -116,11 +111,22 @@ class Cassette {
             wheelPower *= -1;
             angleError = subtractAngles(currentTargetAngle,currentAngle_rad);
         }
-// PID LOOP HERE
+// TODO: UNDERSTAND EVERYTHING FROM HERE
 
+        double angleErrorVelocity = angleError -
+                ((getCurrentTurnVelocity() / Math.toRadians(300)) * Math.toRadians(30)
+                        * Dgain);
+        //derivative
+        turnErrorSum += angleError * elapsedTimeThisUpdate;
+       moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
+//        proportional
+        moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
+                * Pgain;
+//        Integral
+        moduleRotationPower += turnErrorSum * Igain;
 
-// TO HERE
+// TODO: TO HERE
         // if it has to rotate too much, you don't want the robot to run off.
         if(Math.toDegrees(Math.abs(angleError))>20){
             wheelPower=0;
