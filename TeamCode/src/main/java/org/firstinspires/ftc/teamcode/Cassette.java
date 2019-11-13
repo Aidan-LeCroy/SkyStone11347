@@ -33,7 +33,7 @@ class Cassette {
     private String moduleName;
 
     private ElapsedTime timeSinceStart = new ElapsedTime();
-    Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename) {
+    Cassette(DcMotor motor1, DcMotor motor2, double angletoTurnAt, String cassettename, boolean isSlave) {
         this.topmotor = motor1;
         this.bottommotor = motor2;
         this.angleToTurnAt = angletoTurnAt;
@@ -118,7 +118,7 @@ class Cassette {
                         * Dgain);
         //derivative
         turnErrorSum += angleError * elapsedTimeThisUpdate;
-       moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
+        moduleRotationPower*= Range.clip(Math.abs(angleError)/Math.toRadians(2),0,1);
 
 //        proportional
         moduleRotationPower = Range.clip((angleErrorVelocity / Math.toRadians(15)),-1,1)
@@ -132,9 +132,8 @@ class Cassette {
             wheelPower=0;
         }
         wheelPower*=DiffCore.masterScale;
-        motor1Power = wheelPower+moduleRotationPower*1.0;
-        motor2Power = -wheelPower+moduleRotationPower*1.0;
-        //*1.0 is to make sure it performs double multiplication.
+        motor1Power = wheelPower+moduleRotationPower;
+        motor2Power = -wheelPower+moduleRotationPower;
         maximumPowerScale();
     }
     private void maximumPowerScale() {
