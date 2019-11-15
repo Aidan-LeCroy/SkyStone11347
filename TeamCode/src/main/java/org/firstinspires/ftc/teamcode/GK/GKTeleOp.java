@@ -35,7 +35,7 @@ public class GKTeleOp extends GKCore {
         runtime.reset();
         flip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         time.reset();
-        telemetry.addData("Evan", " has been gay for"+(int)time.seconds()+" seconds");
+        telemetry.addData("Evan", " has been gay for "+(int)time.seconds()+" seconds");
     }
 
     /*
@@ -54,11 +54,11 @@ public class GKTeleOp extends GKCore {
             flip.setPower(-gamepad2.left_trigger);
 
 
+
+
         intakeR.setPower(.5*-gamepad2.left_stick_y);
         intakeL.setPower(.5*gamepad2.right_stick_y);
-        }
-
-
+}
 
     /*
      * Code to run ONCE after the driver hits STOP
