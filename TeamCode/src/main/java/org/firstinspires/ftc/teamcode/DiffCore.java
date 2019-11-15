@@ -115,14 +115,6 @@ public class DiffCore extends OpMode {
     }
     //return true if input is detected on either stick
     //false if otherwise
-
-    private boolean checkMotorReversing(double Angle) { // checks whether the angle provided has a corrected value that requires the motor to be reversed
-        return (Math.floor(Angle / (Math.PI/2)) == 1);
-        }
-    private double correctAngle(double Angle) {
-        return (Angle - (Math.floor(Angle / (Math.PI/2)) * (Math.PI/2)));
-    }
-
 }
 
 
