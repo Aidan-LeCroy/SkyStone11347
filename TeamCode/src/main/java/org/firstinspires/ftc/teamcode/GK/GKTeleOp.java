@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.GK;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -29,7 +29,7 @@ public class GKTeleOp extends GKCore {
         runtime.reset();
         flip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         time.reset();
-        telemetry.addData("Evan", " has been gay for"+(int)time.seconds()+" seconds");
+        telemetry.addData("Evan", " has been gay for "+(int)time.seconds()+" seconds");
         super.start();
     }
 
@@ -66,6 +66,9 @@ public class GKTeleOp extends GKCore {
 
 
 
+        intakeR.setPower(.5*-gamepad2.left_stick_y);
+        intakeL.setPower(.5*gamepad2.right_stick_y);
+}
 
     /*
      * Code to run ONCE after the driver hits STOP
