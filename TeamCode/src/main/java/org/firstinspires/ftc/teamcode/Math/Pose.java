@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Math;
 
-import Vector;
+import org.firstinspires.ftc.teamcode.Math.Vector;
 /*
 public class Pose {
     public Object position;
