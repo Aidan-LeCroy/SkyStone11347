@@ -50,16 +50,7 @@ public class GKTeleOp extends GKCore {
         } else {
             flip.setPower(-gamepad2.left_trigger);
         }
-        if (gamepad2.left_stick_y > 0) {
-            intakeL.setPower(gamepad2.left_stick_y);
-        } else {
-            intakeL.setPower(.65 * gamepad2.left_stick_y);
-        }
-        if (gamepad2.right_stick_y > 0) {
-            intakeR.setPower(gamepad2.right_stick_y);
-        } else {
-            intakeR.setPower(.65 * gamepad2.right_stick_y);
-        }
+
 
         intakeR.setPower(.5*-gamepad2.left_stick_y);
         intakeL.setPower(.5*gamepad2.right_stick_y);
