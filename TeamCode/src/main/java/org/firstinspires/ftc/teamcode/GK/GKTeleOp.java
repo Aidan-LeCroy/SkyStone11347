@@ -64,7 +64,7 @@ public class GKTeleOp extends GKCore {
         intakeR.setPower(.5*-gamepad2.left_stick_y);
         intakeL.setPower(.5*gamepad2.right_stick_y);
     }
-    
+
 
 
     /*

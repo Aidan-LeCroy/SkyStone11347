@@ -59,6 +59,11 @@ public class AutoTest extends LinearOpMode {
         backR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        backL.setTargetPosition(0);
+        backR.setTargetPosition(0);
+        frontL.setTargetPosition(0);
+        frontR.setTargetPosition(0);
+
         backL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -69,7 +74,15 @@ public class AutoTest extends LinearOpMode {
 
         waitForStart();
 
-        turn(90, 5);
+        backL.setTargetPosition(295);
+        backR.setTargetPosition(-295);
+        frontL.setTargetPosition(295);
+        frontR.setTargetPosition(-295);
+        backR.setPower(-.5);
+        frontR.setPower(-.5);
+        backL.setPower(.5);
+        frontL.setPower(.5);
+        sleep(2000);
 
     }
 
