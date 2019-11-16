@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.GK;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="GK-TeleOp", group="GK")
 public class GKTeleOp extends GKCore {
+
+    public GKTeleOp() {}
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -20,14 +22,6 @@ public class GKTeleOp extends GKCore {
     }
 
     /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
-    @Override
-    public void init_loop() {
-
-    }
-
-    /*
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
@@ -36,6 +30,7 @@ public class GKTeleOp extends GKCore {
         flip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         time.reset();
         telemetry.addData("Evan", " has been gay for"+(int)time.seconds()+" seconds");
+        super.start();
     }
 
     /*
@@ -44,19 +39,31 @@ public class GKTeleOp extends GKCore {
     @Override
     public void loop() {
 
-            frontR.setPower(gamepad1.right_stick_y);
-            backR.setPower(gamepad1.right_stick_y);
-            frontL.setPower(-gamepad1.left_stick_y);
-            backL.setPower(-gamepad1.left_stick_y);
-        if(gamepad2.right_trigger>=.2)
-        flip.setPower(gamepad2.right_trigger);
-        else
-            flip.setPower(-gamepad2.left_trigger);
-
-
-        intakeR.setPower(.5*-gamepad2.left_stick_y);
-        intakeL.setPower(.5*gamepad2.right_stick_y);
+        frontR.setPower(gamepad1.right_stick_y);
+        backR.setPower(gamepad1.right_stick_y);
+        frontL.setPower(gamepad1.left_stick_y);
+        backL.setPower(gamepad1.left_stick_y);
+        if(gamepad2.right_trigger>=.2) {
+            flip.setPower(gamepad2.right_trigger);
         }
+        else {
+            flip.setPower(-gamepad2.left_trigger);
+        }
+        if (gamepad2.left_stick_y > 0){
+            intakeL.setPower(gamepad2.left_stick_y);
+        }
+        else {
+            intakeL.setPower(.65*gamepad2.left_stick_y);
+        }
+        if (gamepad2.right_stick_y > 0){
+            intakeR.setPower(gamepad2.right_stick_y);
+        }
+        else {
+            intakeR.setPower(.65*gamepad2.right_stick_y);
+        }
+
+    }
+
 
 
 
@@ -65,7 +72,7 @@ public class GKTeleOp extends GKCore {
      */
     @Override
     public void stop() {
-
+        super.stop();
     }
 
 }
