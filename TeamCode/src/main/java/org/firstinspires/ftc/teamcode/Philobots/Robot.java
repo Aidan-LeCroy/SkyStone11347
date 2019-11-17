@@ -23,7 +23,7 @@ public class Robot {
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
         driveController = new DriveController(this);
-        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu 1");
+        imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
     }
 
 
