@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
 @Autonomous(name="GK auto test", group="GK")
-public class AutoTest extends LinearOpMode {
+public class autoTest extends LinearOpMode {
 
     public DcMotor frontL;
     public DcMotor frontR;

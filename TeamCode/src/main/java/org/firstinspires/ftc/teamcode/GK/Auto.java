@@ -58,6 +58,11 @@ public class Auto extends LinearOpMode {
         backR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        backL.setTargetPosition(0);
+        backR.setTargetPosition(0);
+        frontL.setTargetPosition(0);
+        frontR.setTargetPosition(0);
+
         backL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backR.setMode(DcMotor.RunMode.RUN_TO_POSITION);

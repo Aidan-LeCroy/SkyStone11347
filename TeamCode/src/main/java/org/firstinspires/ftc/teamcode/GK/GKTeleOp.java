@@ -31,7 +31,6 @@ public class GKTeleOp extends GKCore {
         runtime.reset();
         flip.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         time.reset();
-        telemetry.addData("Evan", " has been gay for " + (int) time.seconds() + " seconds");
         super.start();
     }
 
@@ -40,7 +39,9 @@ public class GKTeleOp extends GKCore {
      */
     @Override
     public void loop() {
+        telemetry.addData("Evan", " has been gay for " + (int) time.seconds() + " seconds");
 
+        double scalar=.5;
         frontR.setPower(gamepad1.right_stick_y);
         backR.setPower(gamepad1.right_stick_y);
         frontL.setPower(gamepad1.left_stick_y);
@@ -51,9 +52,12 @@ public class GKTeleOp extends GKCore {
             flip.setPower(-gamepad2.left_trigger);
         }
 
+        if(gamepad2.left_stick_y>0||gamepad2.right_stick_y>0)
+            scalar=1;
 
-        intakeR.setPower(.5*-gamepad2.left_stick_y);
-        intakeL.setPower(.5*gamepad2.right_stick_y);
+
+        intakeR.setPower(scalar*gamepad2.left_stick_y);
+        intakeL.setPower(scalar*gamepad2.right_stick_y);
     }
     
 
