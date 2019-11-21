@@ -22,7 +22,6 @@ public class EncoderTest extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
-        telemetry=new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         DcMotor mot[]={motor1,motor2,motor3,motor4};
         for(int i=0;i<mot.length;i++){
 

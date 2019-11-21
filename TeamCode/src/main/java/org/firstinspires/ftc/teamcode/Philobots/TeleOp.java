@@ -37,16 +37,17 @@ public class TeleOp extends OpMode {
         robot.driveController.updateUsingJoysticks(checkDeadband(joystick1), checkDeadband(joystick2));
 
 
-//        //uncomment for live tuning of ROT_ADVANTAGE constant
-//        if (gamepad1.b) {
-//            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
-//            robot.driveController.moduleLeft.ROT_ADVANTAGE += 0.01;
-//        }
-//        if (gamepad1.x) {
-//            robot.driveController.moduleRight.ROT_ADVANTAGE -= 0.01;
-//            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
-//        }
-//        telemetry.addData("ROT_ADVANTAGE: ", robot.driveController.moduleLeft.ROT_ADVANTAGE);
+        //uncomment for live tuning of ROT_ADVANTAGE constant
+        //TODO: After tuning, make ROT_ADVANTAGE final
+        if (gamepad1.b) {
+            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
+            robot.driveController.moduleLeft.ROT_ADVANTAGE += 0.01;
+        }
+        if (gamepad1.x) {
+            robot.driveController.moduleRight.ROT_ADVANTAGE -= 0.01;
+            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
+        }
+        telemetry.addData("ROT_ADVANTAGE: ", robot.driveController.moduleLeft.ROT_ADVANTAGE);
 
 
         //to confirm that joysticks are operating properly
