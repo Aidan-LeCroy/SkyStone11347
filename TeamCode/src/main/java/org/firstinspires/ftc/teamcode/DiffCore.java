@@ -14,12 +14,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
+import static org.firstinspires.ftc.teamcode.DiffConstants.INTAKE_POWER;
+
 @TeleOp(name="core1.4.9",group="Diff")
 
 public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     //top left and bottom right motors bad.
-    private DcMotor motor1,motor2,motor3,motor4;
+    private DcMotor motor1, motor2, motor3, motor4, leftIntake, rightIntake;
     private Cassette leftDrive;
     private Cassette rightDrive;
     private String scaleString;
@@ -44,6 +46,8 @@ public class DiffCore extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
+        leftIntake=hardwareMap.dcMotor.get("intakeL");
+        rightIntake=hardwareMap.dcMotor.get("intakeR");
 
         telemetry=new MultipleTelemetry(telemetry,FtcDashboard.getInstance().getTelemetry());
 
@@ -89,6 +93,8 @@ public class DiffCore extends OpMode {
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);
         rightDrive.update(wheelAngle,-wheelMagnitude);
+        leftIntake.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+        rightIntake.setPower(-1 * (gamepad2.right_trigger - gamepad2.left_trigger));
     }
     // will use for zeroing purposes.
      private void resetEncoders(){
@@ -99,6 +105,7 @@ public class DiffCore extends OpMode {
     private void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
+        telemetry.addData("Intake Power: ", new String(leftIntake.getPower());
         telemetry.addData("Mode: ",scaleString);
 
     }
