@@ -6,13 +6,13 @@ public class DiffPos {
             thetaPos = Math.toRadians(thetaPos);
         }
         Vector position = new Vector(xPos, yPos);
-        Pose pose = new Pose(position, thetaPos);
+//        Pose pose = new Pose(position, thetaPos);
     }
-    public trackMovement(Pose selfpos) {
+    public void trackMovement(Pose selfpos) {
         double x = selfpos.getVec().getX();
         double y = selfpos.getVec().getY();
         double theta = selfpos.getTheta();
-        wait(long 1);
+//        wait((long) 1);
         double newX = selfpos.getVec().getX();
         double newY = selfpos.getVec().getY();
         double newTheta = selfpos.getTheta();
