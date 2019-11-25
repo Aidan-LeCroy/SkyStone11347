@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.Philobots;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
-
+import org.firstinspires.ftc.teamcode.Tracking;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Diff Swerve TeleOp", group = "TeleOp")
 public class TeleOp extends OpMode {
     Robot robot;
-
+    Tracking track;
     //deadband for joysticks
     public double DEADBAND_MAG = 0.1;
     public Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
@@ -15,6 +15,8 @@ public class TeleOp extends OpMode {
 
     public void init() {
         robot = new Robot(this, false);
+        track=new Tracking(hardwareMap);
+        track.initializeCamera();
     }
 
     //allows driver to indicate that the IMU should not be reset
