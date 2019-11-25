@@ -14,8 +14,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
-import static org.firstinspires.ftc.teamcode.DiffConstants.INTAKE_POWER;
-
 @TeleOp(name="core1.4.9",group="Diff")
 
 public class DiffCore extends OpMode {
@@ -61,7 +59,7 @@ public class DiffCore extends OpMode {
     }
     public void loop(){
         //main loop
-        diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        diffDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad2.left_trigger, gamepad2.right_trigger);
         logMotorStats();
         logCasseteStats();
 //        update();
@@ -87,14 +85,14 @@ public class DiffCore extends OpMode {
         telemetry.addData("Cassete1: ",leftDrive.basicTelemetry());
         telemetry.addData("Cassete2: ",rightDrive.basicTelemetry());
     }
-    private void diffDrive(double stickLX,double stickLY) {
+    private void diffDrive(double stickLX,double stickLY, float triggerLeft, float triggerRight) {
         Vector direction = new Vector(stickLX, -stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);
         rightDrive.update(wheelAngle,-wheelMagnitude);
-        leftIntake.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-        rightIntake.setPower(-1 * (gamepad2.right_trigger - gamepad2.left_trigger));
+        leftIntake.setPower(triggerRight - triggerLeft);
+        rightIntake.setPower(-1 * (triggerLeft - triggerRight));
     }
     // will use for zeroing purposes.
      private void resetEncoders(){
@@ -105,7 +103,7 @@ public class DiffCore extends OpMode {
     private void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
-        telemetry.addData("Intake Power: ", new String(leftIntake.getPower());
+        telemetry.addData("Intake Power: ", Double.valueOf(leftIntake.getPower()).toString());
         telemetry.addData("Mode: ",scaleString);
 
     }
