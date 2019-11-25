@@ -22,14 +22,13 @@ public class DriveModule {
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
 
-    //TODO: modify this variable to match drive gear ratio
-    public final double TICKS_PER_MODULE_REV = 616;
+    public final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56; //TODO: if heading is wrong, change 56 to 28 on module rev and wheel rev
     public final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
 
     //TODO: modify this variable to match drive gear ratio
-    public final double TICKS_PER_WHEEL_REV = 28 * (double)(60)/11 * (double)(48)/15 * (double)(82)/22 * (double)(14)/60; //ticks per WHEEL revolution
+    public final double TICKS_PER_WHEEL_REV = (28985.0 / 2016.0) * 56; //ticks per WHEEL revolution
 
-    public final double CM_WHEEL_DIAMETER = 9; //TODO: change to match wheel size
+    public final double CM_WHEEL_DIAMETER = 9;
     public final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
     public final double CM_PER_TICK = CM_PER_WHEEL_REV/TICKS_PER_WHEEL_REV;
 
@@ -40,7 +39,7 @@ public class DriveModule {
     public final double ALLOWED_MODULE_ORIENTATION_ERROR = 3;
 
     //TODO: tune this variable (see commented out section in TeleOp)
-    public double ROT_ADVANTAGE = 0.3; //max rotation power divided by max translation power (scaling factor)
+    public double ROT_ADVANTAGE = 1; //max rotation power divided by max translation power (scaling factor)
 
     //this variable is set to 0.7 because when in RUN_USING_ENCODERS mode, powers about ~0.7 are the same
     //setting to 1 may increase robot top speed, but may decrease accuracy
