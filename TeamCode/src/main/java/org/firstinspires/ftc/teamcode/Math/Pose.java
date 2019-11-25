@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.Math;
 
 import org.firstinspires.ftc.teamcode.Math.Vector;
-/*
+
 public class Pose {
-    public Object position;
-    public double theta;
+    private Object position;
+    private double theta;
+
+    public Vector getVec() { return position; }
+    public double getTheta() { return theta; }
 
     public Pose(Vector position, double theta) {
         Vector this.position = position;
@@ -15,4 +18,4 @@ public class Pose {
         assert true;
     }
 }
-*/
+
