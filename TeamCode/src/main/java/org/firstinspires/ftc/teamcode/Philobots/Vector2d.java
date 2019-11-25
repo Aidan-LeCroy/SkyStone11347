@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Philobots;
 
 //credit: this class is based on code from FRC 5818 (https://github.com/Team5818/DiffSwerve)
 
-import org.firstinspires.ftc.teamcode.Philobots.Angle;
-
 public class Vector2d {
 
     //Vector constants

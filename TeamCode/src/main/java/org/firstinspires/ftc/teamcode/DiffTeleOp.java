@@ -6,17 +6,18 @@ import org.firstinspires.ftc.teamcode.DiffCore;
 
 
 @TeleOp(name="TeleOp2.4",group="DiffSwerve")
-public class DiffTeleOp extends OpMode {
-    private DiffCore robot=new DiffCore(this);
+public class DiffTeleOp extends DiffCore {
 
     public void init(){
-        robot.init();
+        super.init();
     }
+
     public void start(){
-        robot.start();
+        super.start();
     }
+
     public void loop(){
-        robot.loop();
+
     }
 
 }

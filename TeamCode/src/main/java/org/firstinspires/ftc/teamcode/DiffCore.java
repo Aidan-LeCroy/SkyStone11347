@@ -32,13 +32,10 @@ public class DiffCore extends OpMode {
     private Telemetry telemetry;
     private Gamepad gamepad1,gamepad2;
 
-    public DiffCore(OpMode opmode){
+    public DiffCore(){
 
-        hardwareMap=opmode.hardwareMap;
-        telemetry=opmode.telemetry;
-        gamepad1=opmode.gamepad1;
-        gamepad2=opmode.gamepad2;
     }
+
     public void init(){
         motor1=hardwareMap.dcMotor.get("topL");
         motor2=hardwareMap.dcMotor.get("bottomL");
@@ -55,6 +52,13 @@ public class DiffCore extends OpMode {
         resetEncoders();
 
     }
+
+    public void start(){
+        runtime.reset();
+        leftDrive.resetRuntime();
+        rightDrive.resetRuntime();
+    }
+
     public void loop(){
         //main loop
         diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
@@ -64,14 +68,6 @@ public class DiffCore extends OpMode {
     }
 
     public void update() {}
-
-
-    public void start(){
-        runtime.reset();
-        leftDrive.resetRuntime();
-        rightDrive.resetRuntime();
-    }
-
 
     @Deprecated public void DiffAutoDrive(double angle, double power){
 
