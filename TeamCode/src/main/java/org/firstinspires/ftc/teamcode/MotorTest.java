@@ -34,7 +34,7 @@ public class MotorTest extends OpMode {
             motor = 4;
         }
         if(motor == 1) {
-            
+
         }
     }
 
