@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.GK;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="GK-TeleOp", group="GK")
+@Disabled
 public class GKTeleOp extends GKCore {
 
     public GKTeleOp() {

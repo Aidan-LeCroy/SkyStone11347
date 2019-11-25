@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Math.Vector;
 public class DiffCore extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     //top left and bottom right motors bad.
-    private DcMotor motor1,motor2,motor3,motor4;
+    private DcMotor motor1, motor2, motor3, motor4, leftIntake, rightIntake;
     private Cassette leftDrive;
     private Cassette rightDrive;
     private String scaleString;
@@ -44,6 +44,8 @@ public class DiffCore extends OpMode {
         motor2=hardwareMap.dcMotor.get("bottomL");
         motor3=hardwareMap.dcMotor.get("topR");
         motor4=hardwareMap.dcMotor.get("bottomR");
+        leftIntake=hardwareMap.dcMotor.get("intakeL");
+        rightIntake=hardwareMap.dcMotor.get("intakeR");
 
         telemetry=new MultipleTelemetry(telemetry,FtcDashboard.getInstance().getTelemetry());
 
@@ -57,7 +59,7 @@ public class DiffCore extends OpMode {
     }
     public void loop(){
         //main loop
-        diffDrive(gamepad1.left_stick_x,gamepad1.left_stick_y);
+        diffDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad2.left_trigger, gamepad2.right_trigger);
         logMotorStats();
         logCasseteStats();
 //        update();
@@ -83,12 +85,14 @@ public class DiffCore extends OpMode {
         telemetry.addData("Cassete1: ",leftDrive.basicTelemetry());
         telemetry.addData("Cassete2: ",rightDrive.basicTelemetry());
     }
-    private void diffDrive(double stickLX,double stickLY) {
+    private void diffDrive(double stickLX,double stickLY, float triggerLeft, float triggerRight) {
         Vector direction = new Vector(stickLX, -stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
         leftDrive.update(wheelAngle,wheelMagnitude);
         rightDrive.update(wheelAngle,-wheelMagnitude);
+        leftIntake.setPower(triggerRight - triggerLeft);
+        rightIntake.setPower(-1 * (triggerLeft - triggerRight));
     }
     // will use for zeroing purposes.
      private void resetEncoders(){
@@ -99,6 +103,7 @@ public class DiffCore extends OpMode {
     private void logMotorStats(){
         telemetry.addData("Left Drive: ",leftDrive.getLogString());
         telemetry.addData("Right Drive: ",rightDrive.getLogString());
+        telemetry.addData("Intake Power: ", Double.valueOf(leftIntake.getPower()).toString());
         telemetry.addData("Mode: ",scaleString);
 
     }
