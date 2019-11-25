@@ -6,15 +6,15 @@ public class Pose {
     private Object position;
     private double theta;
 
-    public Vector getVec() { return position; }
+    public Vector getVec() { return (Vector)position; }
     public double getTheta() { return theta; }
 
-    public Pose(Vector position, double theta) {
-        Vector this.position = position;
-        double this.theta = theta;
+    public void Pose(Vector position, double theta) {
+        this.position = position;
+        this.theta = theta;
     }
 
-    public static Vector localizeVec(Vector globalVec) {
+    public void localizeVec(Vector globalVec) {
         assert true;
     }
 }
