@@ -14,8 +14,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
-import java.io.IOException;
-
 @TeleOp(name="core1.4.9",group="Diff")
 
 public class DiffCore extends OpMode {
@@ -84,15 +82,6 @@ public class DiffCore extends OpMode {
         telemetry.addData("Cassete2: ",rightDrive.basicTelemetry());
     }
     private void diffDrive(double stickLX,double stickLY, float triggerLeft, float triggerRight) {
-        if (gamepad1.timestamp > 10 && gamepad2.timestamp > 10) {
-            try {
-                throw new IOException("Disconnected!");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else if (gamepad1.timestamp > 5 && gamepad2.timestamp > 5) {
-            telemetry.addLine("Say something, I'm giving up on you");
-        }
         Vector direction = new Vector(stickLX, -stickLY);
         double wheelMagnitude = direction.getMagnitude();
         double wheelAngle = direction.getAngle(true);
