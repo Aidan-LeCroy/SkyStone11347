@@ -85,9 +85,13 @@ public class DiffCore extends OpMode {
     }
     private void diffDrive(double stickLX,double stickLY, float triggerLeft, float triggerRight) {
         if (gamepad1.timestamp > 10 && gamepad2.timestamp > 10) {
-            throw new IOException("Disconnected!");
+            try {
+                throw new IOException("Disconnected!");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if (gamepad1.timestamp > 5 && gamepad2.timestamp > 5) {
-            telemetry.addLine("The robot will stop in 5 seconds, please input something");
+            telemetry.addLine("Say something, I'm giving up on you");
         }
         Vector direction = new Vector(stickLX, -stickLY);
         double wheelMagnitude = direction.getMagnitude();
