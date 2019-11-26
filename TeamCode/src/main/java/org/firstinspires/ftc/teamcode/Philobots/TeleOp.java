@@ -27,9 +27,7 @@ public class TeleOp extends OpMode {
             willResetIMU = false;
         }
     }
-    public void start () {
-        if (willResetIMU) robot.initIMU();
-    }
+    public void start () { if (willResetIMU) robot.initIMU(); }
 
 
     public void loop() {

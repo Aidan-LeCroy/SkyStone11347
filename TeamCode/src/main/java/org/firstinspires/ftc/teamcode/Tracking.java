@@ -13,6 +13,7 @@ public class Tracking {
     private OpenCvWebcam camera;
     private SkystoneDetector detector;
     public Tracking(HardwareMap hwmap){
+        hardwareMap=hwmap;
 
     }
     public void initializeCamera(){
