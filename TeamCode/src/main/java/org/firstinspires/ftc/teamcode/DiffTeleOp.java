@@ -17,7 +17,7 @@ public class DiffTeleOp extends DiffCore {
     }
 
     public void loop(){
-
+        super.loop();
     }
 
 }

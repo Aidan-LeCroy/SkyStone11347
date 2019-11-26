@@ -88,7 +88,12 @@ public class DiffCore extends OpMode {
         leftDrive.update(wheelAngle,wheelMagnitude);
         rightDrive.update(wheelAngle,-wheelMagnitude);
         leftIntake.setPower(triggerRight - triggerLeft);
-        rightIntake.setPower(-1 * (triggerLeft - triggerRight));
+        rightIntake.setPower(-1 * (triggerRight - triggerLeft));
+        if (gamepad1.dpad_up) {
+            fastMode();
+        } else if (gamepad1.dpad_down){
+            slowMode();
+        }
     }
     // will use for zeroing purposes.
      private void resetEncoders(){
