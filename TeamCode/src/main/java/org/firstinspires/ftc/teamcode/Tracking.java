@@ -22,6 +22,6 @@ public class Tracking {
         camera=new OpenCvWebcam(hardwareMap.get(WebcamName.class,"Webcam 1"),cameraMonitorViewId);
         camera.openCameraDevice();
         camera.setPipeline(detector);
-        camera.startStreaming(1280,720,OpenCvCameraRotation.UPRIGHT);
+        camera.startStreaming(320,240,OpenCvCameraRotation.UPRIGHT);
     }
 }

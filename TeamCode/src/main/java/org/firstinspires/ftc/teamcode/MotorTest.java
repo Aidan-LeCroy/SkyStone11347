@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.DiffCore;
 
 @TeleOp(name="Motor Test", group = "DiffSwerve")
 public class MotorTest extends OpMode {
-    DiffCore robot= new DiffCore(this);
+    DiffCore robot= new DiffCore();
     int motor;
 
     @Override
