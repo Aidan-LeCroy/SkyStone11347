@@ -15,7 +15,7 @@ public class TeleOp extends OpMode {
 
     public void init() {
         robot = new Robot(this, false);
-        track=new Tracking(hardwareMap);
+        track=new Tracking(hardwareMap,telemetry);
         track.initializeCamera();
     }
 
@@ -53,6 +53,9 @@ public class TeleOp extends OpMode {
         //to confirm that joysticks are operating properly
         telemetry.addData("Joystick 1", joystick1);
         telemetry.addData("Joystick 2", joystick2);
+        telemetry.addData("Skystone xpos",track.detector.getScreenPosition().x);
+        telemetry.addData("Skystone ypos",track.detector.getScreenPosition().y);
+        telemetry.addData("Is skystone detected?",track.detector.isDetected());
 
         telemetry.update();
     }

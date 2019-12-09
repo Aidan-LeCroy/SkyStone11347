@@ -63,11 +63,13 @@ public class DriveController {
     //do NOT call in a loop
 
     //speed should be scalar from 0 to 1
-    public void drive(Vector2d direction, double cmDistance, double speed, LinearOpMode linearOpMode) {
+    public void drive(Vector2d direction, double cmDistance, double speed, LinearOpMode linearOpMode,double timeoutms) {
         //turns modules to correct positions for straight driving
         //rotateModules()
+        double currenttime=System.currentTimeMillis();
+        timeoutms+=System.currentTimeMillis();
         resetDistanceTraveled();
-        while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive()) {
+        while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive()&&currenttime<timeoutms) {
             //slows down drive power in certain range
             if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
                 //speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
@@ -77,6 +79,7 @@ public class DriveController {
 
             linearOpMode.telemetry.addData("Driving robot", "");
             linearOpMode.telemetry.update();
+            currenttime=System.currentTimeMillis();
         }
         update(Vector2d.ZERO, 0);
     }
@@ -118,6 +121,21 @@ public class DriveController {
             linearOpMode.telemetry.addData("Rotating MODULES", "");
             linearOpMode.telemetry.update();
         } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && linearOpMode.opModeIsActive() && System.currentTimeMillis() < startTime + timemoutMS);
+        update(Vector2d.ZERO, 0);
+    }
+    public void rotateModules(Vector2d direction, double timemoutMS, OpMode opmode) {
+        //TODO: check if this will work with reversed modules
+        double moduleLeftDifference, moduleRightDifference;
+        double startTime = System.currentTimeMillis();
+        do {
+            moduleLeftDifference = moduleLeft.getCurrentOrientation().getDifference(direction.getAngleAngle());
+            moduleRightDifference = moduleRight.getCurrentOrientation().getDifference(direction.getAngleAngle());
+            moduleLeft.rotateModule(direction);
+            moduleRight.rotateModule(direction);
+
+            opmode.telemetry.addData("Rotating MODULES", "");
+            opmode.telemetry.update();
+        } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && System.currentTimeMillis() < startTime + timemoutMS);
         update(Vector2d.ZERO, 0);
     }
 

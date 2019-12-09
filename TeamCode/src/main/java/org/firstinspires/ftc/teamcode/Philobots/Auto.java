@@ -12,16 +12,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.DiffCore;
+import org.firstinspires.ftc.teamcode.Tracking;
 
-
-@Autonomous(name="GK auto", group="GK")
+@Autonomous(name="WA Autonomous 1.0", group="Diffy")
 @Disabled
 public class Auto extends OpMode {
 
     Robot robot;
-
+    Tracking track;
     @Override
     public void init() {
+        track=new Tracking(hardwareMap,telemetry);
+        track.initializeCamera();
+
     }
 
     @Override
