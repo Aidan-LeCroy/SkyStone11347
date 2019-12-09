@@ -47,4 +47,8 @@ public class Robot {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime && linearOpMode.opModeIsActive()) {}
     }
+    public void wait (int millis, OpMode OpMode) {
+        long startTime = System.currentTimeMillis();
+        while (millis > System.currentTimeMillis() - startTime) {}
+    }
 }

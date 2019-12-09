@@ -63,13 +63,13 @@ public class DriveController {
     //do NOT call in a loop
 
     //speed should be scalar from 0 to 1
-    public void drive(Vector2d direction, double cmDistance, double speed, LinearOpMode linearOpMode,double timeoutms) {
+    public void drive(Vector2d direction, double cmDistance, double speed, OpMode opmode,double timeoutms) {
         //turns modules to correct positions for straight driving
         //rotateModules()
         double currenttime=System.currentTimeMillis();
         timeoutms+=System.currentTimeMillis();
         resetDistanceTraveled();
-        while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive()&&currenttime<timeoutms) {
+        while (getDistanceTraveled() < cmDistance && currenttime<timeoutms) {
             //slows down drive power in certain range
             if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
                 //speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
@@ -77,8 +77,8 @@ public class DriveController {
             updateTracking();
             update(direction.normalize(speed), 0);
 
-            linearOpMode.telemetry.addData("Driving robot", "");
-            linearOpMode.telemetry.update();
+            opmode.telemetry.addData("Driving robot", "");
+            opmode.telemetry.update();
             currenttime=System.currentTimeMillis();
         }
         update(Vector2d.ZERO, 0);
