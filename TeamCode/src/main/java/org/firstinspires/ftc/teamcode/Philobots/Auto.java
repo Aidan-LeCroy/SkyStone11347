@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.Philobots;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Tracking;
 
 @Autonomous(name="WA Autonomous 1.0", group="Diffy")
 @Disabled
-public class Auto extends OpMode {
+public class Auto extends LinearOpMode {
     public enum SSPos{
         LEFT,
         CENTER,
@@ -19,34 +20,22 @@ public class Auto extends OpMode {
     private Tracking track;
     private SSPos pos;
     @Override
-    public void init() {
+    public void runOpMode(){
         track=new Tracking(hardwareMap,telemetry);
         track.initializeCamera();
-    }
-    public void init_loop(){
-        double x=track.getSkyStoneX();
-        double y=track.getSkyStoneY();
-        pos=SSPos.LEFT;
-        pos=SSPos.RIGHT;
-        pos=SSPos.CENTER;
-
-    }
-
-    @Override
-    public void start() {
+        robot=new Robot(this,true);
         robot.initIMU();
-        super.start();
+
+        while(!this.opModeIsActive()) {
+            double x = track.getSkyStoneX();
+            double y = track.getSkyStoneY();
+            pos = SSPos.LEFT;
+            pos = SSPos.RIGHT;
+            pos = SSPos.CENTER;
+        }
+        waitForStart();
+        drive.drive(Vector2d.FORWARD,20,.8,this,2500);
+
     }
 
-    @Override
-    public void loop() {
-        drive.drive(Vector2d.FORWARD,40,.5,this,2000);
-
-
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-    }
 }

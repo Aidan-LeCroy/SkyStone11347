@@ -15,22 +15,17 @@ import org.firstinspires.ftc.teamcode.Philobots.Angle;
 
 public class Robot {
     DriveController driveController;
-    BNO055IMU imu;
+    private BNO055IMU imu;
     Telemetry telemetry;
     HardwareMap hardwareMap;
-    OpMode opMode;
+    private OpMode opMode;
 
     private DcMotor leftIntake,rightIntake;
-    private Servo leftS,rightS,leftSF,rightSF;
+    private Servo leftS,rightS,leftSF,rightSF,leftFourB,rightFourB;
     public Robot (OpMode opMode, boolean isAuto) {
 
         this.hardwareMap = opMode.hardwareMap;
-        leftIntake=hardwareMap.dcMotor.get("leftIntake");
-        rightIntake=hardwareMap.dcMotor.get("rightIntake");
-        rightS=hardwareMap.servo.get("rightS");
-        leftS=hardwareMap.servo.get("leftS");
-        rightSF=hardwareMap.servo.get("rightSF");
-        leftSF=hardwareMap.servo.get("leftSF");
+        initMechs();
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
         driveController = new DriveController(this);
@@ -45,6 +40,18 @@ public class Robot {
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
 
         imu.initialize(parameters);
+    }
+    public void initMechs(){
+        leftIntake=hardwareMap.dcMotor.get("leftIntake");
+        rightIntake=hardwareMap.dcMotor.get("rightIntake");
+        leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        rightS=hardwareMap.servo.get("rightS");
+        leftS=hardwareMap.servo.get("leftS");
+        rightSF=hardwareMap.servo.get("rightSF");
+        leftSF=hardwareMap.servo.get("leftSF");
+        leftFourB=hardwareMap.servo.get("leftFB");
+        rightFourB=hardwareMap.servo.get("rightFB");
     }
 
     public Angle getRobotHeading () {
@@ -71,12 +78,15 @@ public class Robot {
         rightIntake.setPower(power);
     }
     public void dropFoundation(){
-        leftSF.setPosition(.8);
-        rightSF.setPosition(.8);
+        leftSF.setPosition(1);
+        rightSF.setPosition(1);
     }
     public void liftFoundation(){
         leftSF.setPosition(0);
         rightSF.setPosition(0);
+
+    }
+    public void fourBarPower(){
 
     }
 }

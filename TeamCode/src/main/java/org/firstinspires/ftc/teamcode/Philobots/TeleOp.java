@@ -4,11 +4,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Tracking;
+//import org.firstinspires.ftc.teamcode.Tracking;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Diff Swerve TeleOp", group = "TeleOp")
 public class TeleOp extends OpMode {
     Robot robot;
-    Tracking track;
+//    Tracking track;
     //deadband for joysticks
     public double DEADBAND_MAG = 0.1;
     public Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
@@ -17,8 +17,8 @@ public class TeleOp extends OpMode {
     private boolean foundationDown=false;
     public void init() {
         robot = new Robot(this, false);
-        track=new Tracking(hardwareMap,telemetry);
-        track.initializeCamera();
+//        track=new Tracking(hardwareMap,telemetry);
+//        track.initializeCamera();
 
 
     }
@@ -28,7 +28,10 @@ public class TeleOp extends OpMode {
     //relevant because of field-centric controls
     public void init_loop() {
         if (gamepad1.y) {
-            willResetIMU = false;
+            willResetIMU = true;
+        }
+        if (gamepad1.x){
+            willResetIMU=false;
         }
     }
     public void start () { if (willResetIMU) robot.initIMU(); }
@@ -57,8 +60,8 @@ public class TeleOp extends OpMode {
         //to confirm that joysticks are operating properly
         telemetry.addData("Joystick 1", joystick1);
         telemetry.addData("Joystick 2", joystick2);
-        telemetry.addData("Skystone xpos",track.getSkyStoneX());
-        telemetry.addData("Skystone ypos",track.getSkyStoneY());
+//        telemetry.addData("Skystone xpos",track.getSkyStoneX());
+//        telemetry.addData("Skystone ypos",track.getSkyStoneY());
 
         telemetry.update();
     }
