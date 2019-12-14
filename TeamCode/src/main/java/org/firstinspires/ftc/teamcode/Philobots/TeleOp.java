@@ -13,6 +13,8 @@ public class TeleOp extends OpMode {
     public double DEADBAND_MAG = 0.1;
     public Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
     public boolean willResetIMU = false;
+    private boolean changed=false;
+    private boolean foundationDown=false;
     public void init() {
         robot = new Robot(this, false);
         track=new Tracking(hardwareMap,telemetry);
@@ -35,20 +37,20 @@ public class TeleOp extends OpMode {
     public void loop() {
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y); //LEFT joystick
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
-
+        flipFoundation();
         robot.driveController.updateUsingJoysticks(checkDeadband(joystick1), checkDeadband(joystick2));
 
 
         //uncomment for live tuning of ROT_ADVANTAGE constant
         //TODO: After tuning, make ROT_ADVANTAGE final
-        if (gamepad1.b) {
-            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
-            robot.driveController.moduleLeft.ROT_ADVANTAGE += 0.01;
-        }
-        if (gamepad1.x) {
-            robot.driveController.moduleRight.ROT_ADVANTAGE -= 0.01;
-            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
-        }
+//        if (gamepad1.b) {
+//            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
+//            robot.driveController.moduleLeft.ROT_ADVANTAGE += 0.01;
+//        }
+//        if (gamepad1.x) {
+//            robot.driveController.moduleRight.ROT_ADVANTAGE -= 0.01;
+//            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
+//        }
         telemetry.addData("ROT_ADVANTAGE: ", robot.driveController.moduleLeft.ROT_ADVANTAGE);
 
 
@@ -69,6 +71,18 @@ public class TeleOp extends OpMode {
             return joystick;
         }
         return Vector2d.ZERO;
+    }
+    private void flipFoundation(){
+        if(gamepad2.x&& !changed) {
+            foundationDown = !foundationDown;
+            if(foundationDown)
+                robot.dropFoundation();
+            else
+                robot.liftFoundation();
+            changed=true;
+        }
+        else if(!gamepad1.x)
+            changed=false;
     }
 
 }

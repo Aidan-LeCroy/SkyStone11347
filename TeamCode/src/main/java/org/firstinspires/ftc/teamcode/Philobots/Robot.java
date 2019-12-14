@@ -70,11 +70,11 @@ public class Robot {
         leftIntake.setPower(-power);
         rightIntake.setPower(power);
     }
-    private void dropFoundation(){
+    public void dropFoundation(){
         leftSF.setPosition(.8);
         rightSF.setPosition(.8);
     }
-    private void liftFoundation(){
+    public void liftFoundation(){
         leftSF.setPosition(0);
         rightSF.setPosition(0);
 
