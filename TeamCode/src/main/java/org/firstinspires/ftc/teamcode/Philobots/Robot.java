@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.teamcode.Philobots.Angle;
 
 public class Robot {
     DriveController driveController;
@@ -25,7 +24,7 @@ public class Robot {
     public Robot (OpMode opMode, boolean isAuto) {
 
         this.hardwareMap = opMode.hardwareMap;
-        initMechs();
+        initMechanisms();
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
         driveController = new DriveController(this);
@@ -41,7 +40,7 @@ public class Robot {
 
         imu.initialize(parameters);
     }
-    public void initMechs(){
+    public void initMechanisms(){
         leftIntake=hardwareMap.dcMotor.get("leftIntake");
         rightIntake=hardwareMap.dcMotor.get("rightIntake");
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -57,6 +56,7 @@ public class Robot {
     public Angle getRobotHeading () {
         //heading is of NEG_180_TO_180_HEADING type by default (no need for conversion)
         double heading = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
         telemetry.addData("Robot Heading", heading);
         return new Angle(heading, Angle.AngleType.NEG_180_TO_180_HEADING);
     }
@@ -69,11 +69,11 @@ public class Robot {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime) {}
     }
-    private void dropIntakeServos(){
-        leftS.setPosition(.4);
-        rightS.setPosition(.4);
+    public void dropIntakeServos(){
+        leftS.setPosition(.6);
+        rightS.setPosition(.2);
     }
-    private void intake(double power){
+    public void intake(double power){
         leftIntake.setPower(-power);
         rightIntake.setPower(power);
     }
@@ -86,7 +86,7 @@ public class Robot {
         rightSF.setPosition(0);
 
     }
-    public void fourBarPower(){
+    public void fourBarPosition(double pos){
 
     }
 }

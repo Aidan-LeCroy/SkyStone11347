@@ -34,7 +34,7 @@ public class DriveController {
     public final int MAX_ITERATIONS_ROBOT_ROTATE = 3;
 
     //will multiply the input from the rotation joystick (max value of 1) by this factor
-    public final double ROBOT_ROTATION_SCALE_FACTOR = 0.7;
+    public final double ROBOT_ROTATION_SCALE_FACTOR = 1;
 
 
     public DriveController(Robot robot) {
@@ -126,22 +126,6 @@ public class DriveController {
         } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && linearOpMode.opModeIsActive() && System.currentTimeMillis() < startTime + timemoutMS);
         update(Vector2d.ZERO, 0);
     }
-    public void rotateModules(Vector2d direction, double timemoutMS, OpMode opmode) {
-        //TODO: check if this will work with reversed modules
-        double moduleLeftDifference, moduleRightDifference;
-        double startTime = System.currentTimeMillis();
-        do {
-            moduleLeftDifference = moduleLeft.getCurrentOrientation().getDifference(direction.getAngleAngle());
-            moduleRightDifference = moduleRight.getCurrentOrientation().getDifference(direction.getAngleAngle());
-            moduleLeft.rotateModule(direction);
-            moduleRight.rotateModule(direction);
-
-            opmode.telemetry.addData("Rotating MODULES", "");
-            opmode.telemetry.update();
-        } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && System.currentTimeMillis() < startTime + timemoutMS);
-        update(Vector2d.ZERO, 0);
-    }
-
 
 
     //TRACKING METHODS

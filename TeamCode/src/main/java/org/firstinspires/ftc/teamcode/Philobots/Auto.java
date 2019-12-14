@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Philobots;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Tracking;
 
@@ -25,7 +24,7 @@ public class Auto extends LinearOpMode {
         track.initializeCamera();
         robot=new Robot(this,true);
         robot.initIMU();
-
+        robot.initMechanisms();
         while(!this.opModeIsActive()) {
             double x = track.getSkyStoneX();
             double y = track.getSkyStoneY();
@@ -34,8 +33,7 @@ public class Auto extends LinearOpMode {
             pos = SSPos.CENTER;
         }
         waitForStart();
-        drive.drive(Vector2d.FORWARD,20,.8,this,2500);
-
+        robot.dropIntakeServos();
     }
 
 }
