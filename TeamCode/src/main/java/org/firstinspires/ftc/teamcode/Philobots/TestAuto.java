@@ -20,7 +20,7 @@ public class TestAuto extends LinearOpMode {
         robot.driveController.rotateModules(Vector2d.RIGHT, 4000, this);
 
         //drive 20 cm to the right (while facing forward)
-        robot.driveController.drive(Vector2d.RIGHT, 20, 1, this);
+        robot.driveController.drive(Vector2d.RIGHT, 20, 1, this,2000);
 
         //turn to face robot right
         robot.driveController.rotateRobot(Angle.RIGHT, this);

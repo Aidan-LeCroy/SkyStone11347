@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Philobots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Philobots.Angle;
 import org.firstinspires.ftc.teamcode.Philobots.DriveModule;
@@ -17,10 +18,11 @@ public class DriveController {
     DriveModule moduleRight;
 
     //used for straight line distance tracking
-    double robotDistanceTraveled = 0;
-    double previousRobotDistanceTraveled = 0;
-    double moduleLeftLastDistance;
-    double moduleRightLastDistance;
+    private double robotDistanceTraveled = 0;
+    private double previousRobotDistanceTraveled = 0;
+    private double moduleLeftLastDistance;
+    private double moduleRightLastDistance;
+
 
     //tolerance for module rotation (in degrees)
     public final double ALLOWED_MODULE_ROT_ERROR = 5;
@@ -37,6 +39,7 @@ public class DriveController {
 
     public DriveController(Robot robot) {
         this.robot = robot;
+
         moduleLeft = new DriveModule(robot, ModuleSide.LEFT);
         moduleRight = new DriveModule(robot, ModuleSide.RIGHT);
 
