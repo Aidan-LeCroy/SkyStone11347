@@ -59,8 +59,6 @@ public class TeleOp extends OpMode {
         telemetry.addData("Joystick 2", joystick2);
         telemetry.addData("Skystone xpos",track.getSkyStoneX());
         telemetry.addData("Skystone ypos",track.getSkyStoneY());
-        telemetry.addData("Angle to Skystone",track.getAngletoSkyStone());
-
 
         telemetry.update();
     }
