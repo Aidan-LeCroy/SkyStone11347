@@ -84,14 +84,14 @@ public class DriveModule {
         Angle convertedRobotHeading = robot.getRobotHeading().convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
 
         //converts the translation vector from a robot centric to a field centric one
-//        Vector2d transVecFC = transVec.rotate(convertedRobotHeading.getAngle());
+        Vector2d transVecFC = transVec.rotate(convertedRobotHeading.getAngle());
 
         //vector needed to rotate robot at the desired magnitude
         //based on positionVector of module (see definition for more info)
         Vector2d rotVec = positionVector.normalize(rotMag);//.rotate(90); //theoretically this should be rotated 90, not sure sure it doesn't need to be
 
         //combine desired robot translation and robot rotation to get goal vector for the module
-        Vector2d targetVector = transVec.add(rotVec);
+        Vector2d targetVector = transVecFC.add(rotVec);
 
         //allows modules to reverse power instead of rotating 180 degrees
         //example: useful when going from driving forwards to driving backwards
@@ -105,7 +105,7 @@ public class DriveModule {
         goToTarget(targetVector, directionMultiplier);
 
         robot.telemetry.addData(moduleSide + " REVERSED: ", reversed);
-//        robot.telemetry.addData(moduleSide + " Trans Vec FC: ", transVecFC);
+        robot.telemetry.addData(moduleSide + " Trans Vec FC: ", transVecFC);
         robot.telemetry.addData(moduleSide + " Rot Vec: ", rotVec);
     }
 
