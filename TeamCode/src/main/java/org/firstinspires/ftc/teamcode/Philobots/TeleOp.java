@@ -15,7 +15,9 @@ public class TeleOp extends OpMode {
 
     public void init() {
         robot = new Robot(this, false);
+        robot.driveController.resetEncoders();
     }
+
 
     //allows driver to indicate that the IMU should not be reset
     //used when starting TeleOp after auto or if program crashes in the middle of match
@@ -33,7 +35,7 @@ public class TeleOp extends OpMode {
     public void loop() {
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y); //LEFT joystick
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
-        flipFoundation();
+//        flipFoundation();
         robot.driveController.updateUsingJoysticks(checkDeadband(joystick1), checkDeadband(joystick2));
         robot.intake(-gamepad2.left_stick_y);
 
@@ -55,6 +57,10 @@ public class TeleOp extends OpMode {
         telemetry.addData("Joystick 2", joystick2);
 
         telemetry.update();
+
+        if (gamepad1.y) {
+            robot.driveController.resetEncoders();
+        }
     }
 
     //returns zero vector if joystick is within deadband
@@ -64,17 +70,18 @@ public class TeleOp extends OpMode {
         }
         return Vector2d.ZERO;
     }
-    private void flipFoundation(){
-        if(gamepad2.x&& !changed) {
-            foundationDown = !foundationDown;
-            if(foundationDown)
-                robot.dropFoundation();
-            else
-                robot.liftFoundation();
-            changed=true;
-        }
-        else if(!gamepad1.x)
-            changed=false;
-    }
 
+//    private void flipFoundation(){
+//        if(gamepad2.x&& !changed) {
+//            foundationDown = !foundationDown;
+//            if(foundationDown)
+//                robot.dropFoundation();
+//            else
+//                robot.liftFoundation();
+//            changed=true;
+//        }
+//        else if(!gamepad1.x)
+//            changed=false;
+//    }
+//
 }
