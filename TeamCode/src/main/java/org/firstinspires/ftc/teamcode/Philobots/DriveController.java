@@ -2,12 +2,6 @@ package org.firstinspires.ftc.teamcode.Philobots;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.teamcode.Philobots.Angle;
-import org.firstinspires.ftc.teamcode.Philobots.DriveModule;
-import org.firstinspires.ftc.teamcode.Philobots.RobotUtil;
-import org.firstinspires.ftc.teamcode.Philobots.Vector2d;
 
 enum ModuleSide {LEFT, RIGHT}
 
@@ -18,11 +12,10 @@ public class DriveController {
     DriveModule moduleRight;
 
     //used for straight line distance tracking
-    private double robotDistanceTraveled = 0;
-    private double previousRobotDistanceTraveled = 0;
-    private double moduleLeftLastDistance;
-    private double moduleRightLastDistance;
-
+    double robotDistanceTraveled = 0;
+    double previousRobotDistanceTraveled = 0;
+    double moduleLeftLastDistance;
+    double moduleRightLastDistance;
 
     //tolerance for module rotation (in degrees)
     public final double ALLOWED_MODULE_ROT_ERROR = 5;
@@ -34,12 +27,11 @@ public class DriveController {
     public final int MAX_ITERATIONS_ROBOT_ROTATE = 3;
 
     //will multiply the input from the rotation joystick (max value of 1) by this factor
-    public final double ROBOT_ROTATION_SCALE_FACTOR = 1;
+    public final double ROBOT_ROTATION_SCALE_FACTOR = 0.7;
 
 
     public DriveController(Robot robot) {
         this.robot = robot;
-
         moduleLeft = new DriveModule(robot, ModuleSide.LEFT);
         moduleRight = new DriveModule(robot, ModuleSide.RIGHT);
 
@@ -66,13 +58,11 @@ public class DriveController {
     //do NOT call in a loop
 
     //speed should be scalar from 0 to 1
-    public void drive(Vector2d direction, double cmDistance, double speed, OpMode opmode,double timeoutms) {
+    public void drive(Vector2d direction, double cmDistance, double speed, LinearOpMode linearOpMode) {
         //turns modules to correct positions for straight driving
         //rotateModules()
-        double currenttime=System.currentTimeMillis();
-        timeoutms+=System.currentTimeMillis();
         resetDistanceTraveled();
-        while (getDistanceTraveled() < cmDistance && currenttime<timeoutms) {
+        while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive()) {
             //slows down drive power in certain range
             if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
                 //speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
@@ -80,9 +70,8 @@ public class DriveController {
             updateTracking();
             update(direction.normalize(speed), 0);
 
-            opmode.telemetry.addData("Driving robot", "");
-            opmode.telemetry.update();
-            currenttime=System.currentTimeMillis();
+            linearOpMode.telemetry.addData("Driving robot", "");
+            linearOpMode.telemetry.update();
         }
         update(Vector2d.ZERO, 0);
     }
@@ -126,6 +115,7 @@ public class DriveController {
         } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && linearOpMode.opModeIsActive() && System.currentTimeMillis() < startTime + timemoutMS);
         update(Vector2d.ZERO, 0);
     }
+
 
 
     //TRACKING METHODS
