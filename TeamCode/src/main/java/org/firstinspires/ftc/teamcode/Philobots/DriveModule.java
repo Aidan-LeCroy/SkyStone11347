@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Philobots;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Philobots.Angle;
-
 public class DriveModule {
     Robot robot;
 
@@ -36,10 +34,10 @@ public class DriveModule {
     public final double ANGLE_OF_MAX_MODULE_ROTATION_POWER = 60;
 
     //if module is within this number of degrees from its target orientation, no pivot power will be applied
-    public final double ALLOWED_MODULE_ORIENTATION_ERROR = 3;
+    public final double ALLOWED_MODULE_ORIENTATION_ERROR = 5;
 
     //TODO: tune this variable (see commented out section in TeleOp)
-    public double ROT_ADVANTAGE = .75; //max rotation power divided by max translation power (scaling factor)
+    public final double ROT_ADVANTAGE = 1; //max rotation power divided by max translation power (scaling factor)
 
     //this variable is set to 0.7 because when in RUN_USING_ENCODERS mode, powers about ~0.7 are the same
     //setting to 1 may increase robot top speed, but may decrease accuracy
@@ -84,14 +82,14 @@ public class DriveModule {
         Angle convertedRobotHeading = robot.getRobotHeading().convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
 
         //converts the translation vector from a robot centric to a field centric one
-//        Vector2d transVecFC = transVec.rotate(convertedRobotHeading.getAngle());
+        Vector2d transVecFC = transVec.rotate(convertedRobotHeading.getAngle());
 
         //vector needed to rotate robot at the desired magnitude
         //based on positionVector of module (see definition for more info)
         Vector2d rotVec = positionVector.normalize(rotMag);//.rotate(90); //theoretically this should be rotated 90, not sure sure it doesn't need to be
 
         //combine desired robot translation and robot rotation to get goal vector for the module
-        Vector2d targetVector = transVec.add(rotVec);
+        Vector2d targetVector = transVecFC.add(rotVec);
 
         //allows modules to reverse power instead of rotating 180 degrees
         //example: useful when going from driving forwards to driving backwards
@@ -105,7 +103,7 @@ public class DriveModule {
         goToTarget(targetVector, directionMultiplier);
 
         robot.telemetry.addData(moduleSide + " REVERSED: ", reversed);
-//        robot.telemetry.addData(moduleSide + " Trans Vec FC: ", transVecFC);
+        robot.telemetry.addData(moduleSide + " Trans Vec FC: ", transVecFC);
         robot.telemetry.addData(moduleSide + " Rot Vec: ", rotVec);
     }
 
