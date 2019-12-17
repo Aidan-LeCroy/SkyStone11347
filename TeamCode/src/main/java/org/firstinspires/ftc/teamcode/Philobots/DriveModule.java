@@ -26,7 +26,7 @@ public class DriveModule {
     //TODO: modify this variable to match drive gear ratio
     public final double TICKS_PER_WHEEL_REV = (28985.0 / 2016.0) * 56; //ticks per WHEEL revolution
 
-    public final double CM_WHEEL_DIAMETER = 9;
+    public final double CM_WHEEL_DIAMETER = 9.6;
     public final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
     public final double CM_PER_TICK = CM_PER_WHEEL_REV/TICKS_PER_WHEEL_REV;
 
@@ -72,6 +72,7 @@ public class DriveModule {
         lastMotor1Encoder = motor1.getCurrentPosition();
         lastMotor2Encoder = motor2.getCurrentPosition();
 
+        //TODO: Make sure we want coast or brake
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }

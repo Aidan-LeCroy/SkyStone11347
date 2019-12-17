@@ -15,7 +15,6 @@ public class TeleOp extends OpMode {
 
     public void init() {
         robot = new Robot(this, false);
-        robot.driveController.resetEncoders();
     }
 
 
@@ -37,7 +36,7 @@ public class TeleOp extends OpMode {
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
 //        flipFoundation();
         robot.driveController.updateUsingJoysticks(checkDeadband(joystick1), checkDeadband(joystick2));
-        robot.intake(-gamepad2.left_stick_y);
+        robot.intake(-gamepad1.right_trigger);
 
 
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
