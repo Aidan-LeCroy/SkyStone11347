@@ -32,7 +32,8 @@ public class Auto extends LinearOpMode {
             pos = SSPos.CENTER;
         }
         waitForStart();
-        robot.dropIntakeServos();
+        drive.drive(Vector2d.FORWARD,100,.7,this);
+
     }
 
 }
