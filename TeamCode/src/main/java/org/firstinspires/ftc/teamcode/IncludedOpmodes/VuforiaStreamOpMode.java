@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.R;
  * your Vuforia key below and select the 'Camera' preset on top right of the dashboard. This sample
  * also works for UVCs with slight adjustments.
  */
+@Disabled
 @Autonomous
 public class VuforiaStreamOpMode extends LinearOpMode {
 

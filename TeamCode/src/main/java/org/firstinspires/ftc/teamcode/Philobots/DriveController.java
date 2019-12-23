@@ -58,6 +58,28 @@ public class DriveController {
     //do NOT call in a loop
 
     //speed should be scalar from 0 to 1
+    public void drive(Vector2d direction, double cmDistance, double speed, LinearOpMode linearOpMode, double timeoutms) {
+        //turns modules to correct positions for straight driving
+        //rotateModules()
+        resetDistanceTraveled();
+        double startTime = System.currentTimeMillis();
+
+        while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive() ) {
+            //slows down drive power in certain range
+            if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
+//                speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
+            }
+            updateTracking();
+            update(direction.normalize(speed), 0);
+
+            linearOpMode.telemetry.addData("Driving robot", "");
+            linearOpMode.telemetry.update();
+            if(System.currentTimeMillis()-startTime>timeoutms){
+                break;
+            }
+        }
+        update(Vector2d.ZERO, 0);
+    }
     public void drive(Vector2d direction, double cmDistance, double speed, LinearOpMode linearOpMode) {
         //turns modules to correct positions for straight driving
         //rotateModules()
@@ -79,6 +101,7 @@ public class DriveController {
     public void rotateRobot(Angle targetAngle, LinearOpMode linearOpMode) {
         //rotateModules
         int iterations = 0;
+
         boolean isNegativeRotation = robot.getRobotHeading().directionTo(targetAngle) == Angle.Direction.CLOCKWISE;
 
         double absHeadingDiff = robot.getRobotHeading().getDifference(targetAngle);
@@ -100,10 +123,9 @@ public class DriveController {
     }
 
     //both modules must be within allowed error for method to return
-    public void rotateModules(Vector2d direction, double timemoutMS, LinearOpMode linearOpMode) {
+    public void rotateModules(Vector2d direction,  LinearOpMode linearOpMode) {
         //TODO: check if this will work with reversed modules
         double moduleLeftDifference, moduleRightDifference;
-        double startTime = System.currentTimeMillis();
         do {
             moduleLeftDifference = moduleLeft.getCurrentOrientation().getDifference(direction.getAngleAngle());
             moduleRightDifference = moduleRight.getCurrentOrientation().getDifference(direction.getAngleAngle());
@@ -112,7 +134,7 @@ public class DriveController {
 
             linearOpMode.telemetry.addData("Rotating MODULES", "");
             linearOpMode.telemetry.update();
-        } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && linearOpMode.opModeIsActive() && System.currentTimeMillis() < startTime + timemoutMS);
+        } while ((moduleLeftDifference > ALLOWED_MODULE_ROT_ERROR || moduleRightDifference > ALLOWED_MODULE_ROT_ERROR) && linearOpMode.opModeIsActive());
         update(Vector2d.ZERO, 0);
     }
 

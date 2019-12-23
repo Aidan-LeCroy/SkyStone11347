@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Tracking;
 
 @Autonomous(name="WA Autonomous 1.0", group="Diffy")
-@Disabled
 public class Auto extends LinearOpMode {
     public enum SSPos{
         LEFT,
@@ -33,7 +32,8 @@ public class Auto extends LinearOpMode {
             pos = SSPos.CENTER;
         }
         waitForStart();
-        robot.dropIntakeServos();
+        drive.drive(Vector2d.FORWARD,100,.7,this);
+
     }
 
 }

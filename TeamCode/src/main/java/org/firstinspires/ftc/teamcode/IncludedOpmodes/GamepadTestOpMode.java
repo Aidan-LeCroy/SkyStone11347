@@ -14,6 +14,7 @@ import java.lang.reflect.Modifier;
 /*
  * Test the dashboard gamepad integration.
  */
+@Disabled
 @Autonomous
 public class GamepadTestOpMode extends LinearOpMode {
 
