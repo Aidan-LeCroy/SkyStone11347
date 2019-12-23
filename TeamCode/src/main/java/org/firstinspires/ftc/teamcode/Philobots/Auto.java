@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Tracking;
 
 @Autonomous(name="WA Autonomous 1.0", group="Diffy")
-@Disabled
 public class Auto extends LinearOpMode {
     public enum SSPos{
         LEFT,
