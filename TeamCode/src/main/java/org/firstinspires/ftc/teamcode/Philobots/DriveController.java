@@ -52,7 +52,14 @@ public class DriveController {
         moduleRight.updateTarget(translationVector, rotationMagnitude);
     }
 
+    //Debug methods to only update one module
+    public void updateLeft(Vector2d joystick1, Vector2d joystick2) {
+        moduleLeft.updateTarget(joystick1, -joystick2.getX() * ROBOT_ROTATION_SCALE_FACTOR);
+    }
 
+    public void updateRight(Vector2d joystick1, Vector2d joystick2) {
+        moduleRight.updateTarget(joystick1, -joystick2.getX() * ROBOT_ROTATION_SCALE_FACTOR);
+    }
 
     //AUTONOMOUS METHODS
     //do NOT call in a loop
