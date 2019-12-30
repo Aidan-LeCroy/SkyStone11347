@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Philobots;
 
 import com.disnodeteam.dogecv.detectors.skystone.SkystoneDetector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,7 +13,7 @@ public class Tracking {
     private OpenCvWebcam camera;
     public SkystoneDetector detector;
     private String pipeline;
-    public static final double DEGREES_PER_PIXEl=60/Math.sqrt(640^2+480^2);
+    public static final double DEGREES_PER_PIXEl=60/(Math.sqrt(640^2+480^2));
     public Tracking(HardwareMap hwmap, Telemetry telemetry){
         hardwareMap=hwmap;
         this.telemetry=telemetry;
@@ -27,6 +27,7 @@ public class Tracking {
 
         camera.startStreaming(640,480,OpenCvCameraRotation.UPRIGHT);
     }
+
     public double getSkyStoneX(){
         return detector.getScreenPosition().x;
     }
