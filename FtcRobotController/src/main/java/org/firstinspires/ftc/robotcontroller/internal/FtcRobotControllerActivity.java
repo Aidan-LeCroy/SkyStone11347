@@ -134,7 +134,7 @@ public class FtcRobotControllerActivity extends Activity
 
   protected WifiManager.WifiLock wifiLock;
   protected RobotConfigFileManager cfgFileMgr;
-
+  protected static Context fooContext;
   protected ProgrammingModeManager programmingModeManager;
 
   protected UpdateUI.Callback callback;
@@ -256,7 +256,7 @@ public class FtcRobotControllerActivity extends Activity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
+    fooContext=this;
     if (enforcePermissionValidator()) {
       return;
     }
@@ -386,7 +386,12 @@ public class FtcRobotControllerActivity extends Activity
     FtcDashboard.start();
   }
 
-  protected UpdateUI createUpdateUI() {
+  public static Context getContext() {
+    return fooContext;
+  }
+
+
+    protected UpdateUI createUpdateUI() {
     Restarter restarter = new RobotRestarter();
     UpdateUI result = new UpdateUI(this, dimmer);
     result.setRestarter(restarter);

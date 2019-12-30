@@ -15,7 +15,9 @@ public class Auto extends LinearOpMode {
     private Tracking track;
     private SSPos pos;
     @Override
+
     public void runOpMode(){
+
         track=new Tracking(hardwareMap,telemetry);
         track.initializeCamera();
         robot=new Robot(this,true);
