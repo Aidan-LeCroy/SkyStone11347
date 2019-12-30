@@ -34,7 +34,8 @@ public class Auto extends LinearOpMode {
         }
         waitForStart();
         drive.drive(Vector2d.FORWARD,20,.7,this);
-
+        /*
+        put any auto plans here
+         */
     }
-
 }
