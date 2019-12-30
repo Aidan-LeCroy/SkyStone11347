@@ -57,6 +57,7 @@ public class DriveController {
         moduleLeft.updateTarget(joystick1, -joystick2.getX() * ROBOT_ROTATION_SCALE_FACTOR);
     }
 
+
     public void updateRight(Vector2d joystick1, Vector2d joystick2) {
         moduleRight.updateTarget(joystick1, -joystick2.getX() * ROBOT_ROTATION_SCALE_FACTOR);
     }

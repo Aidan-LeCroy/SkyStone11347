@@ -29,7 +29,7 @@ public class TeleOp extends OpMode {
             mp.start();
         }
         catch(Exception e){
-            // whoops
+            telemetry.addData("Exception Thrown! ",e);
         }
     }
 
