@@ -20,7 +20,10 @@ public class Robot {
     private OpMode opMode;
 
     private DcMotor leftIntake,rightIntake;
+    private DcMotor leftLift,rightLift;
+    private static final double ENCODER_TICKS_PER_LEVEL=200.0;
     private Servo leftS,rightS,leftSF,rightSF,leftFourB,rightFourB;
+    int liftLevel=1;
     public Robot (OpMode opMode, boolean isAuto) {
 
         this.hardwareMap = opMode.hardwareMap;
@@ -51,6 +54,8 @@ public class Robot {
         leftSF=hardwareMap.servo.get("leftSF");
         leftFourB=hardwareMap.servo.get("leftFB");
         rightFourB=hardwareMap.servo.get("rightFB");
+        rightLift=hardwareMap.dcMotor.get("rightLift");
+        leftLift=hardwareMap.dcMotor.get("leftLift");
     }
 
     public Angle getRobotHeading () {
@@ -89,4 +94,36 @@ public class Robot {
     public void fourBarPosition(double pos){
 
     }
+    public void activateLift(){
+        if(liftLevel*ENCODER_TICKS_PER_LEVEL-100>getLiftEncoder())
+            leftLift.setPower(0);
+            rightLift.setPower(0);
+        if(liftLevel*ENCODER_TICKS_PER_LEVEL>(getLiftEncoder())){
+            leftLift.setPower(.5);
+            rightLift.setPower(.5);
+        }
+        if(liftLevel*ENCODER_TICKS_PER_LEVEL<(getLiftEncoder())){
+            leftLift.setPower(-.5);
+            rightLift.setPower(-.5);
+        }
+    }
+    public void addLevel() {
+        liftLevel++;
+    }
+    public void subLevel(){
+        if(liftLevel==1){
+            return;
+        }
+        liftLevel--;
+    }
+    public int getLevel(){
+        return liftLevel;
+    }
+    public double getLiftEncoder(){
+        return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
+    }
+
+
+
+
 }
