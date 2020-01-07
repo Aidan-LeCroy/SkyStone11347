@@ -56,6 +56,8 @@ public class Robot {
         rightFourB=hardwareMap.servo.get("rightFB");
         rightLift=hardwareMap.dcMotor.get("rightLift");
         leftLift=hardwareMap.dcMotor.get("leftLift");
+        leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public Angle getRobotHeading () {
@@ -94,19 +96,7 @@ public class Robot {
     public void fourBarPosition(double pos){
 
     }
-    public void activateLift(){
-        if(liftLevel*ENCODER_TICKS_PER_LEVEL-100>getLiftEncoder())
-            leftLift.setPower(0);
-            rightLift.setPower(0);
-        if(liftLevel*ENCODER_TICKS_PER_LEVEL>(getLiftEncoder())){
-            leftLift.setPower(.5);
-            rightLift.setPower(.5);
-        }
-        if(liftLevel*ENCODER_TICKS_PER_LEVEL<(getLiftEncoder())){
-            leftLift.setPower(-.5);
-            rightLift.setPower(-.5);
-        }
-    }
+
     public void addLevel() {
         liftLevel++;
     }
@@ -116,14 +106,15 @@ public class Robot {
         }
         liftLevel--;
     }
+    public void setLiftPower(double power){
+        leftLift.setPower(power);
+        rightLift.setPower(power);
+    }
     public int getLevel(){
         return liftLevel;
     }
     public double getLiftEncoder(){
         return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
     }
-
-
-
 
 }

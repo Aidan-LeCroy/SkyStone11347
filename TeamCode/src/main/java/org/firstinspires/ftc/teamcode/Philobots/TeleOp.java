@@ -20,7 +20,8 @@ public class TeleOp extends OpMode {
     public Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
 
     public boolean willResetIMU = true;
-
+    private boolean bounce1=false;
+    private boolean bounce2=false;
     public void init() {
         robot = new Robot(this, false);
         robot.initMechanisms();
@@ -62,7 +63,20 @@ public class TeleOp extends OpMode {
         } else {
             robot.intake(0);
         }
-        
+        robot.setLiftPower(-gamepad2.right_stick_y);
+        if(gamepad2.dpad_up&&!bounce1){
+            robot.addLevel();
+            bounce1=true;
+        }
+        else if(!gamepad2.dpad_up)
+            bounce2=false;
+        if(gamepad2.dpad_down&&!bounce2){
+            robot.subLevel();
+            bounce2=true;
+        }
+        else if(!gamepad2.dpad_down)
+            bounce2=false;
+
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
 //        if (gamepad1.b) {
 //            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
