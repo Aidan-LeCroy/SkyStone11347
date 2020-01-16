@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.teamcode.R;
 
+
 import java.util.Random;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Diff Swerve TeleOp", group = "TeleOp")
@@ -47,8 +48,6 @@ public class TeleOp extends OpMode {
     public void start () {
         if (willResetIMU) robot.initIMU();
     }
-
-
     public void loop() {
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y); //LEFT joystick
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
@@ -64,18 +63,19 @@ public class TeleOp extends OpMode {
             robot.intake(0);
         }
         robot.setLiftPower(-gamepad2.right_stick_y);
-        if(gamepad2.dpad_up&&!bounce1){
-            robot.addLevel();
-            bounce1=true;
-        }
-        else if(!gamepad2.dpad_up)
-            bounce2=false;
-        if(gamepad2.dpad_down&&!bounce2){
-            robot.subLevel();
-            bounce2=true;
-        }
-        else if(!gamepad2.dpad_down)
-            bounce2=false;
+        //        if(gamepad2.dpad_up&&!bounce1){
+//          ithub   robot.addLevel();
+//            bounce1=true;
+//        }
+//        else if(!gamepad2.dpad_up)
+//            bounce2=false;
+//        if(gamepad2.dpad_down&&!bounce2){
+//            robot.subLevel();
+//            bounce2=true;
+//        }
+//        else if(!gamepad2.dpad_down)
+//            bounce2=false;
+
 
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
 //        if (gamepad1.b) {
@@ -107,6 +107,7 @@ public class TeleOp extends OpMode {
         }
         return Vector2d.ZERO;
     }
+
 
 //    private void flipFoundation(){
 //        if(gamepad2.x&& !changed) {

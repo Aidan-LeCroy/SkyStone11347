@@ -22,7 +22,7 @@ public class Robot {
     private DcMotor leftIntake,rightIntake;
     private DcMotor leftLift,rightLift;
     private static final double ENCODER_TICKS_PER_LEVEL=200.0;
-    private Servo leftS,rightS,leftSF,rightSF,leftFourB,rightFourB;
+    private Servo leftFourB,rightFourB,grab;
     int liftLevel=1;
     public Robot (OpMode opMode, boolean isAuto) {
 
@@ -48,16 +48,15 @@ public class Robot {
         rightIntake=hardwareMap.dcMotor.get("rightIntake");
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightS=hardwareMap.servo.get("rightS");
-        leftS=hardwareMap.servo.get("leftS");
-        rightSF=hardwareMap.servo.get("rightSF");
-        leftSF=hardwareMap.servo.get("leftSF");
+        grab=hardwareMap.servo.get("grab");
         leftFourB=hardwareMap.servo.get("leftFB");
         rightFourB=hardwareMap.servo.get("rightFB");
         rightLift=hardwareMap.dcMotor.get("rightLift");
         leftLift=hardwareMap.dcMotor.get("leftLift");
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFourB.setDirection(Servo.Direction.REVERSE);
+        leftFourB.setDirection(Servo.Direction.FORWARD);
     }
 
     public Angle getRobotHeading () {
@@ -76,23 +75,19 @@ public class Robot {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime) {}
     }
-    public void dropIntakeServos(){
-        leftS.setPosition(.6);
-        rightS.setPosition(.2);
-    }
     public void intake(double power){
         leftIntake.setPower(-power);
         rightIntake.setPower(power);
     }
-    public void dropFoundation(){
-        leftSF.setPosition(1);
-        rightSF.setPosition(1);
-    }
-    public void liftFoundation(){
-        leftSF.setPosition(0);
-        rightSF.setPosition(0);
-
-    }
+//    public void dropFoundation(){
+//        leftSF.setPosition(1);
+//        rightSF.setPosition(1);
+//    }
+//    public void liftFoundation(){
+//        leftSF.setPosition(0);
+//        rightSF.setPosition(0);
+//
+//    }
     public void fourBarPosition(double pos){
 
     }
@@ -116,5 +111,14 @@ public class Robot {
     public double getLiftEncoder(){
         return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
     }
+    public void modulePower(String module,double power){
+        if (module.toLowerCase().equals("left")){
+            driveController.moduleLeft.directDrive(power);
+        }
+        else if (module.toLowerCase().equals("right")){
+            driveController.moduleRight.directDrive(power);
+        }
+    }
+
 
 }

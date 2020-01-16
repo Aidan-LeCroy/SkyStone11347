@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.Philobots.Angle;
 
 public class TestAuto extends LinearOpMode {
     Robot robot;
-
     public void runOpMode() {
         robot = new Robot(this, true);
         robot.initIMU();
