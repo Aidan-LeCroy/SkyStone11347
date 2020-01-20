@@ -1,16 +1,11 @@
-package org.firstinspires.ftc.teamcode.Philobots;
+package org.firstinspires.ftc.teamcode.CircuitRunners;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.teamcode.R;
-
-
-import java.util.Random;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Diff Swerve TeleOp", group = "TeleOp")
 public class TeleOp extends OpMode {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Philobots;
+package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 //this class allows you to avoid dealing with angle conversions!
 //different angle types are input into program and required for calculations (ex. IMU reading, vector math...)
