@@ -20,7 +20,7 @@ public class DriveModule {
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
 
-    public final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56; //TODO: if heading is wrong, change 56 to 28 on module rev and wheel rev
+    public final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56; //TODO: if heading is wrong, change 56 to 28 on module rev+wheel rev
     public final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
 
     //TODO: modify this variable to match drive gear ratio

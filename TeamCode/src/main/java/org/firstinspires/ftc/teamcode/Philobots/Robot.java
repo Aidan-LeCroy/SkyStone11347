@@ -18,9 +18,10 @@ public class Robot {
     Telemetry telemetry;
     HardwareMap hardwareMap;
     private OpMode opMode;
-
+    private int liftLevel=1;
     private DcMotor leftIntake,rightIntake;
-    private Servo leftS,rightS,leftSF,rightSF,leftFourB,rightFourB;
+    private DcMotor leftLift,rightLift;
+    private Servo leftS,rightS,leftSF,rightSF, leftFB, rightFB,grab;
     public Robot (OpMode opMode, boolean isAuto) {
 
         this.hardwareMap = opMode.hardwareMap;
@@ -40,17 +41,24 @@ public class Robot {
 
         imu.initialize(parameters);
     }
+    public void manLift(double power){
+        leftLift.setPower(-power);
+        rightLift.setPower(power);
+    }
     public void initMechanisms(){
         leftIntake=hardwareMap.dcMotor.get("leftIntake");
         rightIntake=hardwareMap.dcMotor.get("rightIntake");
+        grab=hardwareMap.servo.get("grabber");
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightS=hardwareMap.servo.get("rightS");
-        leftS=hardwareMap.servo.get("leftS");
-        rightSF=hardwareMap.servo.get("rightSF");
-        leftSF=hardwareMap.servo.get("leftSF");
-        leftFourB=hardwareMap.servo.get("leftFB");
-        rightFourB=hardwareMap.servo.get("rightFB");
+        leftFB=hardwareMap.servo.get("leftFB");
+        rightFB=hardwareMap.servo.get("rightFB");
+        rightFB.setDirection(Servo.Direction.REVERSE);
+        rightLift=hardwareMap.dcMotor.get("rightLift");
+        leftLift=hardwareMap.dcMotor.get("leftLift");
+        rightFB.setPosition(.95);
+        leftFB.setPosition(.95);
+        grab.setPosition(.9);
     }
 
     public Angle getRobotHeading () {
@@ -65,7 +73,7 @@ public class Robot {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime && linearOpMode.opModeIsActive()) {}
     }
-    public void wait (int millis, OpMode OpMode) {
+    public void wait (int millis) {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime) {}
     }
@@ -86,7 +94,26 @@ public class Robot {
         rightSF.setPosition(0);
 
     }
-    public void fourBarPosition(double pos){
+    public void setV4BPosition(double pos){
 
+    }
+    public void addLevel(){
+        liftLevel++;
+    }
+    public void removeLevel(){
+        if(liftLevel==1){
+            telemetry.addData("Lift Level: ","Cannot go below level 1");
+            return;
+        }
+        liftLevel--;
+    }
+    public void setLevel(int level){
+        liftLevel=level;
+    }
+    public int getLiftLevel(){
+        return liftLevel;
+}
+    public double getLiftEncoders(){
+        return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
     }
 }
