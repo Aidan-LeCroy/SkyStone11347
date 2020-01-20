@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.Philobots;
+package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 enum ModuleSide {LEFT, RIGHT}
 

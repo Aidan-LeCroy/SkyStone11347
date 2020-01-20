@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Philobots;
+package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import android.media.MediaPlayer;
 
@@ -14,8 +14,10 @@ public class TeleOp extends OpMode {
     //deadband for joysticks
     public double DEADBAND_MAG = 0.1;
     public Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
-    private boolean changed=false;
+    private boolean changed = false;
     public boolean willResetIMU = true;
+    private boolean bounce1 = false;
+    private boolean bounce2 = false;
 
     public void init() {
         robot = new Robot(this, false);
@@ -35,10 +37,10 @@ public class TeleOp extends OpMode {
     public void init_loop() {
         if (gamepad1.y) {
             willResetIMU = true;
-            telemetry.addData("tel","RESETTING IMU ON START, PRESS X TO NOT DO THIS");
-    }
-        if(gamepad1.x){
-            willResetIMU=false;
+            telemetry.addData("tel", "RESETTING IMU ON START, PRESS X TO NOT DO THIS");
+        }
+        if (gamepad1.x) {
+            willResetIMU = false;
         }
     }
 
@@ -46,15 +48,12 @@ public class TeleOp extends OpMode {
         if (willResetIMU) robot.initIMU();
     }
 
-
     public void loop() {
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y); //LEFT joystick
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
 //        flipFoundation();
 
         robot.driveController.updateUsingJoysticks(checkDeadband(joystick1), checkDeadband(joystick2));
-
-        
 
 
         if (gamepad1.left_trigger > 0) {
@@ -64,9 +63,23 @@ public class TeleOp extends OpMode {
         } else {
             robot.intake(0);
         }
-        robot.manLift(.5*gamepad2.left_stick_y);
-        telemetry.addData("LiftHeight: ",robot.getLiftLevel());
-        telemetry.addData("A1 Current Lift Level: ",robot.getLiftLevel());
+        robot.manLift(.5 * gamepad2.left_stick_y);
+        telemetry.addData("LiftHeight: ", robot.getLiftLevel());
+        telemetry.addData("A1 Current Lift Level: ", robot.getLiftLevel());
+        robot.setLiftPower(-gamepad2.right_stick_y);
+        //        if(gamepad2.dpad_up&&!bounce1){
+//          ithub   robot.addLevel();
+//            bounce1=true;
+//        }
+//        else if(!gamepad2.dpad_up)
+//            bounce2=false;
+//        if(gamepad2.dpad_down&&!bounce2){
+//            robot.subLevel();
+//            bounce2=true;
+//        }
+//        else if(!gamepad2.dpad_down)
+//            bounce2=false;
+
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
 //        if (gamepad1.b) {
 //            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;

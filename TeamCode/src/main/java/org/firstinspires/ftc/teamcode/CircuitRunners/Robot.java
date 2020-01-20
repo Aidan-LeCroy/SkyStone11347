@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Philobots;
+package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -21,7 +21,8 @@ public class Robot {
     private int liftLevel=1;
     private DcMotor leftIntake,rightIntake;
     private DcMotor leftLift,rightLift;
-    private Servo leftS,rightS,leftSF,rightSF, leftFB, rightFB,grab;
+    private static final double ENCODER_TICKS_PER_LEVEL=200.0;
+    private Servo leftFB,rightFB,grab;
     public Robot (OpMode opMode, boolean isAuto) {
 
         this.hardwareMap = opMode.hardwareMap;
@@ -46,9 +47,7 @@ public class Robot {
         rightLift.setPower(power);
     }
     public void initMechanisms(){
-        leftIntake=hardwareMap.dcMotor.get("leftIntake");
-        rightIntake=hardwareMap.dcMotor.get("rightIntake");
-        grab=hardwareMap.servo.get("grabber");
+
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftFB=hardwareMap.servo.get("leftFB");
@@ -56,6 +55,7 @@ public class Robot {
         rightFB.setDirection(Servo.Direction.REVERSE);
         rightLift=hardwareMap.dcMotor.get("rightLift");
         leftLift=hardwareMap.dcMotor.get("leftLift");
+        grab=hardwareMap.servo.get("grab");
         rightFB.setPosition(.95);
         leftFB.setPosition(.95);
         grab.setPosition(.9);
@@ -73,31 +73,17 @@ public class Robot {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime && linearOpMode.opModeIsActive()) {}
     }
-    public void wait (int millis) {
-        long startTime = System.currentTimeMillis();
-        while (millis > System.currentTimeMillis() - startTime) {}
-    }
-    public void dropIntakeServos(){
-        leftS.setPosition(.6);
-        rightS.setPosition(.2);
-    }
     public void intake(double power){
         leftIntake.setPower(-power);
         rightIntake.setPower(power);
     }
-    public void dropFoundation(){
-        leftSF.setPosition(1);
-        rightSF.setPosition(1);
-    }
-    public void liftFoundation(){
-        leftSF.setPosition(0);
-        rightSF.setPosition(0);
+    public void setV4BPosition(double pos) {
 
     }
-    public void setV4BPosition(double pos){
-
-    }
-    public void addLevel(){
+    public void setLiftPower(double power){
+        leftLift.setPower(power);
+        rightLift.setPower(power);
+    }public void addLevel(){
         liftLevel++;
     }
     public void removeLevel(){
@@ -115,5 +101,19 @@ public class Robot {
 }
     public double getLiftEncoders(){
         return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
+    }
+    public int getLevel(){
+        return liftLevel;
+    }
+    public double getLiftEncoder(){
+        return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
+    }
+    public void modulePower(String module,double power){
+        if (module.toLowerCase().equals("left")){
+            driveController.moduleLeft.directDrive(power);
+        }
+        else if (module.toLowerCase().equals("right")){
+            driveController.moduleRight.directDrive(power);
+        }
     }
 }
