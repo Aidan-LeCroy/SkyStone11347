@@ -64,9 +64,6 @@ public class TeleOp extends OpMode {
             robot.intake(0);
         }
         robot.manLift(.5 * gamepad2.left_stick_y);
-        telemetry.addData("LiftHeight: ", robot.getLiftLevel());
-        telemetry.addData("A1 Current Lift Level: ", robot.getLiftLevel());
-        robot.setLiftPower(-gamepad2.right_stick_y);
         //        if(gamepad2.dpad_up&&!bounce1){
 //          ithub   robot.addLevel();
 //            bounce1=true;
