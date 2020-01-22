@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Philobots;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import static org.firstinspires.ftc.teamcode.Philobots.RobotUtil.toCm;
+
 @Autonomous(name="WA Autonomous 1.0", group="Diffy")
 public class Auto extends LinearOpMode {
     public enum SSPos{
@@ -33,9 +35,14 @@ public class Auto extends LinearOpMode {
 
         }
         waitForStart();
-        drive.drive(Vector2d.FORWARD,20,.7,this);
-        /*
-        put any auto plans here
-         */
+        drive.drive(Vector2d.FORWARD,toCm(30),.7,this);
+        drive.rotateRobot(new Angle(90, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
+        robot.intakeOn();
+        drive.drive(Vector2d.BACKWARD, toCm(84), .7, this);
+        drive.rotateRobot(new Angle(180, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
+        // snag the foundation
+        drive.rotateRobot(new Angle(90, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
+        drive.drive(Vector2d.FORWARD, toCm(48), .7, this);
+
     }
 }

@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
+import static android.os.SystemClock.sleep;
+
 public class Robot {
     DriveController driveController;
     private BNO055IMU imu;
@@ -78,6 +80,12 @@ public class Robot {
     public void intake(double power){
         leftIntake.setPower(-power);
         rightIntake.setPower(power);
+    }
+    public void intakeOn() {
+        this.intake(1);
+    }
+    public void intakeOff(){
+        this.intake(0);
     }
 //    public void dropFoundation(){
 //        leftSF.setPosition(1);

@@ -9,4 +9,6 @@ public class RobotUtil {
         double scaleFactor = input/inputRange;
         return outputRange * scaleFactor + minOutputVal;
     }
+    public static double toCm(double inches) { return inches * 2.54; }
+    public static double toIn(double centimetres) { return centimetres / 2.54; }
 }

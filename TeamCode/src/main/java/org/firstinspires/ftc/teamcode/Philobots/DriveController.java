@@ -12,10 +12,10 @@ public class DriveController {
     DriveModule moduleRight;
 
     //used for straight line distance tracking
-    double robotDistanceTraveled = 0;
-    double previousRobotDistanceTraveled = 0;
-    double moduleLeftLastDistance;
-    double moduleRightLastDistance;
+    private double robotDistanceTraveled = 0;
+    private double previousRobotDistanceTraveled = 0;
+    private double moduleLeftLastDistance;
+    private double moduleRightLastDistance;
 
     //tolerance for module rotation (in degrees)
     public final double ALLOWED_MODULE_ROT_ERROR = 5;
