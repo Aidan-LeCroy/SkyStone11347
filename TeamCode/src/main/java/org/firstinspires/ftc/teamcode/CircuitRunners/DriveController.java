@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.Philobots;
+package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 enum ModuleSide {LEFT, RIGHT}
 
@@ -75,7 +74,7 @@ public class DriveController {
         while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive() ) {
             //slows down drive power in certain range
             if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
-//                speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
+                speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
             }
             updateTracking();
             update(direction.normalize(speed), 0);
@@ -95,7 +94,7 @@ public class DriveController {
         while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive()) {
             //slows down drive power in certain range
             if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
-                //speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
+                speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(), 0, START_DRIVE_SLOWDOWN_AT_CM, 0.1, 1);
             }
             updateTracking();
             update(direction.normalize(speed), 0);
