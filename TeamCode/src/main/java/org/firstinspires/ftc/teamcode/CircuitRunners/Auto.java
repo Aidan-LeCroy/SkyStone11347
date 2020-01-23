@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import static org.firstinspires.ftc.teamcode.Philobots.RobotUtil.toCm;
+import static org.firstinspires.ftc.teamcode.CircuitRunners.RobotUtil.toCm;
 
 @Autonomous(name="WA Autonomous 1.0", group="Diffy")
 public class Auto extends LinearOpMode {
@@ -24,8 +24,6 @@ public class Auto extends LinearOpMode {
         track.initializeCamera();
         robot=new Robot(this,true);
         robot.initIMU();
-        robot.initMechanisms();
-
         while(!this.opModeIsActive()) {
             double x = track.getSkyStoneX();
             double y = track.getSkyStoneY();

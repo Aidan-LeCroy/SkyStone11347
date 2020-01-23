@@ -21,7 +21,6 @@ public class TeleOp extends OpMode {
 
     public void init() {
         robot = new Robot(this, false);
-        robot.initMechanisms();
         try {
             mp = MediaPlayer.create(FtcRobotControllerActivity.getContext(), R.raw.megalovania);
             mp.start();
@@ -53,7 +52,9 @@ public class TeleOp extends OpMode {
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
 //        flipFoundation();
 
+
         robot.driveController.updateUsingJoysticks(checkDeadband(joystick1), checkDeadband(joystick2));
+
 
 
         if (gamepad1.left_trigger > 0) {

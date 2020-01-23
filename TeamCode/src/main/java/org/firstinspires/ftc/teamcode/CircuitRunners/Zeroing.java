@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Zero",group="TeleOp")
 public class Zeroing extends OpMode {
-    Robot robot = new Robot(this, false);
+    Robot robot;
 
     public void init() {
-        robot.initMechanisms();
+        robot=new Robot(this,false);
     }
 
     public void stop() {
@@ -16,7 +16,7 @@ public class Zeroing extends OpMode {
     }
 
     public void loop() {
-        robot.driveController.moduleLeft.directDrive(-gamepad1.left_stick_y);
-        robot.driveController.moduleRight.directDrive(-gamepad1.right_stick_y);
+        robot.driveController.moduleLeft.directDrive(.5*-gamepad1.left_stick_y);
+        robot.driveController.moduleRight.directDrive(.5*-gamepad1.right_stick_y);
     }
 }

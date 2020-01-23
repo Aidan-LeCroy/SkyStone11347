@@ -49,7 +49,8 @@ public class Robot {
         rightLift.setPower(power);
     }
     public void initMechanisms(){
-
+        leftIntake=hardwareMap.dcMotor.get("leftIntake");
+        rightIntake=hardwareMap.dcMotor.get("rightIntake");
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftFB=hardwareMap.servo.get("leftFB");
@@ -58,9 +59,6 @@ public class Robot {
         rightLift=hardwareMap.dcMotor.get("rightLift");
         leftLift=hardwareMap.dcMotor.get("leftLift");
         grab=hardwareMap.servo.get("grab");
-        rightFB.setPosition(.95);
-        leftFB.setPosition(.95);
-        grab.setPosition(.9);
     }
 
     public Angle getRobotHeading () {
