@@ -89,6 +89,9 @@ public class Robot {
     public void intakeOff(){
         this.intake(0);
     }
+    public void setGrabPos(double pos){
+        grab.setPosition(pos);
+    }
 //    public void dropFoundation(){
 //        leftSF.setPosition(1);
 //        rightSF.setPosition(1);
