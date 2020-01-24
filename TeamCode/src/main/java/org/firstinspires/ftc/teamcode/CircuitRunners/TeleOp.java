@@ -86,6 +86,13 @@ public class TeleOp extends OpMode {
         else if(!gamepad2.x){
             bounce3=false;
         }
+        if(gamepad2.a&&!bounce1){
+            grabToggle();
+            bounce1=true;
+        }
+        else if(!gamepad2.a){
+            bounce1=false;
+        }
 
         //to confirm that joysticks are operating properly
         telemetry.addData("Joystick 1", joystick1);
@@ -104,7 +111,7 @@ public class TeleOp extends OpMode {
         return Vector2d.ZERO;
     }
 
-    public void flip4B(){
+    private void flip4B(){
         if(!fbDrop){
             robot.set4BPos(.03);
             fbDrop=true;
@@ -112,6 +119,16 @@ public class TeleOp extends OpMode {
         else if(fbDrop){
             robot.set4BPos(.85);
             fbDrop=false;
+        }
+    }
+    private void grabToggle(){
+        if(grabbing){
+            robot.setGrabPos(.8);
+            grabbing=false;
+        }
+        else if(!grabbing){
+            robot.setGrabPos(.9);
+            grabbing=true;
         }
     }
 
