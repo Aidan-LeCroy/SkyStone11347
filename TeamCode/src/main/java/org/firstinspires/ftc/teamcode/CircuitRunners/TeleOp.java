@@ -18,6 +18,8 @@ public class TeleOp extends OpMode {
     public boolean willResetIMU = true;
     private boolean bounce1 = false;
     private boolean bounce2 = false;
+    private boolean bounce3= false;
+    private boolean fbDrop=false;
 
     public void init() {
         robot = new Robot(this, false);
@@ -57,27 +59,16 @@ public class TeleOp extends OpMode {
 
 
 
-        if (gamepad1.left_trigger > 0) {
+
+        if (gamepad2.left_trigger > 0) {
             robot.intake(-1);
-        } else if (gamepad1.right_trigger > 0) {
+        } else if (gamepad2.right_trigger > 0) {
             robot.intake(1);
         } else {
             robot.intake(0);
         }
+        telemetry.addData("Lift Encoder:",robot.getLiftEncoders());
         robot.manLift(.5 * gamepad2.left_stick_y);
-        //        if(gamepad2.dpad_up&&!bounce1){
-//          ithub   robot.addLevel();
-//            bounce1=true;
-//        }
-//        else if(!gamepad2.dpad_up)
-//            bounce2=false;
-//        if(gamepad2.dpad_down&&!bounce2){
-//            robot.subLevel();
-//            bounce2=true;
-//        }
-//        else if(!gamepad2.dpad_down)
-//            bounce2=false;
-
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
 //        if (gamepad1.b) {
 //            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
@@ -88,7 +79,13 @@ public class TeleOp extends OpMode {
 //            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
 //        }
 //        telemetry.addData("ROT_ADVANTAGE: ", robot.driveController.moduleLeft.ROT_ADVANTAGE);
-
+        if(gamepad2.x&&!bounce3){
+            flip4B();
+            bounce3=true;
+        }
+        else if(!gamepad2.x){
+            bounce3=false;
+        }
 
         //to confirm that joysticks are operating properly
         telemetry.addData("Joystick 1", joystick1);
@@ -106,6 +103,19 @@ public class TeleOp extends OpMode {
         }
         return Vector2d.ZERO;
     }
+
+    public void flip4B(){
+        if(!fbDrop){
+            robot.set4BPos(.03);
+            fbDrop=true;
+        }
+        else if(fbDrop){
+            robot.set4BPos(.85);
+            fbDrop=false;
+        }
+    }
+
+
 }
 //    private void flipFoundation(){
 //        if(gamepad2.x&& !changed) {

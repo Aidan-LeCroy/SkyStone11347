@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 import static android.os.SystemClock.sleep;
+import static java.lang.Math.abs;
 
 public class Robot {
     DriveController driveController;
@@ -44,6 +45,7 @@ public class Robot {
 
         imu.initialize(parameters);
     }
+    //Left lift reversed, encoder ticks going negative.
     public void manLift(double power){
         leftLift.setPower(-power);
         rightLift.setPower(power);
@@ -59,6 +61,8 @@ public class Robot {
         rightLift=hardwareMap.dcMotor.get("rightLift");
         leftLift=hardwareMap.dcMotor.get("leftLift");
         grab=hardwareMap.servo.get("grab");
+        leftFB.setPosition(0.03);
+        rightFB.setPosition(0.03);
     }
 
     public Angle getRobotHeading () {
@@ -93,12 +97,9 @@ public class Robot {
 //
 //    }
 
-    public void setLiftPower(double power) {
-        leftLift.setPower(power);
-        rightLift.setPower(power);
-    }
+
     public double getLiftEncoders(){
-        return ((leftLift.getCurrentPosition()+rightLift.getCurrentPosition())/2.0);
+        return (abs((leftLift.getCurrentPosition())+abs(rightLift.getCurrentPosition())/2.0));
     }
 
     public void modulePower(String module,double power){
@@ -109,4 +110,13 @@ public class Robot {
             driveController.moduleRight.directDrive(power);
         }
     }
+    public void set4BPos(double pos){
+        leftFB.setPosition(pos);
+        rightFB.setPosition(pos);
+    }
+    public void setLiftPosition(int pos){
+        leftLift.setTargetPosition(-pos);
+        rightLift.setTargetPosition(pos);
+    }
+
 }
