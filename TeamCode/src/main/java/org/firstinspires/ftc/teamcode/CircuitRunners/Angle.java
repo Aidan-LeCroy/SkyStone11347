@@ -5,12 +5,14 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 // make sure you...
 // initialize all Angle objects with the correct AngleType for the data you're storing
-// use angle1.getDifference(angle2) to get the difference between two angles (DON'T subtract raw values)
+// use angle1.getDifference(angle2) to get the difference between two angles
+// (DON'T subtract raw values)
 //   ^and don't forget to use getDirection() to get the sign of the difference
 
 //other notes:
 // you do NOT need to convert angle types before getting the difference or direction between them
-// you CAN initialize Angle objects with an angle value greater than the range (ex. new Angle(600, ZERO_TO_360_HEADING) is valid
+// you CAN initialize Angle objects with an angle value greater than the range
+// (ex. new Angle(600, ZERO_TO_360_HEADING) is valid
 
 
 //definitions:
@@ -20,15 +22,18 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 //Heading style: zero is forward (positive y-axis), CW is positive, CCW is negative
 //Cartesian style: zero is right (positive x-axis), CCW is positive, CW is negative
 
-//ZERO_TO_360_HEADING: heading style, going around CW from 0 takes you up to 360 and back to 0
-//NEG_180_TO_180_HEADING: heading style, going CW from 0 takes you up to +180, going CCW takes you to -180
-//ZERO_TO_360_CARTESIAN: cartesian style, going CCW from 0 takes you up to 360 and back to 0
-//NEG_180_TO_180_CARTESIAN: cartesian style, going CCW from 0 takes you up to +180, going CW takes you to -180
-
-
+//ZERO_TO_360_HEADING: heading style,
+// going around CW from 0 takes you up to 360 and back to 0
+//NEG_180_TO_180_HEADING: heading style,
+// going CW from 0 takes you up to +180, going CCW takes you to -180
+//ZERO_TO_360_CARTESIAN: cartesian style,
+// going CCW from 0 takes you up to 360 and back to 0
+//NEG_180_TO_180_CARTESIAN: cartesian style,
+// going CCW from 0 takes you up to +180, going CW takes you to -180
 public class Angle {
 
-    //relative to robot starting position (right = east, left = west, forward = north, backward = south)
+    //relative to robot starting position (right = east, left = west,
+    // forward = north, backward = south)
     public static final Angle
             RIGHT = new Angle(90, AngleType.NEG_180_TO_180_HEADING),
             LEFT = new Angle(-90, AngleType.NEG_180_TO_180_HEADING),
@@ -37,7 +42,8 @@ public class Angle {
 
     //see top for type definitions
     enum AngleType {
-        ZERO_TO_360_CARTESIAN, ZERO_TO_360_HEADING, NEG_180_TO_180_CARTESIAN, NEG_180_TO_180_HEADING
+        ZERO_TO_360_CARTESIAN, ZERO_TO_360_HEADING,
+        NEG_180_TO_180_CARTESIAN, NEG_180_TO_180_HEADING
     }
 
     //not stored for each angle, but used to return direction between two angles
@@ -60,7 +66,8 @@ public class Angle {
     public AngleType getType () { return type; }
 
 
-    //assumes DEGREES for input and output!! use built-in Java method to convert between radians and degrees
+    //assumes DEGREES for input and output!!
+    // use built-in Java method to convert between radians and degrees
     //no other assumptions related to inputAngle value (can be -infinity to infinity)
     public Angle convertAngle (AngleType outputType) {
         return new Angle (convertAngleDouble(outputType), outputType);
@@ -81,8 +88,10 @@ public class Angle {
         else {
             //even though input and output types are not true to the type of intermediate angle...
             // they have the correct important characteristic (numerical or coordinate)
-            double angleNewCoordinateSystem = convertCoordinateSystem(angle, type, numericalAndCoordinate(type, outputType));
-            return convertNumericalSystem(angleNewCoordinateSystem, numericalAndCoordinate(type, outputType), outputType);
+            double angleNewCoordinateSystem =
+                    convertCoordinateSystem(angle, type, numericalAndCoordinate(type, outputType));
+            return convertNumericalSystem(angleNewCoordinateSystem,
+                    numericalAndCoordinate(type, outputType), outputType);
         }
     }
 

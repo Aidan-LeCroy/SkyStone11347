@@ -10,7 +10,8 @@ public class DriveModule {
     DcMotor motor2; //bottom motor
 
     public final ModuleSide moduleSide;
-    public final Vector2d positionVector; //position of module relative to robot COM (center of mass)
+    public final Vector2d positionVector;
+    //position of module relative to robot COM (center of mass)
 
     //used for logic that allows robot to rotate modules as little as possible
     public boolean takingShortestPath = false;
@@ -20,11 +21,13 @@ public class DriveModule {
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
 
-    public final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56; //TODO: if heading is wrong, change 56 to 28 on module rev+wheel rev
+    public final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56;
+    //TODO: if heading is wrong, change 56 to 28 on module rev+wheel rev
     public final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
 
     //TODO: modify this variable to match drive gear ratio
-    public final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 ); //ticks per WHEEL revolution
+    public final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 );
+    //ticks per WHEEL revolution
 
     public final double CM_WHEEL_DIAMETER = 9.6;
     public final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
@@ -33,24 +36,28 @@ public class DriveModule {
     //used for scaling pivot component (see getPivotComponent() method)
     public final double ANGLE_OF_MAX_MODULE_ROTATION_POWER = 60;
 
-    //if module is within this number of degrees from its target orientation, no pivot power will be applied
+    //if module is within this number of degrees from its target orientation,
+    // no pivot power will be applied
     public final double ALLOWED_MODULE_ORIENTATION_ERROR = 5;
 
-    //TODO: tune this variable (see commented out section in TeleOp)
-    public final double ROT_ADVANTAGE = .6; //max rotation power divided by max translation power (scaling factor)
+    //tuned variable
+    public final double ROT_ADVANTAGE = .6;
+    //max rotation power divided by max translation power (scaling factor)
 
-    //this variable is set to 0.7 because when in RUN_USING_ENCODERS mode, powers about ~0.7 are the same
+    //this variable is set to 0.7 because when in RUN_USING_ENCODERS mode,
+    // powers about ~0.7 are the same
     //setting to 1 may increase robot top speed, but may decrease accuracy
     public double MAX_MOTOR_POWER = 0.7;
 
-    //unit vectors representing motors in the rotation power vs. translation power coordinate system
+    //unit vectors representing motors in the rotation power vs. translation power coordinate plane
     //more documentation on this coming soon
     public final Vector2d MOTOR_1_VECTOR = new Vector2d(1/Math.sqrt(2), 1/Math.sqrt(2));
     public final Vector2d MOTOR_2_VECTOR = new Vector2d(-1/Math.sqrt(2), 1/Math.sqrt(2));
 
     //variables used for path length distance tracking
     //this tracking is useful only for straight line paths
-    //tracking robot x and y position is significantly more complicated, and will likely be added in a later version
+    //tracking robot x and y position is significantly more complicated,
+    // and will likely be added in a later version
     private double distanceTraveled; //distance traveled (delta s) since initial encoder state
     private double lastMotor1Encoder;
     private double lastMotor2Encoder;
@@ -62,11 +69,13 @@ public class DriveModule {
         if (moduleSide == ModuleSide.RIGHT) {
             motor1 = robot.hardwareMap.dcMotor.get("topR");
             motor2 = robot.hardwareMap.dcMotor.get("bottomR");
-            positionVector = new Vector2d((double)18/2, 0); //points from robot center to right module
+            positionVector = new Vector2d((double)18/2, 0);
+            //points from robot center to right module
         } else {
             motor1 = robot.hardwareMap.dcMotor.get("topL");
             motor2 = robot.hardwareMap.dcMotor.get("bottomL");
-            positionVector = new Vector2d((double)-18/2, 0); //points from robot center to left module
+            positionVector = new Vector2d((double)-18/2, 0);
+            //points from robot center to left module
         }
 
         lastMotor1Encoder = motor1.getCurrentPosition();
@@ -78,16 +87,19 @@ public class DriveModule {
     }
 
 
-    public void updateTarget (Vector2d transVec, double rotMag) { //translation vector and rotation magnitude
+    public void updateTarget (Vector2d transVec, double rotMag) {
+        //translation vector and rotation magnitude
         //converts robot heading to the angle type used by Vector2d class
-        Angle convertedRobotHeading = robot.getRobotHeading().convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
+        Angle convertedRobotHeading = robot.getRobotHeading()
+                .convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
 
         //converts the translation vector from a robot centric to a field centric one
         Vector2d transVecFC = transVec.rotate(convertedRobotHeading.getAngle());
 
         //vector needed to rotate robot at the desired magnitude
         //based on positionVector of module (see definition for more info)
-        Vector2d rotVec = positionVector.normalize(rotMag);//.rotate(90); //theoretically this should be rotated 90, not sure sure it doesn't need to be
+        Vector2d rotVec = positionVector.normalize(rotMag);//.rotate(90);
+        // theoretically this should be rotated 90, not sure sure it doesn't need to be
 
         //combine desired robot translation and robot rotation to get goal vector for the module
         Vector2d targetVector = transVecFC.add(rotVec);
@@ -100,7 +112,8 @@ public class DriveModule {
             directionMultiplier = -1;
         }
 
-        //calls method that will apply motor powers necessary to reach target vector in the best way possible, based on current position
+        //calls method that will apply motor powers necessary to reach
+        // the target vector in the best way possible, based on current position
         goToTarget(targetVector, directionMultiplier);
 
 //        robot.telemetry.addData(moduleSide + " REVERSED: ", reversed);
@@ -123,13 +136,12 @@ public class DriveModule {
             pivotComponent = 0;
         }
 
-        //vector in an (invented) coordinate system that represents desired (relative) module translation and module rotation
-        Vector2d powerVector = new Vector2d(moveComponent, pivotComponent); //order very important here
+        //vector in an (invented) coordinate system
+        //represents desired (relative) module translation/module rotation
+        Vector2d powerVector = new Vector2d(moveComponent, pivotComponent);
+        //order very important here
         setMotorPowers(powerVector);
 
-//        robot.telemetry.addData(moduleSide + " Target Vector Angle: ", targetVector.getAngle());
-//        robot.telemetry.addData(moduleSide + " Power Vector: ", powerVector);
-//        robot.telemetry.addData(moduleSide + " Current orientation: ", getCurrentOrientation().getAngle());
     }
 
 
@@ -137,10 +149,12 @@ public class DriveModule {
     //this is necessary because of the differential nature of a diff swerve drive
     public double getPivotComponent (Vector2d targetVector, Angle currentAngle) {
         Angle targetAngle = targetVector.getAngleAngle();
-        double angleDiff = targetAngle.getDifference(currentAngle); //number from 0 to 180 (always positive)
+        double angleDiff = targetAngle.getDifference(currentAngle);
+        //number from 0 to 180 (always positive)
 
         //allows module to rotate to the opposite position of (180 degrees away from) its target
-        //if this is the fastest path, we need to indicate that the direction of translation should be reversed
+        //if this is the fastest path,
+        // we need to indicate that the direction of translation should be reversed
         if (Math.abs(angleDiff) > 90) {
             if (!takingShortestPath) {
                 reversed = !reversed; //reverse translation direction bc module is newly reversed
@@ -164,26 +178,29 @@ public class DriveModule {
             else return -1 * ROT_ADVANTAGE;
         } else {
             //scale module rotation power based on set constants
-            if (direction == Angle.Direction.CLOCKWISE) return angleDiff / ANGLE_OF_MAX_MODULE_ROTATION_POWER * ROT_ADVANTAGE;
+            if (direction == Angle.Direction.CLOCKWISE)
+                return angleDiff / ANGLE_OF_MAX_MODULE_ROTATION_POWER * ROT_ADVANTAGE;
             else return -1 * angleDiff / ANGLE_OF_MAX_MODULE_ROTATION_POWER * ROT_ADVANTAGE;
         }
     }
 
 
     //takes vector in power vector coordinate system
-    // ^(x component is relative translation power and y component is relative MODULE rotation power)
-    //calculates motor powers that will result in the desired ratio of module translation and module rotation
+    // x component is relative translation power
+    // y component is relative MODULE rotation power
     //sets motors to appropriate powers
     public void setMotorPowers (Vector2d powerVector) {
 
-        //this is one way to convert desired ratio of module translation and module rotation to motor powers
+        //this is one way to convert desired ratio of module translation
+        //and module rotation to motor powers
         //vectors are not strictly necessary for this, but made it easier to visualize
         //more documentation on this visualization method coming soon
         Vector2d motor1Unscaled = powerVector.projection(MOTOR_1_VECTOR);
         Vector2d motor2Unscaled = powerVector.projection(MOTOR_2_VECTOR);
 
         //makes sure no vector magnitudes exceed the maximum motor power
-        Vector2d[] motorPowersScaled = Vector2d.batchNormalize(MAX_MOTOR_POWER, motor1Unscaled, motor2Unscaled);
+        Vector2d[] motorPowersScaled =
+                Vector2d.batchNormalize(MAX_MOTOR_POWER, motor1Unscaled, motor2Unscaled);
         double motor1power = motorPowersScaled[0].getMagnitude();
         double motor2power = motorPowersScaled[1].getMagnitude();
 
@@ -205,10 +222,13 @@ public class DriveModule {
     //for pure module rotation (usually used for precise driving in auto)
     public void rotateModule (Vector2d direction) {
         //pass 0 as moveComponent
-        Vector2d powerVector = new Vector2d(0, getPivotComponent(direction, getCurrentOrientation())); //order important here
+        Vector2d powerVector = new Vector2d
+                (0, getPivotComponent(direction, getCurrentOrientation()));
+        //order important here
         setMotorPowers(powerVector);
 //        robot.telemetry.addData(moduleSide + " Power Vector: ", powerVector);
-//        robot.telemetry.addData(moduleSide + " Current orientation: ", getCurrentOrientation().getAngle());
+//        robot.telemetry.addData(moduleSide + " Current orientation: ",
+//        getCurrentOrientation().getAngle());
     }
 
     //does not need to be called at the start of every program
@@ -220,11 +240,14 @@ public class DriveModule {
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    //returns module orientation relative to ROBOT (not field) in degrees and NEG_180_TO_180_HEADING type
+    //returns module orientation relative to ROBOT (not field) in degrees and
+    // NEG_180_TO_180_HEADING type
     public Angle getCurrentOrientation() {
 //        robot.telemetry.addData(moduleSide + "Motor 1 Encoder", motor1.getCurrentPosition());
 //        robot.telemetry.addData(moduleSide + "Motor 2 Encoder", motor2.getCurrentPosition());
-        double rawAngle = (double)(motor2.getCurrentPosition() + motor1.getCurrentPosition())* DEGREES_PER_TICK; //motor2-motor1 makes ccw positive (?)
+        double rawAngle = (double)(motor2.getCurrentPosition() +
+                motor1.getCurrentPosition())* DEGREES_PER_TICK;
+        //motor2-motor1 makes ccw positive (?)
         return new Angle(rawAngle, Angle.AngleType.ZERO_TO_360_HEADING);
     }
 
@@ -233,7 +256,8 @@ public class DriveModule {
     //used for straight line distance tracking
 
     public void updateTracking () {
-        //important to set these to a variable so getCurrentPosition() is not called multiple times in single cycle
+        /*important to set these to a variable so getCurrentPosition()
+         is not called multiple times in single cycle */
         double currentMotor1Encoder = motor1.getCurrentPosition();
         double currentMotor2Encoder = motor2.getCurrentPosition();
 

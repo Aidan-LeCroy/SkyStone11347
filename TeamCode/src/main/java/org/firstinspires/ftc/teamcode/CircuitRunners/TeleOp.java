@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.teamcode.R;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Differential Swerve TeleOp", group = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+        (name = "Differential Swerve TeleOp", group = "TeleOp")
 public class TeleOp extends OpMode {
     private MediaPlayer mp = new MediaPlayer();
     private Robot robot;
@@ -52,8 +53,10 @@ public class TeleOp extends OpMode {
     }
 
     public void loop() {
-        Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y); //LEFT joystick
-        Vector2d joystick2 = new Vector2d(-gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
+        Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y);
+        //LEFT joystick
+        Vector2d joystick2 = new Vector2d(-gamepad1.right_stick_x, -gamepad2.right_stick_y);
+        //RIGHT joystick
 //        flipFoundation();
 
 
@@ -107,7 +110,8 @@ public class TeleOp extends OpMode {
 
     //returns zero vector if joystick is within deadband
     private Vector2d checkDeadband(Vector2d joystick) {
-        if (Math.abs(joystick.getX()) > DEADBAND_VEC.getX() || Math.abs(joystick.getY()) > DEADBAND_VEC.getY()) {
+        if (Math.abs(joystick.getX()) > DEADBAND_VEC.getX() ||
+                Math.abs(joystick.getY()) > DEADBAND_VEC.getY()) {
             return joystick;
         }
         return Vector2d.ZERO;
