@@ -138,7 +138,7 @@ public class TeleOp extends OpMode {
             grabbing=true;
         }
         else if(grabbing){
-            robot.setGrabPos(.9);
+            robot.setGrabPos(.6);
             grabbing=false;
         }
     }

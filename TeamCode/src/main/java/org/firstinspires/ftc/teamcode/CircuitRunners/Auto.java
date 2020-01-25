@@ -36,9 +36,9 @@ public class Auto extends LinearOpMode {
         waitForStart();
 
         sleep(100);
-        robot.set4BPos(.3);
+        robot.set4BPos(.125);
         sleep(2000);
-        drive.drive(Vector2d.FORWARD,toCm(10),.7,this);
+        drive.drive(Vector2d.FORWARD,toCm(5),.7,this);
 //        drive.drive(Vector2d.FORWARD,toCm(30),.7,this);
 //        drive.rotateRobot(new Angle(90, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
 //        robot.intakeOn();
@@ -47,7 +47,6 @@ public class Auto extends LinearOpMode {
 //        // snag the foundation
 //        drive.rotateRobot(new Angle(90, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
 //        drive.drive(Vector2d.FORWARD, toCm(48), .7, this);
-
     }
     private void rotateModules(Vector2d direction){
         robot.driveController.moduleLeft.rotateModule(direction);

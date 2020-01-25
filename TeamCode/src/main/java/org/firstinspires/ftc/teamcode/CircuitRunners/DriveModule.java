@@ -98,10 +98,10 @@ public class DriveModule {
 
         //vector needed to rotate robot at the desired magnitude
         //based on positionVector of module (see definition for more info)
-        Vector2d rotVec = positionVector.normalize(rotMag);//.rotate(90);
+        Vector2d rotVec = positionVector.normalize(rotMag).rotate(90);
         // theoretically this should be rotated 90, not sure sure it doesn't need to be
 
-        //combine desired robot translation and robot rotation to get goal vector for the module
+        //combine desired robot translation and robot rotation to get goal vector for the module;//
         Vector2d targetVector = transVecFC.add(rotVec);
 
         //allows modules to reverse power instead of rotating 180 degrees

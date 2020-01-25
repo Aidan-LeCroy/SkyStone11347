@@ -43,7 +43,7 @@ public class Tracking {
 //
 //In this case, sqrt(1920^2 + 1080^2) gives 2292.19 pixels along the diagonal.
 // That means each pixel represents 45/2292.19 = .0153994 degrees.
-// Explanation from StackOverflow user Jerry Coffin
+// Explanation paraphrased from StackOverflow user Jerry Coffin
 // Purely theoretical btw
     public double getAngletoSkyStone(){
         double skyX= getSkyStoneX();
