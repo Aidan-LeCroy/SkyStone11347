@@ -49,7 +49,7 @@ public class DriveModule {
     //setting to 1 may increase robot top speed, but may decrease accuracy
     public double MAX_MOTOR_POWER = 0.7;
 
-    //unit vectors representing motors in the rotation power vs. translation power coordinate plane
+    //unit vectors representing motors in the rotation power vs. translation power coordinate planehttps://nsspot.herokuapp.com/code2pdf/
     //more documentation on this coming soon
     public final Vector2d MOTOR_1_VECTOR = new Vector2d(1/Math.sqrt(2), 1/Math.sqrt(2));
     public final Vector2d MOTOR_2_VECTOR = new Vector2d(-1/Math.sqrt(2), 1/Math.sqrt(2));

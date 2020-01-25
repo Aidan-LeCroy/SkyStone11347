@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.R;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -55,7 +56,7 @@ public class TeleOp extends OpMode {
     public void loop() {
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y);
         //LEFT joystick
-        Vector2d joystick2 = new Vector2d(-gamepad1.right_stick_x, -gamepad2.right_stick_y);
+        Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y);
         //RIGHT joystick
 //        flipFoundation();
 
@@ -99,6 +100,9 @@ public class TeleOp extends OpMode {
         else if(!gamepad2.a){
             bounce1=false;
         }
+        if(gamepad2.y){
+            robot.set4BPos(.95);
+        }
 
         //to confirm that joysticks are operating properly
         telemetry.addData("Joystick 1", joystick1);
@@ -129,13 +133,13 @@ public class TeleOp extends OpMode {
         }
     }
     private void grabToggle(){
-        if(grabbing){
-            robot.setGrabPos(.8);
-            grabbing=false;
-        }
-        else if(!grabbing){
-            robot.setGrabPos(.9);
+        if(!grabbing){
+            robot.setGrabPos(.5);
             grabbing=true;
+        }
+        else if(grabbing){
+            robot.setGrabPos(.9);
+            grabbing=false;
         }
     }
 

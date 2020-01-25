@@ -34,10 +34,10 @@ public class Auto extends LinearOpMode {
             pos = SSPos.CENTER;
         }
         waitForStart();
-        robot.init4b();
+
         sleep(100);
-        robot.set4BPos(.6);
-        sleep(5000);
+        robot.set4BPos(.3);
+        sleep(2000);
         drive.drive(Vector2d.FORWARD,toCm(10),.7,this);
 //        drive.drive(Vector2d.FORWARD,toCm(30),.7,this);
 //        drive.rotateRobot(new Angle(90, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
@@ -48,5 +48,9 @@ public class Auto extends LinearOpMode {
 //        drive.rotateRobot(new Angle(90, Angle.AngleType.NEG_180_TO_180_CARTESIAN), this);
 //        drive.drive(Vector2d.FORWARD, toCm(48), .7, this);
 
+    }
+    private void rotateModules(Vector2d direction){
+        robot.driveController.moduleLeft.rotateModule(direction);
+        robot.driveController.moduleRight.rotateModule(direction);
     }
 }
