@@ -262,10 +262,14 @@ public class DriveModule {
 
     public void directDrive(double power){
         motor1.setPower(power);
-        motor2.setPower(power);
+        motor2.setPower(-power);
     }
     //returns distance (in cm) traveled since distance was last reset
     public double getDistanceTraveled () {
         return distanceTraveled;
+    }
+    public void moduleRotate(double power){
+        motor1.setPower(power);
+        motor2.setPower(power);
     }
 }

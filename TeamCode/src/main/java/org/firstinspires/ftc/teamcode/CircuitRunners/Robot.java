@@ -63,8 +63,11 @@ public class Robot {
         rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         grab=hardwareMap.servo.get("grab");
-        leftFB.setPosition(0.05);
-        rightFB.setPosition(0.05);
+
+    }
+    public void init4b(){
+        leftFB.setPosition(0.03);
+        rightFB.setPosition(0.03);
     }
 
     public Angle getRobotHeading () {

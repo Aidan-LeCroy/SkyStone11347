@@ -16,7 +16,7 @@ public class Zeroing extends OpMode {
     }
 
     public void loop() {
-        robot.driveController.moduleLeft.directDrive(.5*-gamepad1.left_stick_y);
-        robot.driveController.moduleRight.directDrive(.5*-gamepad1.right_stick_y);
+        robot.driveController.moduleLeft.moduleRotate(.5*-gamepad1.left_stick_y);
+        robot.driveController.moduleRight.moduleRotate(.5*-gamepad1.right_stick_y);
     }
 }

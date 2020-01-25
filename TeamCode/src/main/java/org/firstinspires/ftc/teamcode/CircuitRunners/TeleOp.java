@@ -7,15 +7,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.teamcode.R;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Diff Swerve TeleOp", group = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Differential Swerve TeleOp", group = "TeleOp")
 public class TeleOp extends OpMode {
     private MediaPlayer mp = new MediaPlayer();
     private Robot robot;
     //deadband for joysticks
-    public double DEADBAND_MAG = 0.1;
-    public Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
+    private double DEADBAND_MAG = 0.1;
+    private Vector2d DEADBAND_VEC = new Vector2d(DEADBAND_MAG, DEADBAND_MAG);
     private boolean changed = false;
-    public boolean willResetIMU = true;
+    private boolean grabbing=false;
+    private boolean willResetIMU = true;
     private boolean bounce1 = false;
     private boolean bounce2 = false;
     private boolean bounce3= false;
@@ -47,11 +48,12 @@ public class TeleOp extends OpMode {
 
     public void start() {
         if (willResetIMU) robot.initIMU();
+        robot.set4BPos(.5);
     }
 
     public void loop() {
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y); //LEFT joystick
-        Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
+        Vector2d joystick2 = new Vector2d(-gamepad1.right_stick_x, -gamepad2.right_stick_y); //RIGHT joystick
 //        flipFoundation();
 
 
