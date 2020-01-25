@@ -21,8 +21,10 @@ public class Vector2d {
 
     //makes a unit vector with a certain angle
     public Vector2d(Angle angle) {
-        this.x = Math.cos(Math.toRadians(angle.convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN).getAngle()));
-        this.y = Math.sin(Math.toRadians(angle.convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN).getAngle()));
+        this.x = Math.cos(Math.toRadians
+                (angle.convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN).getAngle()));
+        this.y = Math.sin(Math.toRadians
+                (angle.convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN).getAngle()));
     }
 
     public double getX() {
@@ -41,7 +43,8 @@ public class Vector2d {
     public double getAngle() {
         //don't know why all this is needed, but it doesn't work without it
         double angRad = Math.atan2(y, -x); //returns from -180 to 180 //-y for TESTING ONLY
-        Angle angHeading = new Angle(Math.toDegrees(angRad), Angle.AngleType.NEG_180_TO_180_HEADING);
+        Angle angHeading = new Angle(Math.toDegrees(angRad),
+                Angle.AngleType.NEG_180_TO_180_HEADING);
         return angHeading.convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN).getAngle();
 
         //the thing that should work in theory but doesn't:
@@ -51,7 +54,8 @@ public class Vector2d {
     //forgive this bad naming - returns Angle type instead of double of NEG_180_TO_180_CARTESIAN type
     public Angle getAngleAngle () {
         double angRad = Math.atan2(y, -x); //returns from -180 to 180 //-y for TESTING ONLY
-        Angle angHeading = new Angle(Math.toDegrees(angRad), Angle.AngleType.NEG_180_TO_180_HEADING);
+        Angle angHeading = new Angle(Math.toDegrees(angRad),
+                Angle.AngleType.NEG_180_TO_180_HEADING);
         return angHeading.convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
     }
 
@@ -75,7 +79,8 @@ public class Vector2d {
     //returns Vector2d rotated by ang degrees
     public Vector2d rotate(double ang) {
         double angRads = Math.toRadians(ang);
-        return new Vector2d(x * Math.cos(angRads) - y * Math.sin(angRads), x * Math.sin(angRads) + y * Math.cos(angRads));
+        return new Vector2d(x * Math.cos(angRads) - y * Math.sin(angRads),
+                x * Math.sin(angRads) + y * Math.cos(angRads));
     }
 
     //dot product

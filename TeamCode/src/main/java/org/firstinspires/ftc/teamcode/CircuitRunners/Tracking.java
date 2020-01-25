@@ -20,8 +20,10 @@ public class Tracking {
     }
     public void initializeCamera(){
         detector=new SkystoneDetector();
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera=new OpenCvWebcam(hardwareMap.get(WebcamName.class,"Webcam 1"),cameraMonitorViewId);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier
+                ("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera=new OpenCvWebcam
+                (hardwareMap.get(WebcamName.class,"Webcam 1"),cameraMonitorViewId);
         camera.openCameraDevice();
         camera.setPipeline(detector);
 
@@ -35,10 +37,14 @@ public class Tracking {
     public double getSkyStoneY() {
         return detector.getScreenPosition().y;
     }
-//    Computing the angle requires only simple linear interpolation. For example, let's assume a camera with a resolution of 1920x1080 that covers a 45 degree angle of view across the diagonal.
+//Computing the angle requires only simple linear interpolation.
+//For example, let's assume a camera with a resolution of 1920x1080 that
+// covers a 45 degree angle of view across the diagonal.
 //
-//In this case, sqrt(1920^2 + 1080^2) gives 2292.19 pixels along the diagonal. That means each pixel represents 45/2292.19 = .0153994 degrees.
-    // Explanation from StackOverflow user Jerry Coffin
+//In this case, sqrt(1920^2 + 1080^2) gives 2292.19 pixels along the diagonal.
+// That means each pixel represents 45/2292.19 = .0153994 degrees.
+// Explanation from StackOverflow user Jerry Coffin
+// Purely theoretical btw
     public double getAngletoSkyStone(){
         double skyX= getSkyStoneX();
         if (getSkyStoneX()<240)

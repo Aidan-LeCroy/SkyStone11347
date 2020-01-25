@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 public class RobotUtil {
 
-    public static double scaleVal (double input, double minInputVal, double maxInputVal, double minOutputVal, double maxOutputVal) {
+    public static double scaleVal (double input, double minInputVal,
+                                   double maxInputVal, double minOutputVal, double maxOutputVal) {
         if (input > maxInputVal) input = maxInputVal;
         double inputRange = Math.abs(maxInputVal - minInputVal);
         double outputRange = Math.abs(maxOutputVal - minOutputVal);
