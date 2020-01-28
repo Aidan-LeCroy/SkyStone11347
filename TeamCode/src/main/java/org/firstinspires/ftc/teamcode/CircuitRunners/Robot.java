@@ -11,6 +11,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.openftc.revextensions2.ExpansionHubEx;
+import org.openftc.revextensions2.ExpansionHubMotor;
+import org.openftc.revextensions2.RevBulkData;
 
 import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
@@ -26,13 +29,15 @@ class Robot {
     private DcMotor leftLift,rightLift;
     private static final double ENCODER_TICKS_PER_LEVEL=200.0;
     private Servo leftFB,rightFB,grab;
-    public Robot (OpMode opMode, boolean isAuto) {
+    ExpansionHubEx expHub;
+    ExpansionHubMotor topLeft,bottomLeft,topRight,bottomRight;
+    public Robot (OpMode opMode, boolean isAuto,boolean headless) {
 
         this.hardwareMap = opMode.hardwareMap;
         initMechanisms();
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
-        driveController = new DriveController(this);
+        driveController = new DriveController(this,headless);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
     }
 
@@ -51,6 +56,8 @@ class Robot {
         rightLift.setPower(power);
     }
     private void initMechanisms(){
+        expHub=hardwareMap.get(ExpansionHubEx.class,"Expansion Hub 5");
+
         leftIntake=hardwareMap.dcMotor.get("leftIntake");
         rightIntake=hardwareMap.dcMotor.get("rightIntake");
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -127,6 +134,9 @@ class Robot {
     public void setLiftPosition(int pos){
         leftLift.setTargetPosition(-pos);
         rightLift.setTargetPosition(pos);
+    }
+    public RevBulkData getBulkData(){
+        return expHub.getBulkInputData();
     }
 
 }

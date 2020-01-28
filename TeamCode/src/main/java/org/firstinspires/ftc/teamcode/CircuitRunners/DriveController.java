@@ -29,10 +29,10 @@ class DriveController {
     private final double ROBOT_ROTATION_SCALE_FACTOR = 0.6;
 
 
-    public DriveController(Robot robot) {
+    public DriveController(Robot robot, boolean headless) {
         this.robot = robot;
-        moduleLeft = new DriveModule(robot, ModuleSide.LEFT);
-        moduleRight = new DriveModule(robot, ModuleSide.RIGHT);
+        moduleLeft = new DriveModule(robot, ModuleSide.LEFT,headless);
+        moduleRight = new DriveModule(robot, ModuleSide.RIGHT,headless);
 
         moduleLeftLastDistance = moduleLeft.getDistanceTraveled();
         moduleRightLastDistance = moduleRight.getDistanceTraveled();

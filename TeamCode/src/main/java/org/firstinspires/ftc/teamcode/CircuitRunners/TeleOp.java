@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.R;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
         (name = "Differential Swerve TeleOp", group = "TeleOp")
-class TeleOp extends OpMode {
+public class TeleOp extends OpMode {
     private MediaPlayer mp = new MediaPlayer();
     private Robot robot;
     //deadband for joysticks
@@ -25,7 +25,7 @@ class TeleOp extends OpMode {
     private boolean fbDrop=false;
 
     public void init() {
-        robot = new Robot(this, false);
+        robot = new Robot(this, false,false);
         try {
             mp = MediaPlayer.create(FtcRobotControllerActivity.getContext(), R.raw.megalovania);
             mp.start();

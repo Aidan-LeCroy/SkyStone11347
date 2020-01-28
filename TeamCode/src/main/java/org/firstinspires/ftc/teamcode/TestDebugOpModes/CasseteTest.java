@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="coreTest",group="Diff")
-class CasseteTest extends OpMode {
+public class CasseteTest extends OpMode {
 
 
 

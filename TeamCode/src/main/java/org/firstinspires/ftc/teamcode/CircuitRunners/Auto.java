@@ -22,7 +22,7 @@ public class Auto extends LinearOpMode {
 
         track=new Tracking(hardwareMap,telemetry);
         track.initializeCamera();
-        robot=new Robot(this,true);
+        robot=new Robot(this,true,false);
         drive=robot.driveController;
 
         robot.initIMU();

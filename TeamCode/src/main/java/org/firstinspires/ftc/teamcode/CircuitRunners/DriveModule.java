@@ -61,9 +61,10 @@ class DriveModule {
     private double distanceTraveled; //distance traveled (delta s) since initial encoder state
     private double lastMotor1Encoder;
     private double lastMotor2Encoder;
+    private boolean headless;
 
-
-    public DriveModule(Robot robot, ModuleSide moduleSide) {
+    public DriveModule(Robot robot, ModuleSide moduleSide,boolean headless) {
+        this.headless=headless;
         this.robot = robot;
         this.moduleSide = moduleSide;
         if (moduleSide == ModuleSide.RIGHT) {
@@ -91,19 +92,20 @@ class DriveModule {
     public void updateTarget (Vector2d transVec, double rotMag) {
         //translation vector and rotation magnitude
         //converts robot heading to the angle type used by Vector2d class
-        Angle convertedRobotHeading = robot.getRobotHeading()
-                .convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
+        if(headless) {
+            Angle convertedRobotHeading = robot.getRobotHeading()
+                    .convertAngle(Angle.AngleType.NEG_180_TO_180_CARTESIAN);
 
-        //converts the translation vector from a robot centric to a field centric one
-        Vector2d transVecFC = transVec.rotate(convertedRobotHeading.getAngle());
-
+            //converts the translation vector from a robot centric to a field centric one
+            transVec = transVec.rotate(convertedRobotHeading.getAngle());
+        }
         //vector needed to rotate robot at the desired magnitude
         //based on positionVector of module (see definition for more info)
         Vector2d rotVec = positionVector.normalize(rotMag);
         // theoretically this should be rotated 90, not sure sure it doesn't need to be
 
         //combine desired robot translation and robot rotation to get goal vector for the module;//
-        Vector2d targetVector = transVecFC.add(rotVec);
+        Vector2d targetVector = transVec.add(rotVec);
 
         //allows modules to reverse power instead of rotating 180 degrees
         //example: useful when going from driving forwards to driving backwards
