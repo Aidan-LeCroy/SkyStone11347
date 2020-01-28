@@ -63,6 +63,7 @@ public class Vector2d {
         return new Vector2d(x + other.getX(), y + other.getY());
     }
 
+    @SuppressWarnings("WeakerAccess")
     public Vector2d scale(double scale) {
         return new Vector2d(getX() * scale, getY() * scale);
     }
@@ -84,6 +85,7 @@ public class Vector2d {
     }
 
     //dot product
+    @SuppressWarnings("WeakerAccess")
     public double dot(Vector2d other) {
         return getX() * other.getX() + getY() * other.getY();
     }

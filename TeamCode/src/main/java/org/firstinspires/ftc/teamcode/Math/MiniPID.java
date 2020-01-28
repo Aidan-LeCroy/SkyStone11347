@@ -10,6 +10,7 @@ package org.firstinspires.ftc.teamcode.Math;
  *
  * @see http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-direction/improving-the-beginners-pid-introduction
  */
+@SuppressWarnings("ALL")
 public class MiniPID{
     //**********************************
     // Class private variables
@@ -98,6 +99,7 @@ public class MiniPID{
      *
      * @param i New gain value for the Integral term
      */
+    @SuppressWarnings("WeakerAccess")
     public void setI(double i){
         if(I!=0){
             errorSum=errorSum*I/i;

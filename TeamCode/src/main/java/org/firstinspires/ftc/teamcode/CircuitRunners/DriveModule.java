@@ -2,57 +2,57 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class DriveModule {
-    Robot robot;
+class DriveModule {
+    private Robot robot;
 
     //TODO: make sure these motors are not flipped on your drive
-    DcMotor motor1; //top motor
-    DcMotor motor2; //bottom motor
+    private DcMotor motor1; //top motor
+    private DcMotor motor2; //bottom motor
 
-    public final ModuleSide moduleSide;
-    public final Vector2d positionVector;
+    private final ModuleSide moduleSide;
+    private final Vector2d positionVector;
     //position of module relative to robot COM (center of mass)
 
     //used for logic that allows robot to rotate modules as little as possible
-    public boolean takingShortestPath = false;
-    public boolean reversed = false;
+    private boolean takingShortestPath = false;
+    private boolean reversed = false;
 
     //important note about naming conventions below:
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
 
-    public final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56;
+    private final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56;
     //TODO: if heading is wrong, change 56 to 28 on module rev+wheel rev
-    public final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
+    private final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
 
     //TODO: modify this variable to match drive gear ratio
-    public final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 );
+    private final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 );
     //ticks per WHEEL revolution
 
-    public final double CM_WHEEL_DIAMETER = 9.6;
-    public final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
-    public final double CM_PER_TICK = CM_PER_WHEEL_REV/TICKS_PER_WHEEL_REV;
+    private final double CM_WHEEL_DIAMETER = 9.6;
+    private final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
+    private final double CM_PER_TICK = CM_PER_WHEEL_REV/TICKS_PER_WHEEL_REV;
 
     //used for scaling pivot component (see getPivotComponent() method)
-    public final double ANGLE_OF_MAX_MODULE_ROTATION_POWER = 60;
+    private final double ANGLE_OF_MAX_MODULE_ROTATION_POWER = 60;
 
     //if module is within this number of degrees from its target orientation,
     // no pivot power will be applied
-    public final double ALLOWED_MODULE_ORIENTATION_ERROR = 5;
+    private final double ALLOWED_MODULE_ORIENTATION_ERROR = 5;
 
     //tuned variable
-    public final double ROT_ADVANTAGE = .8;
+    private final double ROT_ADVANTAGE = .8;
     //max rotation power divided by max translation power (scaling factor)
 
     //this variable is set to 0.7 because when in RUN_USING_ENCODERS mode,
     // powers about ~0.7 are the same
     //setting to 1 may increase robot top speed, but may decrease accuracy
-    public double MAX_MOTOR_POWER = 0.9;
+    private double MAX_MOTOR_POWER = 0.9;
 
     //unit vectors representing motors in the rotation power vs. translation power coordinate planehttps://nsspot.herokuapp.com/code2pdf/
     //more documentation on this coming soon
-    public final Vector2d MOTOR_1_VECTOR = new Vector2d(1/Math.sqrt(2), 1/Math.sqrt(2));
-    public final Vector2d MOTOR_2_VECTOR = new Vector2d(-1/Math.sqrt(2), 1/Math.sqrt(2));
+    private final Vector2d MOTOR_1_VECTOR = new Vector2d(1/Math.sqrt(2), 1/Math.sqrt(2));
+    private final Vector2d MOTOR_2_VECTOR = new Vector2d(-1/Math.sqrt(2), 1/Math.sqrt(2));
 
     //variables used for path length distance tracking
     //this tracking is useful only for straight line paths
@@ -124,7 +124,7 @@ public class DriveModule {
 
 
     //sets motor powers for robot to best approach given target vector
-    public void goToTarget (Vector2d targetVector, int directionMultiplier) {
+    private void goToTarget(Vector2d targetVector, int directionMultiplier) {
         //how much the module needs to translate (and in which direction)
         double moveComponent = targetVector.getMagnitude() * directionMultiplier;
 
@@ -148,7 +148,7 @@ public class DriveModule {
 
     //returns a scalar corresponding to how much power the module needs to apply to rotating
     //this is necessary because of the differential nature of a diff swerve drive
-    public double getPivotComponent (Vector2d targetVector, Angle currentAngle) {
+    private double getPivotComponent(Vector2d targetVector, Angle currentAngle) {
         Angle targetAngle = targetVector.getAngleAngle();
         double angleDiff = targetAngle.getDifference(currentAngle);
         //number from 0 to 180 (always positive)
@@ -190,7 +190,7 @@ public class DriveModule {
     // x component is relative translation power
     // y component is relative MODULE rotation power
     //sets motors to appropriate powers
-    public void setMotorPowers (Vector2d powerVector) {
+    private void setMotorPowers(Vector2d powerVector) {
 
         //this is one way to convert desired ratio of module translation
         //and module rotation to motor powers

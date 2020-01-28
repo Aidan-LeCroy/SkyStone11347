@@ -4,9 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "Diff Swerve Test Auto", group = "Linear Opmode")
-
-public class TestAuto extends LinearOpMode {
-    Robot robot;
+class TestAuto extends LinearOpMode {
+    private Robot robot;
     public void runOpMode() {
         robot = new Robot(this, true);
         robot.initIMU();

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 
-public class Robot {
+class Robot {
     DriveController driveController;
     private BNO055IMU imu;
     Telemetry telemetry;
@@ -50,7 +50,7 @@ public class Robot {
         leftLift.setPower(-power);
         rightLift.setPower(power);
     }
-    public void initMechanisms(){
+    private void initMechanisms(){
         leftIntake=hardwareMap.dcMotor.get("leftIntake");
         rightIntake=hardwareMap.dcMotor.get("rightIntake");
         leftIntake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

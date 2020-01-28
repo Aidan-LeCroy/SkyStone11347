@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Math;
 
 import org.firstinspires.ftc.teamcode.Math.Vector;
 
-public class Pose {
+class Pose {
     private Object position;
     private double theta;
 

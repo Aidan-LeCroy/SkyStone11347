@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
-public class RobotUtil {
+class RobotUtil {
 
     public static double scaleVal (double input, double minInputVal,
                                    double maxInputVal, double minOutputVal, double maxOutputVal) {

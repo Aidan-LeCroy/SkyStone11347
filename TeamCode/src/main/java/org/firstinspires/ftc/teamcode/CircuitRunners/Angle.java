@@ -73,7 +73,7 @@ public class Angle {
         return new Angle (convertAngleDouble(outputType), outputType);
     }
 
-    public double convertAngleDouble (AngleType outputType) {
+    private double convertAngleDouble(AngleType outputType) {
         //handles case of same input and output type
         if (type == outputType) {
             return wrapAngle(this.getAngle(), outputType); //was new Angle(angle, type)
@@ -137,7 +137,7 @@ public class Angle {
     //INTERNAL METHODS - don't worry about these unless you're interested in how this class works
 
     //input and output type should have the same numerical system
-    public static double convertCoordinateSystem (double inputAngle,
+    private static double convertCoordinateSystem(double inputAngle,
                                                   AngleType inputType, AngleType outputType) {
         //ensure input and output coordinate system not same-
         // assumed different later on (bc of *-1)
@@ -159,21 +159,21 @@ public class Angle {
 
     //although this method currently is just a pass through,
     // I think it may need to do more in the future (and it adds uniformity)
-    public static double convertNumericalSystem (double inputAngle,
+    private static double convertNumericalSystem(double inputAngle,
                                                  AngleType inputType, AngleType outputType) {
         if (sameNumericalSystem(inputType, outputType)) return inputAngle; //for uniformity
         return wrapAngle(inputAngle, outputType);
     }
 
-    public static boolean sameCoordinateSystem(AngleType firstType, AngleType secondType) {
+    private static boolean sameCoordinateSystem(AngleType firstType, AngleType secondType) {
         return isCartesian(firstType) == isCartesian(secondType);
     }
 
-    public static boolean sameNumericalSystem(AngleType firstType, AngleType secondType) {
+    private static boolean sameNumericalSystem(AngleType firstType, AngleType secondType) {
         return isZeroTo360(firstType) == isZeroTo360(secondType);
     }
 
-    public static boolean isCartesian (AngleType angleType) {
+    private static boolean isCartesian(AngleType angleType) {
         if (angleType == AngleType.ZERO_TO_360_CARTESIAN
                 || angleType == AngleType.NEG_180_TO_180_CARTESIAN) {
             return true;
@@ -181,7 +181,7 @@ public class Angle {
         return false;
     }
 
-    public static boolean isZeroTo360 (AngleType angleType) {
+    private static boolean isZeroTo360(AngleType angleType) {
         if (angleType == AngleType.ZERO_TO_360_CARTESIAN
                 || angleType == AngleType.ZERO_TO_360_HEADING) {
             return true;
@@ -189,7 +189,7 @@ public class Angle {
         return false;
     }
 
-    public static AngleType numericalAndCoordinate (AngleType numericalType,
+    private static AngleType numericalAndCoordinate(AngleType numericalType,
                                                     AngleType coordinateType) {
         if (isZeroTo360(numericalType) && isCartesian(coordinateType))
             return AngleType.ZERO_TO_360_CARTESIAN;
@@ -204,7 +204,7 @@ public class Angle {
     //returns an angle between max and min,
     // assuming a coordinate system starting at min and wrapping back to max
     //assumes min < max AND min <= 0
-    public static double wrapAngle(double angle, double min, double max) {
+    private static double wrapAngle(double angle, double min, double max) {
         angle = mod(angle, range(min, max));
         if (angle > max) { //won't be < min bc of second assumption
             return min + min + angle;
@@ -214,7 +214,7 @@ public class Angle {
     }
 
     //shortcut for AngleType instead of min and max bounds
-    public static double wrapAngle(double angle, AngleType outputAngleType) {
+    private static double wrapAngle(double angle, AngleType outputAngleType) {
         if (isZeroTo360(outputAngleType)) {
             return wrapAngle(angle, 0, 360);
         } else {
@@ -223,13 +223,13 @@ public class Angle {
     }
 
     //returns the range between two numbers (ex. -180, 180 returns 360)
-    public static double range (double num1, double num2) {
+    private static double range(double num1, double num2) {
         return Math.abs(num1-num2);
     }
 
     //returns python version of n % m (n is dividend, m is divisor)
     //python % never returns negative numbers, but Java % does
-    public static double mod (double n, double m) {
+    private static double mod(double n, double m) {
         return (((n % m) + m) % m);
     }
 }

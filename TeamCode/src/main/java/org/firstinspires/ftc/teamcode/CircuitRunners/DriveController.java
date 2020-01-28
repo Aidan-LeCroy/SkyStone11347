@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 enum ModuleSide {LEFT, RIGHT}
 
-public class DriveController {
-    Robot robot;
+class DriveController {
+    private Robot robot;
 
     DriveModule moduleLeft;
     DriveModule moduleRight;
@@ -17,16 +17,16 @@ public class DriveController {
     private double moduleRightLastDistance;
 
     //tolerance for module rotation (in degrees)
-    public final double ALLOWED_MODULE_ROT_ERROR = 5;
+    private final double ALLOWED_MODULE_ROT_ERROR = 5;
 
     //distance from target when power scaling will begin
-    public final double START_DRIVE_SLOWDOWN_AT_CM = 15;
+    private final double START_DRIVE_SLOWDOWN_AT_CM = 15;
 
     //maximum number of times the robot will try to correct its heading when rotating
-    public final int MAX_ITERATIONS_ROBOT_ROTATE = 3;
+    private final int MAX_ITERATIONS_ROBOT_ROTATE = 3;
 
     //will multiply the input from the rotation joystick (max value of 1) by this factor
-    public final double ROBOT_ROTATION_SCALE_FACTOR = 0.6;
+    private final double ROBOT_ROTATION_SCALE_FACTOR = 0.6;
 
 
     public DriveController(Robot robot) {
@@ -46,7 +46,7 @@ public class DriveController {
 
     //should be called every loop cycle when driving (auto or TeleOp)
     //note: positive rotationMagnitude is CCW rotation
-    public void update(Vector2d translationVector, double rotationMagnitude) {
+    private void update(Vector2d translationVector, double rotationMagnitude) {
         moduleLeft.updateTarget(translationVector, rotationMagnitude);
         moduleRight.updateTarget(translationVector, rotationMagnitude);
     }
@@ -163,7 +163,7 @@ public class DriveController {
     //TRACKING METHODS
     //methods for path length tracking in autonomous (only useful for driving in straight lines)
 
-    public void resetDistanceTraveled() {
+    private void resetDistanceTraveled() {
         previousRobotDistanceTraveled = robotDistanceTraveled;
         robotDistanceTraveled = 0;
 
@@ -171,7 +171,7 @@ public class DriveController {
         moduleLeft.resetDistanceTraveled();
     }
 
-    public void updateTracking() {
+    private void updateTracking() {
         moduleRight.updateTracking();
         moduleLeft.updateTracking();
 
@@ -184,7 +184,7 @@ public class DriveController {
     }
 
     //note: returns ABSOLUTE VALUE
-    public double getDistanceTraveled() {
+    private double getDistanceTraveled() {
         return Math.abs(robotDistanceTraveled);
     }
 

@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Zero",group="TeleOp")
-public class Zeroing extends OpMode {
-    Robot robot;
+class Zeroing extends OpMode {
+    private Robot robot;
 
     public void init() {
         robot=new Robot(this,false);

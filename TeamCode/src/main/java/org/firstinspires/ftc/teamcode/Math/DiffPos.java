@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Math;
 
-public class DiffPos {
+class DiffPos {
     public DiffPos(double xPos, double yPos, double thetaPos, boolean isRadian) {
         if (!isRadian) {
             thetaPos = Math.toRadians(thetaPos);

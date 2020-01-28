@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //probably should be used to verify that encoders have not drifted before every competition match
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Reset Encoders", group = "Utilities")
-public class ResetEncoders extends OpMode {
-    Robot robot;
+class ResetEncoders extends OpMode {
+    private Robot robot;
 
     public void init () {
         robot = new Robot(this, false);

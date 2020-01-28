@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+@SuppressWarnings("ALL")
 @TeleOp(name="getRPM",group="TestOpModes")
 public class GetRPM extends OpMode {
     //find RPM, rotate each cassete
