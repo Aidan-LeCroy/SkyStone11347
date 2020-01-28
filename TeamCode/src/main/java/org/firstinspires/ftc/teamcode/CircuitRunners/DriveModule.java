@@ -41,13 +41,13 @@ public class DriveModule {
     public final double ALLOWED_MODULE_ORIENTATION_ERROR = 5;
 
     //tuned variable
-    public final double ROT_ADVANTAGE = .6;
+    public final double ROT_ADVANTAGE = .8;
     //max rotation power divided by max translation power (scaling factor)
 
     //this variable is set to 0.7 because when in RUN_USING_ENCODERS mode,
     // powers about ~0.7 are the same
     //setting to 1 may increase robot top speed, but may decrease accuracy
-    public double MAX_MOTOR_POWER = 0.7;
+    public double MAX_MOTOR_POWER = 0.9;
 
     //unit vectors representing motors in the rotation power vs. translation power coordinate planehttps://nsspot.herokuapp.com/code2pdf/
     //more documentation on this coming soon
@@ -82,6 +82,7 @@ public class DriveModule {
         lastMotor2Encoder = motor2.getCurrentPosition();
 
         //TODO: Make sure we want coast or brake
+        // BRAKE: Jumpy, Decently Accurate
         motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -98,7 +99,7 @@ public class DriveModule {
 
         //vector needed to rotate robot at the desired magnitude
         //based on positionVector of module (see definition for more info)
-        Vector2d rotVec = positionVector.normalize(rotMag).rotate(90);
+        Vector2d rotVec = positionVector.normalize(rotMag);
         // theoretically this should be rotated 90, not sure sure it doesn't need to be
 
         //combine desired robot translation and robot rotation to get goal vector for the module;//
