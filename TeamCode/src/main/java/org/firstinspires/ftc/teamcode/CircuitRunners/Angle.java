@@ -41,7 +41,7 @@ public class Angle {
             BACKWARD = new Angle(180, AngleType.ZERO_TO_360_HEADING);
 
     //see top for type definitions
-    enum AngleType {
+    public enum AngleType {
         ZERO_TO_360_CARTESIAN, ZERO_TO_360_HEADING,
         NEG_180_TO_180_CARTESIAN, NEG_180_TO_180_HEADING
     }

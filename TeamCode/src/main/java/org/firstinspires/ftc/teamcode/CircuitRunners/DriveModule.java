@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-class DriveModule {
+public class DriveModule {
     private Robot robot;
 
     //TODO: make sure these motors are not flipped on your drive
