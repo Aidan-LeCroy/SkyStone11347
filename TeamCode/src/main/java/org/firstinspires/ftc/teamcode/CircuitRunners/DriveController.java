@@ -26,7 +26,7 @@ class DriveController {
     private final int MAX_ITERATIONS_ROBOT_ROTATE = 3;
 
     //will multiply the input from the rotation joystick (max value of 1) by this factor
-    private final double ROBOT_ROTATION_SCALE_FACTOR = 0.6;
+    private final double ROBOT_ROTATION_SCALE_FACTOR = 0.75;
 
 
     public DriveController(Robot robot, boolean headless) {
