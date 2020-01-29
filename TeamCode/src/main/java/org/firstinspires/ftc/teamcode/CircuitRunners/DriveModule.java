@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+
 public class DriveModule {
     private Robot robot;
 
     //TODO: make sure these motors are not flipped on your drive
     private DcMotor motor1; //top motor
     private DcMotor motor2; //bottom motor
+    
+    private AS5600 rotarySensor; //the magnetic rotation sensor
 
     private final ModuleSide moduleSide;
     private final Vector2d positionVector;
