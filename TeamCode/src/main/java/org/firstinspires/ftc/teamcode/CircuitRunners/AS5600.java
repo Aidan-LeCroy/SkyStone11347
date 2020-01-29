@@ -1,44 +1,65 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
-import com.qualcomm.robotcore.hardware.ControlSystem;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
-import com.qualcomm.robotcore.hardware.configuration.I2cSensor;
-import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
-import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
+import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import org.openftc.revextensions2.RevBulkData;
 
+public class AS5600  {
 
-@I2cDeviceType
-@DeviceProperties(name = "AS5600 Magnetic Rotary Sensor",
-        description = "Magnetic Rotary Sensor from Grove",
-        xmlTag = "AS5600",
-        compatibleControlSystems = ControlSystem.REV_HUB)
-public class AS5600 extends I2cDeviceSynchDevice<I2cDeviceSynch> {
+        
+        private static final double maxVoltage = 3.3; //eg 5v, 3.3v VDD
+        private static final double minVoltage = 0.0; //eg. GND
+        private AnalogInput sensor = null;
+        private RevBulkData bulkData;
+        private double lastKnownHeading = 0; 
+        
+        public AS5600(AnalogInput sensor, RevBulkData bulkData){
+                this.sensor = sensor;
+                this.bulkData = bulkData;
+        }
+        
+        public double rawVoltage(){
+                return bulkData.getAnalogInputValue(sensor);
+        }
+        
+        public double getMinV(){
+                return minVoltage;
+        }
+        
+        public double getMaxV(){
+                return maxVoltage;
+        }
+        
+        //Get the heading from 0 - 360
+        public double getHeading(){
+                double rawVoltage = rawVoltage(); 
+                double scaled = scaleFromVoltage(
+                        rawVoltage, //value
+                        0.0, //lower
+                        360.0 //upper
+                        );
+                lastKnownHeading = scaled;
+                return scaled;
+        }
+        
+        public double getLastKnownHeading(){
+                return lastKnownHeading;
+        }
+        
+        
+        //Scale a given voltage value into a given range
+        public double scaleFromVoltage(double voltage, double min, double max){
+                return Range.scale(
+                        voltage,
+                        minVoltage,
+                        maxVoltage,
+                        min,
+                        max);
+        }
+        
+        
+        
+        
 
-
-    @Override
-    public Manufacturer getManufacturer(){
-        return Manufacturer.Other;
-    }
-
-    @Override
-    protected synchronized boolean doInitialize() {
-        return true;
-    }
-
-    @Override
-    public String getDeviceName() {
-
-        return "Grove Magnetic Rotary Sensor";
-    }
-
-
-    public AS5600(I2cDeviceSynch deviceClient) {
-        super(deviceClient, true);
-
-
-        super.registerArmingStateCallback(false);
-        this.deviceClient.engage();
-    }
 
 }
