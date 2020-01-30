@@ -30,12 +30,7 @@ class Robot {
     private static final double ENCODER_TICKS_PER_LEVEL=200.0;
     private Servo leftFB,rightFB,grab;
 
-    private ExpansionHubEx expansionHubEx5;
-    private ExpansionHubEx expansionHubEx7;
-
-    private RevBulkData revBulkData5;
-    private RevBulkData revBulkData7;
-
+    public BulkDataManager bulkDataManager;
     ExpansionHubMotor topLeft,bottomLeft,topRight,bottomRight;
 
     public Robot (OpMode opMode, boolean isAuto, boolean headless) {
@@ -46,8 +41,17 @@ class Robot {
         this.opMode = opMode;
         driveController = new DriveController(this,headless);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+
+        initBulkData();
     }
 
+    public void initBulkData() {
+        bulkDataManager = new BulkDataManager(
+                hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 5"),
+                hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 7")
+        );
+
+    }
 
     public void initIMU () {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -80,13 +84,6 @@ class Robot {
 
     }
 
-    private void initHubs() {
-        expansionHubEx5 = hardwareMap.get(ExpansionHubEx.class,"Expansion Hub 5");
-        expansionHubEx7 = hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 7");
-
-        revBulkData5 = expansionHubEx5.getBulkInputData();
-        revBulkData7 = expansionHubEx7.getBulkInputData();
-    }
     public void init4b(){
         leftFB.setPosition(0.03);
         rightFB.setPosition(0.03);
@@ -150,52 +147,5 @@ class Robot {
         rightLift.setTargetPosition(pos);
     }
 
-    /**
-     * Bulk Data utility/convenience methods
-     *
-     */
-
-    //Returns encoder for hub 5
-    public double getDriveEncoder(ExpansionHubMotor motor){
-        return revBulkData5.getMotorCurrentPosition(motor);
-    }
-
-    public double getMecEncoder(ExpansionHubMotor motor){
-        return revBulkData7.getMotorCurrentPosition(motor);
-    }
-
-    public double getDriveEncoderVelo(ExpansionHubMotor motor){
-        return revBulkData5.getMotorVelocity(motor);
-    }
-
-
-    public double hubCurrent(byte hubNum){
-        switch(hubNum){
-            case 5:
-                return expansionHubEx5.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
-            case 7:
-                return expansionHubEx7.getTotalModuleCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
-            default: return 0;
-        }
-    }
-
-
-
-
-
-    public void updateBulkData(){
-        revBulkData5 = expansionHubEx5.getBulkInputData();
-        revBulkData7 = expansionHubEx7.getBulkInputData();
-    }
-
-    //Return bulk data object for hub 5
-    public RevBulkData getBulkData5(){
-        return revBulkData5;
-    }
-
-    //Return the bulk data object for hub 7
-    public RevBulkData getRevBulkData7(){
-        return revBulkData7;
-    }
 
 }

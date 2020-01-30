@@ -81,7 +81,6 @@ public class DriveModule {
             positionVector = new Vector2d((double)-18/2, 0);
             //points from robot center to left module
         }
-
         lastMotor1Encoder = motor1.getCurrentPosition();
         lastMotor2Encoder = motor2.getCurrentPosition();
 
