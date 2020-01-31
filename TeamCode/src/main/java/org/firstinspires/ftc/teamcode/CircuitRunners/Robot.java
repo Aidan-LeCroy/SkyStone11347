@@ -36,13 +36,14 @@ class Robot {
     public Robot (OpMode opMode, boolean isAuto, boolean headless) {
 
         this.hardwareMap = opMode.hardwareMap;
+        initBulkData();
         initMechanisms();
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
+
         driveController = new DriveController(this,headless);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
 
-        initBulkData();
     }
 
     public void initBulkData() {
@@ -127,7 +128,7 @@ class Robot {
 
 
     public double getLiftEncoders(){
-        return (abs((leftLift.getCurrentPosition())+abs(rightLift.getCurrentPosition())/2.0));
+        return (abs((bulkDataManager.getEncoder(leftLift,7))+abs(bulkDataManager.getEncoder(rightLift,7))/2.0));
     }
 
     public void modulePower(String module,double power){

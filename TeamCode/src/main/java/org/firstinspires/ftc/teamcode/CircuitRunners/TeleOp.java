@@ -55,11 +55,14 @@ public class TeleOp extends OpMode {
     }
 
     public void loop() {
+        robot.bulkDataManager.update();
+
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y);
         //LEFT joystick
         Vector2d joystick2 = new Vector2d(gamepad1.right_stick_x, 0);
         //RIGHT joystick
 //        flipFoundation();
+
 
 
         robot.driveController.updateUsingJoysticks

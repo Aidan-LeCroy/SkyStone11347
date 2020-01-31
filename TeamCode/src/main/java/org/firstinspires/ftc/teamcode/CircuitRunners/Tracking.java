@@ -45,12 +45,7 @@ public class Tracking {
 // That means each pixel represents 45/2292.19 = .0153994 degrees.
 // Explanation paraphrased from StackOverflow user Jerry Coffin
 // Purely theoretical btw
-    public double getAngletoSkyStone(){
-        double skyX= getSkyStoneX();
-        if (getSkyStoneX()<240)
-            skyX-=480;
-        return skyX*DEGREES_PER_PIXEl;
-    }
+
 
 }
 

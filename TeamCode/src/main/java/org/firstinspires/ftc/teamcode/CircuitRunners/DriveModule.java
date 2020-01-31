@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.openftc.revextensions2.RevBulkData;
 
 
 public class DriveModule {
@@ -52,7 +55,7 @@ public class DriveModule {
     //setting to 1 may increase robot top speed, but may decrease accuracy
     private double MAX_MOTOR_POWER = 0.9;
 
-    //unit vectors representing motors in the rotation power vs. translation power coordinate planehttps://nsspot.herokuapp.com/code2pdf/
+    //unit vectors representing motors in the rotation power vs. translation power coordinate plane
     //more documentation on this coming soon
     private final Vector2d MOTOR_1_VECTOR = new Vector2d(1/Math.sqrt(2), 1/Math.sqrt(2));
     private final Vector2d MOTOR_2_VECTOR = new Vector2d(-1/Math.sqrt(2), 1/Math.sqrt(2));
@@ -73,6 +76,10 @@ public class DriveModule {
         if (moduleSide == ModuleSide.RIGHT) {
             motor1 = robot.hardwareMap.dcMotor.get("topR");
             motor2 = robot.hardwareMap.dcMotor.get("bottomR");
+            rotarySensor = new AS5600(
+                    robot.hardwareMap.get(AnalogInput.class, "Rmagnet"),
+                    robot.bulkDataManager
+            );
             positionVector = new Vector2d((double)18/2, 0);
             //points from robot center to right module
         } else {
@@ -81,8 +88,9 @@ public class DriveModule {
             positionVector = new Vector2d((double)-18/2, 0);
             //points from robot center to left module
         }
-        lastMotor1Encoder = motor1.getCurrentPosition();
-        lastMotor2Encoder = motor2.getCurrentPosition();
+
+        lastMotor1Encoder = robot.bulkDataManager.getEncoder(motor1,5) ;
+        lastMotor2Encoder = robot.bulkDataManager.getEncoder(motor2,5) ;
 
         //TODO: Make sure we want coast or brake
         // BRAKE: Jumpy, Decently Accurate
@@ -250,8 +258,8 @@ public class DriveModule {
     public Angle getCurrentOrientation() {
 //        robot.telemetry.addData(moduleSide + "Motor 1 Encoder", motor1.getCurrentPosition());
 //        robot.telemetry.addData(moduleSide + "Motor 2 Encoder", motor2.getCurrentPosition());
-        double rawAngle = (double)(motor2.getCurrentPosition() +
-                motor1.getCurrentPosition())* DEGREES_PER_TICK;
+        double rawAngle = (double)robot.bulkDataManager.getEncoder(motor2,5) +
+                robot.bulkDataManager.getEncoder(motor1,5)* DEGREES_PER_TICK;
         //motor2-motor1 makes ccw positive (?)
         return new Angle(rawAngle, Angle.AngleType.ZERO_TO_360_HEADING);
     }
@@ -263,8 +271,8 @@ public class DriveModule {
     public void updateTracking () {
         /*important to set these to a variable so getCurrentPosition()
          is not called multiple times in single cycle */
-        double currentMotor1Encoder = motor1.getCurrentPosition();
-        double currentMotor2Encoder = motor2.getCurrentPosition();
+        double currentMotor1Encoder = robot.bulkDataManager.getEncoder(motor1,5);
+        double currentMotor2Encoder = robot.bulkDataManager.getEncoder(motor2,5);
 
         double motor1Change = currentMotor1Encoder - lastMotor1Encoder;
         double motor2Change = currentMotor2Encoder - lastMotor2Encoder;

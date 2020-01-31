@@ -41,7 +41,7 @@ public class BulkDataManager {
 
 
     //Refreshes the bulk data
-    public void updateBulkData(){
+    public void update(){
         revBulkData5 = expansionHubEx5.getBulkInputData();
         revBulkData7 = expansionHubEx7.getBulkInputData();
     }
