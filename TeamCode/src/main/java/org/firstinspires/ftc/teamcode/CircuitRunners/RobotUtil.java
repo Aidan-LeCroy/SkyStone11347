@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import org.firstinspires.ftc.robotcore.external.Func;
+
 public  class RobotUtil {
 
     public static double scaleVal (double input, double minInputVal,
