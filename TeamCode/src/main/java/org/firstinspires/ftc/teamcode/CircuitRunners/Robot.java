@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -30,20 +32,30 @@ class Robot {
     private static final double ENCODER_TICKS_PER_LEVEL=200.0;
     private Servo leftFB,rightFB,grab;
 
+    private LiftSystem liftSystem;
+
+    public boolean isAuto;
+
+    public Gamepad gamepad1;
+    public Gamepad gamepad2;
+
     public BulkDataManager bulkDataManager;
     ExpansionHubMotor topLeft,bottomLeft,topRight,bottomRight;
 
     public Robot (OpMode opMode, boolean isAuto, boolean headless) {
 
+        this.isAuto = isAuto;
         this.hardwareMap = opMode.hardwareMap;
         initBulkData();
         initMechanisms();
         this.telemetry = opMode.telemetry;
         this.opMode = opMode;
+        gamepad1 = opMode.gamepad1;
+        gamepad2 = opMode.gamepad2;
 
         driveController = new DriveController(this,headless);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-
+        liftSystem = new LiftSystem(this);
     }
 
     public void initBulkData() {
@@ -103,6 +115,19 @@ class Robot {
         long startTime = System.currentTimeMillis();
         while (millis > System.currentTimeMillis() - startTime && linearOpMode.opModeIsActive()) {}
     }
+
+    public ExpansionHubMotor findMotor(String id){
+        return hardwareMap.get(ExpansionHubMotor.class, id);
+    }
+
+    public AnalogInput findAnalog(String id){
+        return hardwareMap.get(AnalogInput.class, id);
+    }
+
+    public Servo findServo(String id){
+        return hardwareMap.get(Servo.class, id);
+    }
+
     public void intake(double power){
         leftIntake.setPower(-power);
         rightIntake.setPower(power);
