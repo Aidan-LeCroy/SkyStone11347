@@ -263,8 +263,7 @@ public class DriveModule {
     public Angle getCurrentOrientation() {
 //        robot.telemetry.addData(moduleSide + "Motor 1 Encoder", motor1.getCurrentPosition());
 //        robot.telemetry.addData(moduleSide + "Motor 2 Encoder", motor2.getCurrentPosition());
-        double rawAngle = (double)robot.bulkDataManager.getEncoder(motor2,5) +
-                robot.bulkDataManager.getEncoder(motor1,5)* DEGREES_PER_TICK;
+        double rawAngle = rotarySensor.getHeading();
         //motor2-motor1 makes ccw positive (?)
         return new Angle(rawAngle, Angle.AngleType.ZERO_TO_360_HEADING);
     }
