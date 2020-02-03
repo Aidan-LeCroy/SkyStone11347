@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.CircuitRunners;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.openftc.revextensions2.ExpansionHubMotor;
 import org.openftc.revextensions2.RevBulkData;
 
 
@@ -10,8 +11,8 @@ public class DriveModule {
     private Robot robot;
 
     //TODO: make sure these motors are not flipped on your drive
-    private DcMotor motor1; //top motor
-    private DcMotor motor2; //bottom motor
+    private ExpansionHubMotor motor1; //top motor
+    private ExpansionHubMotor motor2; //bottom motor
     
     private AS5600 rotarySensor; //the magnetic rotation sensor
 
@@ -74,17 +75,21 @@ public class DriveModule {
         this.robot = robot;
         this.moduleSide = moduleSide;
         if (moduleSide == ModuleSide.RIGHT) {
-            motor1 = robot.hardwareMap.dcMotor.get("topR");
-            motor2 = robot.hardwareMap.dcMotor.get("bottomR");
+            motor1 = robot.findMotor("topR");
+            motor2 = robot.findMotor("bottomR");
             rotarySensor = new AS5600(
-                    robot.hardwareMap.get(AnalogInput.class, "Rmagnet"),
+                    robot.findAnalog("Rmagnet"),
                     robot.bulkDataManager
             );
             positionVector = new Vector2d((double)18/2, 0);
             //points from robot center to right module
         } else {
-            motor1 = robot.hardwareMap.dcMotor.get("topL");
-            motor2 = robot.hardwareMap.dcMotor.get("bottomL");
+            motor1 = robot.findMotor("topL");
+            motor2 = robot.findMotor("bottomL");
+            rotarySensor = new AS5600(
+                    robot.findAnalog("Lmagnet"),
+                    robot.bulkDataManager
+            );
             positionVector = new Vector2d((double)-18/2, 0);
             //points from robot center to left module
         }

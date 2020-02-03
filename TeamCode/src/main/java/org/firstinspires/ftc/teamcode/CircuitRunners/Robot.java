@@ -32,7 +32,8 @@ class Robot {
     private static final double ENCODER_TICKS_PER_LEVEL=200.0;
     private Servo leftFB,rightFB,grab;
 
-    private LiftSystem liftSystem;
+    public LiftSystem liftSystem;
+    public Intake intake;
 
     public boolean isAuto;
 
@@ -55,7 +56,6 @@ class Robot {
 
         driveController = new DriveController(this,headless);
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        liftSystem = new LiftSystem(this);
     }
 
     public void initBulkData() {
@@ -94,6 +94,8 @@ class Robot {
         leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         grab=hardwareMap.servo.get("grab");
         grab.setDirection(Servo.Direction.REVERSE);
+        liftSystem = new LiftSystem(this);
+        intake = new Intake(this);
 
     }
 
@@ -151,26 +153,9 @@ class Robot {
 //
 //    }
 
-
-    public double getLiftEncoders(){
-        return (abs((bulkDataManager.getEncoder(leftLift,7))+abs(bulkDataManager.getEncoder(rightLift,7))/2.0));
-    }
-
-    public void modulePower(String module,double power){
-        if (module.toLowerCase().equals("left")){
-            driveController.moduleLeft.directDrive(power);
-        }
-        else if (module.toLowerCase().equals("right")){
-            driveController.moduleRight.directDrive(power);
-        }
-    }
     public void set4BPos(double pos){
         leftFB.setPosition(pos);
         rightFB.setPosition(pos);
-    }
-    public void setLiftPosition(int pos){
-        leftLift.setTargetPosition(-pos);
-        rightLift.setTargetPosition(pos);
     }
 
 

@@ -7,41 +7,22 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import static java.lang.Math.round;
 
+import com.arcrobotics.ftclib.controller.PController;
+
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
-
-enum AboveStonePos {
-    LIFT_DOWN(0),
-    FIRST_LEVEL(30),
-    SECOND_LEVEL(60),
-    THIRD_LEVEL(90),
-    FOURTH_LEVEL(120),
-    FIFTH_LEVEL(150),
-    SIXTH_LEVEL(180),
-    SEVENTH_LEVEL(210),
-    EIGTH_LEVEL(240),
-    NINTH_LEVEL(270),
-
-    TENTH_lEVEL(300), //????? MAYBE
-    LIFT_TOP(330);
-
-    public final int encoderNum;
-
-    AboveStonePos(int encoderNum){
-        this.encoderNum = encoderNum;
-    }
-
-
-}
-
-enum LiftControl {
-    AUTOMATIC,
-    MANUAL,
-    NOTHING
-}
 
 public class LiftSystem {
 
+    private final double LIFT_HOLDING_POWER = 0.1;
 
+    private final double LIFT_UP_POWER = 0.8;
+
+    private final double LIFT_DOWN_POWER = -0.1;
+
+    private final double TOP_POSITION = 0;
+    private final double BOTTOM_POSITION = 330;
 
 
 
@@ -53,13 +34,39 @@ public class LiftSystem {
     //private DigitalChannel right_bottom_switch;
     private Gamepad gamepad2;
 
-    private AboveStonePos liftPositions = AboveStonePos.LIFT_DOWN;
-    private LiftControl liftControl = LiftControl.NOTHING;
-
     private Robot robot;
+    private boolean atBottom;
 
-    private boolean togglePressed = false;
-    private boolean toggleHeld = false;
+    //Control to move lift up manually
+    private final Func<Boolean> upControl = () -> gamepad2.dpad_up;
+
+    //Control to move lift down manually
+    private final Func<Boolean> downControl = () -> gamepad2.dpad_down;
+
+    //Get current lift position from encoders
+    public final Func<Integer> liftPosition = () -> (getPosLeft() + getPosRight())/2;
+
+    //Is lift at bottom?
+    private final Func<Boolean> liftAtBottom = () -> {
+        if(liftPosition.value() <= BOTTOM_POSITION){
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+    //Is lift at top?
+    private final Func<Boolean> liftAtTop = () -> {
+        if(liftPosition.value() >= TOP_POSITION){
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
+
+
 
 
     public LiftSystem(Robot robot){
@@ -73,24 +80,36 @@ public class LiftSystem {
         resetEncoders();
 
 
-
         bulkDataManager = robot.bulkDataManager;
         gamepad2 = robot.gamepad2;
     }
 
+
+    //Update and set power to lift
     public void update(){
 
+        boolean goUp = upControl.value();
+        boolean goDown = downControl.value();
+
+        double finalPower;
+        if(goUp && !liftAtTop.value()){
+            finalPower = LIFT_UP_POWER;
+        }
+        else if(goDown && !liftAtBottom.value()){
+            finalPower = LIFT_DOWN_POWER;
+        }
+        else if(!liftAtBottom.value()){
+            finalPower = LIFT_HOLDING_POWER;
+        }
+        else {
+            finalPower = 0;
+        }
+
+        setLiftPower(finalPower);
 
 
     }
 
-    private void setTarget(AboveStonePos pos){
-        setTarget(pos.encoderNum);
-    }
-
-    private double getAveragePos(){
-        return (getPosLeft() + getPosRight())/2;
-    }
 
     private int getPosLeft(){
         return (int) round( bulkDataManager.getEncoder(lift_left, 7));
@@ -101,16 +120,6 @@ public class LiftSystem {
     }
 
 
-
-    private void setTarget(int pos){
-        lift_left.setTargetPosition(pos);
-        lift_right.setTargetPosition(pos);
-    }
-
-    private void setRTP(){
-        lift_left.setMode(ExpansionHubMotor.RunMode.RUN_TO_POSITION);
-        lift_right.setMode(ExpansionHubMotor.RunMode.RUN_TO_POSITION);
-    }
     private void resetEncoders(){
         lift_left.setMode(ExpansionHubMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_right.setMode(ExpansionHubMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -126,7 +135,15 @@ public class LiftSystem {
         lift_right.setPower(power);
     }
 
+    //Is left motor over temp?
+    public boolean isLeftOverTemp(){
+        return lift_left.isBridgeOverTemp();
+    }
 
+    //Is right motor over temp?
+    public boolean isRightOverTemp(){
+        return lift_right.isBridgeOverTemp();
+    }
 
     //Stop all motion
     public void stoplift(){

@@ -71,15 +71,14 @@ public class TeleOp extends OpMode {
 
 
 
-        if (gamepad2.left_trigger > 0) {
-            robot.intake(-1);
-        } else if (gamepad2.right_trigger > 0) {
-            robot.intake(1);
-        } else {
-            robot.intake(0);
-        }
-        telemetry.addData("Lift Encoder:",robot.getLiftEncoders());
-        robot.manLift(.5 * gamepad2.left_stick_y);
+        robot.intake.update();
+
+        telemetry.addData("Lift Encoders:", robot.liftSystem.liftPosition);
+
+        //Control lift
+        robot.liftSystem.update();
+
+
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
 //        if (gamepad1.b) {
 //            robot.driveController.moduleRight.ROT_ADVANTAGE += 0.01;
@@ -115,6 +114,11 @@ public class TeleOp extends OpMode {
         telemetry.update();
 
 
+    }
+
+    @Override
+    public void stop(){
+        robot.liftSystem.stoplift();
     }
 
     //returns zero vector if joystick is within deadband
