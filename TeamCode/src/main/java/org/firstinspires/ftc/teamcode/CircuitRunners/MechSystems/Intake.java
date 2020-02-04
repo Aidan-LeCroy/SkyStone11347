@@ -6,6 +6,22 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 
 public class Intake {
+    
+    //Cache for motors
+    private static double lastRead = 0.0;
+    
+    //Threshold for cache
+    private static final double CACHE_THRESHOLD = 0.1;
+    
+    private double alterFromCache(double newPower){
+        if(Math.abs(lastRead - newPower) > CACHE_THRESHOLD || newPower == 0.0){
+            lastRead = newPower;
+            return newPower;
+        }
+        else {
+            return lastRead;
+        }
+    }   
 
 
     Gamepad gamepad2;
@@ -53,8 +69,9 @@ public class Intake {
     }
 
 
-    private void set(double power){
-        intake_left.setPower(power);
-        intake_right.setPower(power);
+    public void set(double power){
+        double altered = alterFromCache(power);
+        intake_left.setPower(altered);
+        intake_right.setPower(altered);
     }
 }
