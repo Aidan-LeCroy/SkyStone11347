@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode.CircuitRunners;
+package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 
 public class Intake {
 

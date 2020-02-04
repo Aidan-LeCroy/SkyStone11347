@@ -55,6 +55,7 @@ public class TeleOp extends OpMode {
     }
 
     public void loop() {
+        //Refresh all the bulk data
         robot.bulkDataManager.update();
 
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y);
@@ -70,7 +71,7 @@ public class TeleOp extends OpMode {
 
 
 
-
+        //Update the intake
         robot.intake.update();
 
         telemetry.addData("Lift Encoders:", robot.liftSystem.liftPosition);
@@ -119,6 +120,7 @@ public class TeleOp extends OpMode {
     @Override
     public void stop(){
         robot.liftSystem.stoplift();
+        robot.intake.stop();
     }
 
     //returns zero vector if joystick is within deadband

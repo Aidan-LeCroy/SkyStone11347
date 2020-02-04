@@ -13,14 +13,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.Intake;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.LiftSystem;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
-import org.openftc.revextensions2.RevBulkData;
 
-import static android.os.SystemClock.sleep;
 import static java.lang.Math.abs;
 
-class Robot {
+public class Robot {
     DriveController driveController;
     private BNO055IMU imu;
     Telemetry telemetry;

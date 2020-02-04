@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.CircuitRunners;
+package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.teamcode.CircuitRunners.BulkDataManager;
 import org.openftc.revextensions2.RevBulkData;
 
 public class AS5600  {

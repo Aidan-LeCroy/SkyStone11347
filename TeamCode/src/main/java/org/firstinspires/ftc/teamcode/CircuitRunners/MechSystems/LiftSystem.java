@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CircuitRunners;
+package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,7 +10,8 @@ import static java.lang.Math.round;
 import com.arcrobotics.ftclib.controller.PController;
 
 import org.firstinspires.ftc.robotcore.external.Func;
-import org.openftc.revextensions2.ExpansionHubEx;
+import org.firstinspires.ftc.teamcode.CircuitRunners.BulkDataManager;
+import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class LiftSystem {
