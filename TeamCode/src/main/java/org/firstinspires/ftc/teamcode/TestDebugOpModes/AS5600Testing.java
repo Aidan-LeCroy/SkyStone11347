@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.TestDebugOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.CircuitRunners.AS5600;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.AS5600;
 import org.firstinspires.ftc.teamcode.CircuitRunners.BulkDataManager;
 import org.openftc.revextensions2.ExpansionHubEx;
 

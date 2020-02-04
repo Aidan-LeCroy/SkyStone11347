@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CircuitRunners;
+package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -10,10 +10,22 @@ import static java.lang.Math.round;
 import com.arcrobotics.ftclib.controller.PController;
 
 import org.firstinspires.ftc.robotcore.external.Func;
-import org.openftc.revextensions2.ExpansionHubEx;
+import org.firstinspires.ftc.teamcode.CircuitRunners.BulkDataManager;
+import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class LiftSystem {
+    
+    
+    //The boolean that indicates if the lift should go to a position rather than manual
+    public boolean positionMode = false;
+    
+    
+    //The positional coefficients
+    private final double PCoefficient = 10;
+    
+    //The positional tolerance
+    private final double tolerance = 1;
 
     private final double LIFT_HOLDING_POWER = 0.1;
 
@@ -23,6 +35,11 @@ public class LiftSystem {
 
     private final double TOP_POSITION = 0;
     private final double BOTTOM_POSITION = 330;
+    
+    private double liftTarget = BOTTOM_POSITION;
+    
+    //Not used for much by default in TeleOp, but good to have
+    public PController liftController = new PController(PCoefficient);
 
 
 
@@ -78,6 +95,10 @@ public class LiftSystem {
         lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
         stoplift();
         resetEncoders();
+        
+        liftController.setTolerance(tolerance);
+        liftController.setSetPoint(liftTarget);
+        
 
 
         bulkDataManager = robot.bulkDataManager;
@@ -87,22 +108,32 @@ public class LiftSystem {
 
     //Update and set power to lift
     public void update(){
-
+        
+        //Power to be sent
+        double finalPower = 0;
+        
+        //Gamepad controls
         boolean goUp = upControl.value();
         boolean goDown = downControl.value();
-
-        double finalPower;
-        if(goUp && !liftAtTop.value()){
-            finalPower = LIFT_UP_POWER;
-        }
-        else if(goDown && !liftAtBottom.value()){
-            finalPower = LIFT_DOWN_POWER;
-        }
-        else if(!liftAtBottom.value()){
-            finalPower = LIFT_HOLDING_POWER;
+        
+        
+        //Check all possibilities for manual control
+        if(!positionMode){
+            if(goUp && !liftAtTop.value()){
+                finalPower = LIFT_UP_POWER;
+            }
+            else if(goDown && !liftAtBottom.value()){
+                finalPower = LIFT_DOWN_POWER;
+            }
+            else if(!liftAtBottom.value()){
+                finalPower = LIFT_HOLDING_POWER;
+            }   
+            else {
+                finalPower = 0;
+            }
         }
         else {
-            finalPower = 0;
+             finalPower = liftController.calculate(liftPosition.value());   
         }
 
         setLiftPower(finalPower);
@@ -117,6 +148,16 @@ public class LiftSystem {
 
     private int getPosRight(){
         return (int) round( bulkDataManager.getEncoder(lift_right, 7));
+    }
+    
+    //Set a new target for the positional control
+    public void setLiftTargetPos(double target){
+           liftTarget = target;
+           liftController.setSetPoint(target);
+    }
+    
+    public boolean atTarget(){
+        return liftController.atSetPoint();
     }
 
 

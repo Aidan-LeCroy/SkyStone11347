@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.AS5600;
 import org.openftc.revextensions2.ExpansionHubMotor;
-import org.openftc.revextensions2.RevBulkData;
 
 
 public class DriveModule {

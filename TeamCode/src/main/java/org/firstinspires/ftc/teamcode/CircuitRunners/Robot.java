@@ -4,7 +4,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,14 +15,13 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.Intake;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.LiftSystem;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
-import org.openftc.revextensions2.RevBulkData;
 
-import static android.os.SystemClock.sleep;
-import static java.lang.Math.abs;
 
-class Robot {
+public class Robot {
     DriveController driveController;
     private BNO055IMU imu;
     Telemetry telemetry;
@@ -118,6 +119,10 @@ class Robot {
         while (millis > System.currentTimeMillis() - startTime && linearOpMode.opModeIsActive()) {}
     }
 
+
+
+    //Find hardware
+
     public ExpansionHubMotor findMotor(String id){
         return hardwareMap.get(ExpansionHubMotor.class, id);
     }
@@ -129,6 +134,19 @@ class Robot {
     public Servo findServo(String id){
         return hardwareMap.get(Servo.class, id);
     }
+
+    public CRServo findCRServo(String id){
+        return hardwareMap.get(CRServo.class, id);
+    }
+
+    public DigitalChannel findDigital(String id){
+        return hardwareMap.get(DigitalChannel.class, id);
+    }
+
+
+
+
+
 
     public void intake(double power){
         leftIntake.setPower(-power);
