@@ -9,7 +9,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CheemsCVPipeline extends OpenCvPipeline {
@@ -25,7 +24,6 @@ public class CheemsCVPipeline extends OpenCvPipeline {
     //Always good to define the dimensions of the webcam
     private final double width = 640;
     private final double height = 480;
-
 
 
 
