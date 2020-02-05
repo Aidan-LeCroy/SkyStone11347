@@ -28,7 +28,7 @@ public class TeleOp extends OpMode {
     public void init() {
         robot = new Robot(this, false,false);
         try {
-            mp = MediaPlayer.create(FtcRobotControllerActivity.getContext(), R.raw.megalovania);
+            mp = MediaPlayer.create(hardwareMap.appContext, R.raw.megalovania);
             mp.start();
         } catch (Exception e) {
             telemetry.addData("Exception Thrown! ", e);

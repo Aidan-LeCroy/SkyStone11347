@@ -89,10 +89,6 @@ public class Robot {
         leftFB=hardwareMap.servo.get("leftFB");
         rightFB=hardwareMap.servo.get("rightFB");
         rightFB.setDirection(Servo.Direction.REVERSE);
-        rightLift=hardwareMap.dcMotor.get("rightLift");
-        leftLift=hardwareMap.dcMotor.get("leftLift");
-        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         grab=hardwareMap.servo.get("grab");
         grab.setDirection(Servo.Direction.REVERSE);
         liftSystem = new LiftSystem(this);

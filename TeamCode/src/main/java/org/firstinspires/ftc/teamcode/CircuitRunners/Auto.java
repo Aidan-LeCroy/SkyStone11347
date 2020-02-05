@@ -14,21 +14,16 @@ public class Auto extends LinearOpMode {
     }
     private Robot robot;
     private DriveController drive;
-    private Tracking track;
     private SSPos pos;
     @Override
 
     public void runOpMode(){
 
-        track=new Tracking(hardwareMap,telemetry);
-        track.initializeCamera();
         robot=new Robot(this,true,false);
         drive=robot.driveController;
 
         robot.initIMU();
         while(!this.opModeIsActive()) {
-            double x = track.getSkyStoneX();
-            double y = track.getSkyStoneY();
             pos = SSPos.LEFT;
             pos = SSPos.RIGHT;
             pos = SSPos.CENTER;

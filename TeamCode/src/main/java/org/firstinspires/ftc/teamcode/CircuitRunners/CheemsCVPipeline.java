@@ -87,6 +87,33 @@ public class CheemsCVPipeline extends OpenCvPipeline {
         moreMats.add(myMat2);
 
         //There are many other things as well!
+        //Like drawing a rectange
+        Imgproc.rectangle(
+                input,
+                new Point(
+                        input.cols()/4,
+                        input.rows()/4),
+                new Point(
+                        input.cols()*(3f/4f),
+                        input.rows()*(3f/4f)),
+                new Scalar(0, 255, 0),
+                4
+        );
+
+        //Or adding text
+        Imgproc.putText(
+                input,
+                "CR Black CV",
+                new Point(
+                        input.cols()*(1f/4f),
+                        input.rows()*(1f/4f)
+                ),
+                Imgproc.FONT_HERSHEY_PLAIN,
+                2,
+                new Scalar(0, 50, 255),
+                2
+
+        );
 
 
         //There is one more important thing to know.

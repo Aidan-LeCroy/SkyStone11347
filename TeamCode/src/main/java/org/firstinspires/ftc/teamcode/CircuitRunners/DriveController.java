@@ -95,7 +95,7 @@ class DriveController {
         //turns modules to correct positions for straight driving
         //rotateModules()
         resetDistanceTraveled();
-        while (getDistanceTraveled() < cmDistance && linearOpMode.opModeIsActive()) {
+        while (getDistanceTraveled() < cmDistance) {
             //slows down drive power in certain range
             if (cmDistance - getDistanceTraveled() < START_DRIVE_SLOWDOWN_AT_CM) {
                 speed = RobotUtil.scaleVal(cmDistance - getDistanceTraveled(),
