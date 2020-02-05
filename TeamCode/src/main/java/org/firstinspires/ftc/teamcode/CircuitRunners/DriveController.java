@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 enum ModuleSide {LEFT, RIGHT}
 
-class DriveController {
+public class DriveController {
     private Robot robot;
 
     DriveModule moduleLeft;
@@ -194,6 +194,14 @@ class DriveController {
     public void resetEncoders() {
         moduleRight.resetEncoders();
         moduleLeft.resetEncoders();
+    }
+    public void disableModule(String module){
+        if(module.toLowerCase().trim().equals("left")){
+            moduleLeft.disable();
+        }
+        if(module.toLowerCase().trim().equals("right")){
+            moduleRight.disable();
+        }
     }
 
 }

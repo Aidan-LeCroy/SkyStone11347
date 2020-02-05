@@ -94,8 +94,8 @@ public class CheemsCVPipeline extends OpenCvPipeline {
                         input.cols()/4,
                         input.rows()/4),
                 new Point(
-                        input.cols()*(3f/4f),
-                        input.rows()*(3f/4f)),
+                        input.cols()*(.75),
+                        input.rows()*(.75)),
                 new Scalar(0, 255, 0),
                 4
         );

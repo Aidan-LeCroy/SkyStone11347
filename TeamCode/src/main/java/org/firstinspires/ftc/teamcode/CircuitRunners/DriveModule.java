@@ -22,7 +22,7 @@ public class DriveModule {
     //used for logic that allows robot to rotate modules as little as possible
     private boolean takingShortestPath = false;
     private boolean reversed = false;
-
+    private boolean disabled=false;
     //important note about naming conventions below:
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
@@ -311,5 +311,8 @@ public class DriveModule {
     public void moduleRotate(double power){
         motor1.setPower(power);
         motor2.setPower(power);
+    }
+    public void disable(){
+        disabled=true;
     }
 }

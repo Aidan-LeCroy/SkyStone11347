@@ -22,7 +22,7 @@ import org.openftc.revextensions2.ExpansionHubMotor;
 
 
 public class Robot {
-    DriveController driveController;
+    public DriveController driveController;
     private BNO055IMU imu;
     Telemetry telemetry;
     HardwareMap hardwareMap;
@@ -59,7 +59,7 @@ public class Robot {
         imu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
     }
 
-    public void initBulkData() {
+    private void initBulkData() {
         bulkDataManager = new BulkDataManager(
                 hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 5"),
                 hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 7")

@@ -46,9 +46,11 @@ public class AS5600Testing extends LinearOpMode {
 
 
 
+
         while(opModeIsActive()){
             bulkDataManager.update();
             telemetry.update();
+
         }
 
 
