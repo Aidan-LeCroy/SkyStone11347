@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.AS5600;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
+import java.security.Policy;
+
 
 public class DriveModule {
     private Robot robot;
@@ -27,17 +29,18 @@ public class DriveModule {
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
 
-    private final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56;
+    private static final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56;
     //TODO: if heading is wrong, change 56 to 28 on module rev+wheel rev
-    private final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
+    private static final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
 
     //TODO: modify this variable to match drive gear ratio
-    private final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 );
+    private static final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 );
     //ticks per WHEEL revolution
 
-    private final double CM_WHEEL_DIAMETER = 9.6;
-    private final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
-    private final double CM_PER_TICK = CM_PER_WHEEL_REV/TICKS_PER_WHEEL_REV;
+    private static final double CM_WHEEL_DIAMETER = 9.6;
+    private static final double CM_PER_WHEEL_REV = CM_WHEEL_DIAMETER * Math.PI;
+    public static final double CM_PER_TICK = CM_PER_WHEEL_REV/TICKS_PER_WHEEL_REV;
+
 
     //used for scaling pivot component (see getPivotComponent() method)
     private final double ANGLE_OF_MAX_MODULE_ROTATION_POWER = 60;
@@ -314,5 +317,17 @@ public class DriveModule {
     }
     public void disable(){
         disabled=true;
+    }
+    public void applyPowersToReachZero(){
+        double currAngle=getCurrentOrientation().convertAngle(Angle.AngleType.NEG_180_TO_180_HEADING).getAngle();
+        if(currAngle>=5){
+            moduleRotate(-.5);
+        }
+        else if(currAngle<=-5){
+            moduleRotate(.5);
+        }
+        else {
+            moduleRotate(0);
+        }
     }
 }

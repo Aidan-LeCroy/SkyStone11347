@@ -15,6 +15,28 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class LiftSystem {
+
+
+    class CachedMotor {
+
+        double lastReadPower;
+        private final double THRESHOLD = 0.05;
+
+        CachedMotor(double startingPower){
+            this.lastReadPower = startingPower;
+        }
+
+        public boolean checkPower(double newPower){
+            double power;
+            if(Math.abs(lastReadPower - newPower) >= THRESHOLD || newPower == 0){
+                lastReadPower = newPower;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
     
     
     //The boolean that indicates if the lift should go to a position rather than manual
@@ -39,13 +61,14 @@ public class LiftSystem {
     private double liftTarget = BOTTOM_POSITION;
     
     //Not used for much by default in TeleOp, but good to have
-    public PController liftController = new PController(PCoefficient);
+    private PController liftController = new PController(PCoefficient);
 
 
 
 
     private final String[] liftMotorIds = {"lift_left", "lift_right"};
     private ExpansionHubMotor lift_left, lift_right;
+    private CachedMotor left_cache, right_cache;
     private BulkDataManager bulkDataManager;
     //private DigitalChannel left_bottom_switch;
     //private DigitalChannel right_bottom_switch;
@@ -60,8 +83,11 @@ public class LiftSystem {
     //Control to move lift down manually
     private final Func<Boolean> downControl = () -> gamepad2.dpad_down;
 
+    //Control to make the lift go to bottom
+    private final Func<Boolean> bottomControl = () -> gamepad2.dpad_left || gamepad2.dpad_right;
+
     //Get current lift position from encoders
-    public final Func<Integer> liftPosition = () -> (getPosLeft() + getPosRight())/2;
+    public final Func<Integer> liftPosition = () -> (int) Math.round((getPosLeft() + getPosRight())/2.0);
 
     //Is lift at bottom?
     private final Func<Boolean> liftAtBottom = () -> {
@@ -91,10 +117,13 @@ public class LiftSystem {
         lift_left = robot.findMotor(liftMotorIds[0]);
         lift_right = robot.findMotor(liftMotorIds[1]);
 
+        left_cache = new CachedMotor(0);
+        right_cache = new CachedMotor(0);
         //reverse left side
         lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
-        stoplift();
         resetEncoders();
+        setRUE();
+        stoplift();
         
         liftController.setTolerance(tolerance);
         liftController.setSetPoint(liftTarget);
@@ -115,10 +144,11 @@ public class LiftSystem {
         //Gamepad controls
         boolean goUp = upControl.value();
         boolean goDown = downControl.value();
-        
+        boolean goBottom = bottomControl.value();
+
         
         //Check all possibilities for manual control
-        if(!positionMode){
+        if(!goBottom){
             if(goUp && !liftAtTop.value()){
                 finalPower = LIFT_UP_POWER;
             }
@@ -133,7 +163,7 @@ public class LiftSystem {
             }
         }
         else {
-             finalPower = liftController.calculate(liftPosition.value());   
+             finalPower = liftController.calculate(BOTTOM_POSITION);
         }
 
         setLiftPower(finalPower);
@@ -172,8 +202,13 @@ public class LiftSystem {
     }
 
     private void setLiftPower(double power){
-        lift_left.setPower(power);
-        lift_right.setPower(power);
+
+        if(left_cache.checkPower(power)) {
+            lift_left.setPower(power);
+        }
+        if(right_cache.checkPower(power)) {
+            lift_right.setPower(power);
+        }
     }
 
     //Is left motor over temp?

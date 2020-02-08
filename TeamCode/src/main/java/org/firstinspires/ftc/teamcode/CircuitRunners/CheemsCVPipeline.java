@@ -9,6 +9,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CheemsCVPipeline extends OpenCvPipeline {
@@ -25,6 +26,61 @@ public class CheemsCVPipeline extends OpenCvPipeline {
     private final double width = 640;
     private final double height = 480;
 
+    // Width and height of the sampling rectangles
+    private final double samplingRectWidth = 15;
+    private final double samplingRectHeight = 15;
+
+
+
+    //    private val samplePointPercentages = arrayOf(
+    //        arrayOf(.15, .5), arrayOf(.5, .5), arrayOf(.85, .5)
+    //    )
+
+    private List<Mat> sectionRects(List<Point[]> samplePoints, Mat input) {
+        List<Mat> samples = new ArrayList<>();
+        samplePoints.forEach(
+                (Point[] points) -> {
+                    samples.add(
+                            input.submat(new Rect(
+                                            points[0],
+                                            points[1]
+                                    )
+                            )
+                    );
+                }
+        );
+        return samples;
+
+    }
+    private List<Point[]> makePoints( List<Double[]> spots){
+        List<Double[]> sampleSpots = new ArrayList<>(spots);
+        List<Point[]> samplePoints = new ArrayList<>();
+        sampleSpots.forEach(
+                (Double[] points) -> {
+                    samplePoints.add(
+                            new Point[] {
+                                    new Point(
+                                            points[0] * width - samplingRectWidth / 2,
+                                            points[1] * height - samplingRectHeight / 2
+                                    ),
+                                    new Point(
+                                            points[0] * width + samplingRectWidth / 2,
+                                            points[1] * width +samplingRectHeight / 2
+                                    )
+
+                            }
+                    );
+                }
+        );
+        return samplePoints;
+    }
+
+
+    private List<Double[]> sampleSpots = Arrays.asList(
+
+     new Double[][] {{.3,.5},{.5,.5},{.7,.5}}
+    );
+
 
 
 
@@ -34,6 +90,8 @@ public class CheemsCVPipeline extends OpenCvPipeline {
     //You can store data from this pipeline; ie. The skystone location
     @Override
     public Mat processFrame(Mat input){
+
+
 
         //First thing to do (for vision at least) is to convert the raw frame to a different color sspace
         //The input is in RGB, but RGB sucks. We will use YCbCr.

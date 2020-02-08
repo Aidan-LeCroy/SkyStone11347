@@ -195,13 +195,17 @@ public class DriveController {
         moduleRight.resetEncoders();
         moduleLeft.resetEncoders();
     }
-    public void disableModule(String module){
-        if(module.toLowerCase().trim().equals("left")){
+    public void disableModule(ModuleSide module){
+        if(module==ModuleSide.LEFT){
             moduleLeft.disable();
         }
-        if(module.toLowerCase().trim().equals("right")){
+        if(module== ModuleSide.RIGHT){
             moduleRight.disable();
         }
     }
+    public void applyPowersToZero(){
+         moduleRight.applyPowersToReachZero();
+    }
+
 
 }
