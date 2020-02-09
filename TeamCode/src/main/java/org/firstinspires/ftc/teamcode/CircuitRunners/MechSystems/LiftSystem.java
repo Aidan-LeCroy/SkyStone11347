@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
+import com.qualcomm.hardware.motors.RevRobotics20HdHexMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -8,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import static java.lang.Math.round;
 
 import com.arcrobotics.ftclib.controller.PController;
+import com.qualcomm.robotcore.hardware.configuration.annotations.MotorType;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.CircuitRunners.BulkDataManager;
@@ -38,9 +42,9 @@ public class LiftSystem {
         }
     }
     
-    
-    //The boolean that indicates if the lift should go to a position rather than manual
-    public boolean positionMode = false;
+
+
+    private static final double motorCPR = 28 * 4 * 3.9;
     
     
     //The positional coefficients
@@ -72,19 +76,12 @@ public class LiftSystem {
     private BulkDataManager bulkDataManager;
     //private DigitalChannel left_bottom_switch;
     //private DigitalChannel right_bottom_switch;
-    private Gamepad gamepad2;
+
 
     private Robot robot;
     private boolean atBottom;
 
-    //Control to move lift up manually
-    private final Func<Boolean> upControl = () -> gamepad2.dpad_up;
 
-    //Control to move lift down manually
-    private final Func<Boolean> downControl = () -> gamepad2.dpad_down;
-
-    //Control to make the lift go to bottom
-    private final Func<Boolean> bottomControl = () -> gamepad2.dpad_left || gamepad2.dpad_right;
 
     //Get current lift position from encoders
     public final Func<Integer> liftPosition = () -> (int) Math.round((getPosLeft() + getPosRight())/2.0);
@@ -124,14 +121,14 @@ public class LiftSystem {
         resetEncoders();
         setRUE();
         stoplift();
-        
+
+
         liftController.setTolerance(tolerance);
         liftController.setSetPoint(liftTarget);
         
 
 
         bulkDataManager = robot.bulkDataManager;
-        gamepad2 = robot.gamepad2;
     }
 
 
@@ -142,9 +139,9 @@ public class LiftSystem {
         double finalPower = 0;
         
         //Gamepad controls
-        boolean goUp = upControl.value();
-        boolean goDown = downControl.value();
-        boolean goBottom = bottomControl.value();
+        boolean goUp = robot.controls.liftUp.value();
+        boolean goDown = robot.controls.liftDown.value();
+        boolean goBottom = robot.controls.liftBottom.value();
 
         
         //Check all possibilities for manual control

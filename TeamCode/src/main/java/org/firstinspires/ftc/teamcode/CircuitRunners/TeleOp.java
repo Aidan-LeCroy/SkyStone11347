@@ -90,21 +90,23 @@ public class TeleOp extends OpMode {
 //            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
 //        }
 //        telemetry.addData("ROT_ADVANTAGE: ", robot.driveController.moduleLeft.ROT_ADVANTAGE);
-        if(gamepad2.x&&!bounce3){
+        if(robot.controls.v4barMove.value()&&!bounce3){
             flip4B();
             bounce3=true;
         }
-        else if(!gamepad2.x){
+        else if(!robot.controls.v4barMove.value()){
             bounce3=false;
         }
-        if(gamepad2.a&&!bounce1){
+
+        if(robot.controls.grabberMove.value()&&!bounce1){
             grabToggle();
             bounce1=true;
         }
-        else if(!gamepad2.a){
+        else if(!robot.controls.grabberMove.value()){
             bounce1=false;
         }
-        if(gamepad2.y){
+
+        if(robot.controls.v4barExternalMove.value()){
             robot.set4BPos(.95);
         }
 

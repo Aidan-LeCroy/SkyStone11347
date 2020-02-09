@@ -42,6 +42,10 @@ public class Intake {
         intake_left = robot.findMotor("leftIntake");
         intake_right = robot.findMotor("rightIntake");
 
+        intake_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        intake_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+
         stop();
 
     }
