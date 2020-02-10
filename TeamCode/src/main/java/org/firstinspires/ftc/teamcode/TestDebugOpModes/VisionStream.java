@@ -13,10 +13,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class VisionStream extends LinearOpMode {
 
 
-    OpenCvCamera webcam;
+    private OpenCvCamera webcam;
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
+        CheemsCVPipeline pipeline = new CheemsCVPipeline();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
@@ -25,13 +28,14 @@ public class VisionStream extends LinearOpMode {
 
         webcam.openCameraDevice();
 
-        webcam.setPipeline(new CheemsCVPipeline());
+        webcam.setPipeline(pipeline);
 
 
         webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 
         while (opModeIsActive()){
 
+            telemetry.addData("Skystone Position", pipeline.skystone);
 
             telemetry.addData("Frame Count", webcam.getFrameCount());
             telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));

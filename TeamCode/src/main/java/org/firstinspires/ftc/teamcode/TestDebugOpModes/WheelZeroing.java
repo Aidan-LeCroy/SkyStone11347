@@ -14,8 +14,11 @@ public class WheelZeroing extends OpMode {
         drive=robot.driveController;
     }
     public void loop(){
-        while(gamepad1.x) {
+        telemetry.addData("Left Heading",robot.driveController.moduleLeft.getCurrentOrientation().getAngle());
+        telemetry.addData("Right Heading",robot.driveController.moduleRight.getCurrentOrientation().getAngle());
+        if(gamepad1.x) {
             drive.applyPowersToZero();
+
         }
     }
 

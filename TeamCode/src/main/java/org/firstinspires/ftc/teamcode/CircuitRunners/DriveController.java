@@ -7,8 +7,8 @@ enum ModuleSide {LEFT, RIGHT}
 public class DriveController {
     private Robot robot;
 
-    DriveModule moduleLeft;
-    DriveModule moduleRight;
+    public DriveModule moduleLeft;
+    public DriveModule moduleRight;
 
     //used for straight line distance tracking
     private double robotDistanceTraveled = 0;
@@ -204,7 +204,8 @@ public class DriveController {
         }
     }
     public void applyPowersToZero(){
-         moduleRight.applyPowersToReachZero();
+        moduleLeft.applyPowersToReachZero();
+        moduleRight.applyPowersToReachZero();
     }
 
 

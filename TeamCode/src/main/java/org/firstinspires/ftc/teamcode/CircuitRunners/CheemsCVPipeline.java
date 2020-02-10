@@ -15,6 +15,8 @@ import java.util.List;
 public class CheemsCVPipeline extends OpenCvPipeline {
 
 
+    public int skystone = -1;
+
 
     //Example of Mat (image) object. This will hold a YCbCr frame
     private Mat yCbCrMat = new Mat();
@@ -75,10 +77,25 @@ public class CheemsCVPipeline extends OpenCvPipeline {
         return samplePoints;
     }
 
+    private static int maxPosition(double[] t) {
+        double max = t[0];
+        int index = 0;
+
+        for (int i = 0; i < t.length; i++)
+        {
+            if (max > t[i])
+            {
+                max = t[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+
 
     private List<Double[]> sampleSpots = Arrays.asList(
 
-     new Double[][] {{.3,.5},{.5,.5},{.7,.5}}
+     new Double[][] {{.25,.5},{.5,.5},{.75,.5}}
     );
 
 
@@ -117,46 +134,40 @@ public class CheemsCVPipeline extends OpenCvPipeline {
 
         //Things:
         //Scalar represent colors in RGB format
-        Scalar CircuitRunnersGreen = new Scalar(0.0, 255.0, 0.0); //R: 0, G: 255, B: 0
+        Scalar circuitRunnersBlack= new Scalar(0.0, 0.0, 0.0); //R: 0, G: 255, B: 0
 
         //Point is exactly what it sounds like. A point.
         //NOTE: x and y in OpenCv is from the top left corner of an image, and the unit are pixels
         //Because each webcam res can be different, it's usually safer to use a relative value with
         //respect towards the image it is meant for
-        Point myPoint = new Point(0.5 * width, 0.5 * height); //ie. 50% across, 50% down
-        Point myPoint2 = new Point(0.75 * width, 0.75 * height); //ie. 75% across, 75% down
+        List<Point[]> rectArr = new ArrayList<>(makePoints(sampleSpots));
+
+        List<Mat> submats = new ArrayList<>(sectionRects(rectArr,input));
+
+        double[] numList = new double[3];
+        for(int i=0;i<3;i++){
+            numList[i] = (Core.mean(submats.get(i)).val[0]);
+        }
+
+
+
+        skystone = maxPosition(numList);
 
         //Rect are rectangles
         //They aren't Mats really, but a generic shape
         //Formed by two Points which represent the locations of two opposite corners of the the Rect
         //Also formed by a single point and a width/length
         //They are used when drawing on the frame and to indicate where to sub-mat an image for sampling
-        Rect myRect = new Rect(myPoint, myPoint2);
 
         //Finally Mat
         //Mats are simple put images
         //They can have things drawn on them, and can be sub-matted to get certain sections for sampling
         //They MUST be released if they are created in the pipeline (see below)
-        Mat myMat = new Mat();
-        Mat myMat2 = new Mat();
+
         //Have fun!
-        List<Mat> moreMats = new ArrayList<>();
-        moreMats.add(myMat);
-        moreMats.add(myMat2);
 
         //There are many other things as well!
         //Like drawing a rectange
-        Imgproc.rectangle(
-                input,
-                new Point(
-                        input.cols()/4,
-                        input.rows()/4),
-                new Point(
-                        input.cols()*(.75),
-                        input.rows()*(.75)),
-                new Scalar(0, 255, 0),
-                4
-        );
 
         //Or adding text
         Imgproc.putText(
@@ -173,6 +184,26 @@ public class CheemsCVPipeline extends OpenCvPipeline {
 
         );
 
+        //Draw rectanles around the areas
+        // Draw rectangles around sample areas
+        rectArr.forEach((Point[] it) ->
+                     Imgproc.rectangle(input, it[0], it[1], new Scalar(255 , 0, 0), 2)
+        );
+
+        Point[] detectedPoint = rectArr.get(skystone);
+
+        //Draw Circle on the skystone
+        Imgproc.circle(
+                input,
+                new Point(
+                        (detectedPoint[0].x + detectedPoint[1].x) / 2,
+                        (detectedPoint[0].y + detectedPoint[1].y) / 2
+                ),
+                5,
+                new Scalar(0,255,0),
+                -1
+        );
+
 
         //There is one more important thing to know.
         //To avoid memory leaks and to free up resources, you must release any
@@ -184,7 +215,7 @@ public class CheemsCVPipeline extends OpenCvPipeline {
         //myMat2.release();
 
         //Or any way that works
-        for(Mat m : moreMats){
+        for(Mat m : submats){
             m.release();
         }
 
