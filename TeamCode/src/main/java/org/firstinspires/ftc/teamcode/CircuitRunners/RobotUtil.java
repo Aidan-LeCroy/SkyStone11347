@@ -1,13 +1,30 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Paint;
+
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
+import org.firstinspires.ftc.teamcode.R;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public  class RobotUtil {
+
+    private Resources res;
+    private Bitmap robotPic;
+    private android.graphics.Canvas canvas;
+
+    private Paint paint = new Paint();
+
+    private static final int robotPicId = R.drawable.shuckstack;
+
+    private Vector2d robotCenter = new Vector2d(0, 0); //The basis of the drawing
+    private Vector2d headingLine = new Vector2d(0, 100); //The line that signifies the front
 
 
     public static double scaleVal (double input, double minInputVal,
@@ -33,21 +50,37 @@ public  class RobotUtil {
 
 
 
+    public void setRes(Resources res){
+        this.res = res;
+    }
 
+    public void loadRes(){
+        robotPic = BitmapFactory.decodeResource(res, robotPicId);
+        canvas = new android.graphics.Canvas(robotPic);
+    }
 
+    public void updateHeading(double heading){
+        double rotateCCW = 360 - (normalizeTo360(heading) - lastKnownHeading);
+        headingLine.rotateBy(rotateCCW);
+        canvas.drawLine(
+                canvas.getWidth() / 2,
+                canvas.getHeight() / 2,
+                (float) headingLine.getX(),
+                (float) headingLine.getY(),
+                paint
+        );
+        lastKnownHeading = heading;
+    }
 
-
-
-
-
-
+    public Bitmap getRobotPic() {
+        return robotPic;
+    }
 
     //Things for drawing the robot and it's orientation on the FTC dashboard field overlay
 
     //This "SHOULD" work.... I spent a while on it because it was fun.
     //It will be a horrible image, mind. I'm not an artist.
     private Canvas imageOverlay;
-    private Vector2d robotCenter = new Vector2d(0, 0); //The basis of the drawing
 
     //The outline of the robot
     private List<Vector2d> robotOutline = constructRobotOutline();
