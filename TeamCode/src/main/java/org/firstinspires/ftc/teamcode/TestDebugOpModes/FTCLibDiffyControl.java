@@ -1,23 +1,29 @@
 package org.firstinspires.ftc.teamcode.TestDebugOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.config.ValueProvider;
 import com.acmerobotics.dashboard.config.variable.BasicVariable;
 import com.acmerobotics.dashboard.config.variable.CustomVariable;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveModuleEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import  com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveDrive;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.DriveModule;
 
+@Config
+@TeleOp(group = "FTCLib TeleOP")
 public class FTCLibDiffyControl extends LinearOpMode {
 
+    //Dashboard IP: 192.168.49.1:8080/dash
 
     //Dashboard things
     private FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -68,6 +74,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
     @Override
     public void runOpMode(){
 
+
         topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR);
         bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR);
         topRight = new MotorImplEx(hardwareMap, "topR", driveCPR);
@@ -80,7 +87,6 @@ public class FTCLibDiffyControl extends LinearOpMode {
         diffySwerveDrive = new DiffySwerveDrive(moduleLeft, moduleRight);
 
         diffySwerveDrive.setRightSideInverted(true);
-        diffySwerveDrive.stopMotor();
 
         constructVariables();
 
