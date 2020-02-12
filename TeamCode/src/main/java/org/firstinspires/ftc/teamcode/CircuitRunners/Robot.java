@@ -63,7 +63,7 @@ public class Robot {
     private void initBulkData() {
         bulkDataManager = new BulkDataManager(
                 hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 5"),
-                hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 7")
+                hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 2")
         );
 
     }
