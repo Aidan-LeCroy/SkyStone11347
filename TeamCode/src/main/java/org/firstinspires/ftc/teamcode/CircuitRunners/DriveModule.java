@@ -96,8 +96,6 @@ public class DriveModule {
             //points from robot center to left module
         }
 
-        lastMotor1Encoder = robot.bulkDataManager.getEncoder(motor1,5) ;
-        lastMotor2Encoder = robot.bulkDataManager.getEncoder(motor2,5) ;
 
         //TODO: Make sure we want coast or brake
         // BRAKE: Jumpy, Decently Accurate

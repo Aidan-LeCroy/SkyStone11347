@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
@@ -27,11 +28,14 @@ public class Intake {
     Gamepad gamepad2;
     Robot robot;
 
-    DcMotor intake_left, intake_right;
+    private DcMotor intake_left, intake_right;
 
     private final double INTAKE_IN_POWER = -1;
 
     private final double INTAKE_OUT_POWER = 1;
+
+    private final double IN_THRESHOLD = 0.1;
+    private final double OUT_THRESHOLD = 0.1;
 
 
 
@@ -41,6 +45,8 @@ public class Intake {
 
         intake_left = robot.findMotor("leftIntake");
         intake_right = robot.findMotor("rightIntake");
+
+        intake_right.setDirection(DcMotor.Direction.REVERSE);
 
         intake_left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         intake_right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

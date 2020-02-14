@@ -19,6 +19,8 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.DriveModule;
 
+import java.util.Locale;
+
 @Config
 @TeleOp(group = "FTCLib TeleOP")
 public class FTCLibDiffyControl extends LinearOpMode {
@@ -54,7 +56,8 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
 
 
-
+    PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
+    PController defaultRevMotorPos = new PController(5);
 
 
 
@@ -75,10 +78,10 @@ public class FTCLibDiffyControl extends LinearOpMode {
     public void runOpMode(){
 
 
-        topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR);
-        bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR);
-        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR);
-        bottomRight = new MotorImplEx(hardwareMap, "bottomR", driveCPR);
+        topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR, defaultRevMotorVelo);
+        bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR, defaultRevMotorVelo);
+        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR, defaultRevMotorVelo);
+        bottomRight = new MotorImplEx(hardwareMap, "bottomR", driveCPR, defaultRevMotorVelo);
 
 
         moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft);
@@ -87,6 +90,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
         diffySwerveDrive = new DiffySwerveDrive(moduleLeft, moduleRight);
 
         diffySwerveDrive.setRightSideInverted(true);
+        diffySwerveDrive.stopMotor();
 
         constructVariables();
 
@@ -116,16 +120,17 @@ public class FTCLibDiffyControl extends LinearOpMode {
                         gamepad1.right_stick_y * slowModeConst
                 );
             }
+
+
             packet.put("Left Module Vector X", gamepad1.left_stick_x);
             packet.put("Left Module Vector Y", -gamepad1.left_stick_y);
             packet.put("Right Module Vector X", gamepad1.right_stick_x);
             packet.put("Right Module Vector Y", gamepad1.right_stick_y);
             packet.put("Slow-Mode Active", gamepad1.right_bumper);
-            packet.put("Loop Time (ms)", benchmark.milliseconds());
+            packet.put("Loop Time", String.format(Locale.US ,"%.2f ms", benchmark.milliseconds()));
             benchmark.reset();
 
             dashboard.sendTelemetryPacket(packet);
-
 
         }
         diffySwerveDrive.stopMotor();

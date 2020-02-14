@@ -22,7 +22,7 @@ public class BulkDataManager {
 
     //Expansion Hub 5
     private ExpansionHubEx expansionHubEx5;
-    //Expansion Hub 7
+    //Expansion Hub 2
     private ExpansionHubEx expansionHubEx7;
 
     //Bulk data objects for both hubs
