@@ -43,6 +43,11 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private static final String LEFT_MODULE_K_ANGLE_NAME = "Left Module kAngle";
     private static final String RIGHT_MODULE_K_ANGLE_NAME = "Right Module kAngle";
+    
+    private static final String MODULE_ROTATION_P_NAME = "Diffy Module Rotational P";
+    
+    private static final String LEFT_MODULE_ROTATION_P_NAME = "Left Module Rotational P";
+    private static final String RIGHT_MODULE_ROTATION_P_NAME = "Right Module Rotational P";
 
     private static final String SLOW_MODE_REDUCTION_NAME = "Driver Slow-Mode Multiplier";
 
@@ -51,6 +56,9 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private double kAngleLeft = 0.8;
     private double kAngleRight = 0.8;
+    
+    private double rotationPLeft = 0.1;
+    private double rotationPRight = 0.1;
 
     private double slowModeConst = 0.75;
 
@@ -78,14 +86,14 @@ public class FTCLibDiffyControl extends LinearOpMode {
     public void runOpMode(){
 
 
-        topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR, defaultRevMotorVelo);
-        bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR, defaultRevMotorVelo);
-        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR, defaultRevMotorVelo);
-        bottomRight = new MotorImplEx(hardwareMap, "bottomR", driveCPR, defaultRevMotorVelo);
+        topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+        bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR, defaultRevMotorVelo, defualtRevMotorPos);
+        bottomRight = new MotorImplEx(hardwareMap, "bottomR", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
 
 
-        moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft);
-        moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight);
+        moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft);
+        moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rotationPRight);
 
         diffySwerveDrive = new DiffySwerveDrive(moduleLeft, moduleRight);
 
@@ -156,6 +164,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
         CustomVariable kWheels = new CustomVariable();
         CustomVariable kAngles = new CustomVariable();
+        CustomVariable rotationalP = new CustomVariable();
         CustomVariable slowModeMult = new CustomVariable();
 
         kWheels.putVariable(LEFT_MODULE_K_WHEEL_NAME, new BasicVariable<>(new ValueProvider<Double>() {
@@ -218,8 +227,35 @@ public class FTCLibDiffyControl extends LinearOpMode {
                 slowModeConst = value;
             }
         }));
+        rotationalP.putVariable(LEFT_MODULE_ROTATION_P_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+            @Override
+            public Double get() {
+                return rotationPLeft;
+            }
+
+            @Override
+            public void set(Double value) { //Unfortunately we have to do this
+                rotationPLeft = value;
+                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft); // I hate it too...
+                
+            }
+        }));
+        rotationalP.putVariable(RIGHT_MODULE_ROTATION_P_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+            @Override
+            public Double get() {
+                return rotationPRight;
+            }
+
+            @Override
+            public void set(Double value) { //Unfortunately we have to do this
+                rotationPRight = value;
+                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPRight); // I hate it too...
+                
+            }
+        }));
         classVar.putVariable(MODULE_K_WHEEL_NAME, kWheels);
         classVar.putVariable(MODULE_K_ANGLE_NAME, kAngles);
+        classVar.putVariable(MODULE_ROTATION_P_NAME, rotationalP);
         classVar.putVariable(SLOW_MODE_REDUCTION_NAME, slowModeMult);
         dashboard.updateConfig();
     }
