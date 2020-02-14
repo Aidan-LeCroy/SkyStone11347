@@ -106,8 +106,8 @@ repositories {
         dirs rootProject.file('libs')
     }
     jcenter()
-    maven {
-        url "https://dl.bintray.com/ftclib-dev/FTCLib/"
-    }
+//    maven {
+//        url "https://dl.bintray.com/ftclib-dev/FTCLib/"
+//    }
 }
 apply from: 'build.release.gradle'
