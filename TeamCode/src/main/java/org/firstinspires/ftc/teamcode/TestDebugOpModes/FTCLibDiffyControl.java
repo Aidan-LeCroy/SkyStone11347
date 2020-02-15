@@ -88,7 +88,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
         topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
-        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR, defaultRevMotorVelo, defualtRevMotorPos);
+        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomRight = new MotorImplEx(hardwareMap, "bottomR", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
 
 
