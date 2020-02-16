@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveModuleEx;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -18,8 +19,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.DriveModule;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.AS5600;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.function.DoubleSupplier;
 
 @Config
 @TeleOp(group = "FTCLib TeleOP")
@@ -51,16 +55,20 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private static final String SLOW_MODE_REDUCTION_NAME = "Driver Slow-Mode Multiplier";
 
+    private static final String[] driveMotorIds = {"topL", "bottomL", "topR", "bottomR"};
+
     private double kWheelLeft = DriveModule.CM_PER_TICK;
     private double kWheelRight = DriveModule.CM_PER_TICK;
 
     private double kAngleLeft = 0.8;
     private double kAngleRight = 0.8;
     
-    private double rotationPLeft = 0.1;
-    private double rotationPRight = 0.1;
+    private double rotationPLeft = 0.61923568104;
+    private double rotationPRight = 0.61923568104;
 
     private double slowModeConst = 0.75;
+
+
 
 
 
@@ -71,29 +79,68 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     //HARDWARE
 
+
     private DiffySwerveDrive diffySwerveDrive; //Drive base object
 
     private MotorImplEx topLeft, bottomLeft, topRight, bottomRight;
 
+    private AS5600 Lmagnet;
+    private AS5600 Rmagnet;
+
     private DiffySwerveModuleEx moduleLeft, moduleRight;
+
+    private static final double L_MAGNET_OFFSET = 0;
+    private static final double R_MAGNET_OFFSET = 0;
+
+    private DoubleSupplier headingSensorL = () -> {
+        double raw = (Lmagnet.getHeading() + L_MAGNET_OFFSET);
+        if(raw < 0) raw += 360;
+        if(raw > 360) raw -= 360;
+        return raw - 360;
+    };
+
+    private DoubleSupplier headingSensorR = () -> {
+        double raw = (Lmagnet.getHeading() + L_MAGNET_OFFSET);
+        if(raw < 0) raw += 360;
+        if(raw > 360) raw -= 360;
+        return raw - 360;
+    };
 
 
 
     private final double driveCPR = 28 * 4 * 15.9;
 
+    private ArrayList<MotorImplEx> driveMotors = new ArrayList<>();
+
 
     @Override
     public void runOpMode(){
+        Lmagnet = new AS5600(hardwareMap.analogInput.get("Lmagnet"));
+        Rmagnet = new AS5600(hardwareMap.analogInput.get("Rmagnet"));
 
 
-        topLeft = new MotorImplEx(hardwareMap, "topL", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
-        bottomLeft = new MotorImplEx(hardwareMap, "bottomL", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
-        topRight = new MotorImplEx(hardwareMap, "topR", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
-        bottomRight = new MotorImplEx(hardwareMap, "bottomR", driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+
+        topLeft = new MotorImplEx(hardwareMap, driveMotorIds[0], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+        bottomLeft = new MotorImplEx(hardwareMap, driveMotorIds[1], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+        topRight = new MotorImplEx(hardwareMap, driveMotorIds[2], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+        bottomRight = new MotorImplEx(hardwareMap, driveMotorIds[3], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+
+        driveMotors.add(topLeft);
+        driveMotors.add(bottomLeft);
+        driveMotors.add(topRight);
+        driveMotors.add(bottomRight);
+
+        for(MotorImplEx motor : driveMotors){
+            motor.setMode(MotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        }
 
 
         moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft);
         moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rotationPRight);
+
+        moduleLeft.setHeadingInterpol(headingSensorL);
+        moduleRight.setHeadingInterpol(headingSensorR);
 
         diffySwerveDrive = new DiffySwerveDrive(moduleLeft, moduleRight);
 

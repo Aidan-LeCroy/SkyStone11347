@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -11,6 +13,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 public class CheemsCVPipeline extends OpenCvPipeline {
 
@@ -31,6 +34,8 @@ public class CheemsCVPipeline extends OpenCvPipeline {
     // Width and height of the sampling rectangles
     private final double samplingRectWidth = 15;
     private final double samplingRectHeight = 15;
+
+
 
 
 
@@ -224,6 +229,7 @@ public class CheemsCVPipeline extends OpenCvPipeline {
         return input;
 
     }
+
 
 
 

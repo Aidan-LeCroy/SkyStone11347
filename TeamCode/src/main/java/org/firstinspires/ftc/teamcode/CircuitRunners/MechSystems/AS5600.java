@@ -14,13 +14,11 @@ public class AS5600  {
     private static final double maxVoltage = 3.3; //eg 5v, 3.3v VDD
     private static final double minVoltage = 0.0; //eg. GND
     private AnalogInput sensor;
-    private BulkDataManager bulkData;
     private double lastKnownHeading = 0;
     private double lastKnownVoltage = 0;
     private static final int hubnum = 5;
-    public AS5600(AnalogInput sensor, BulkDataManager bulkData){
+    public AS5600(AnalogInput sensor){
         this.sensor = sensor;
-        this.bulkData = bulkData;
 
     }
 
@@ -29,7 +27,7 @@ public class AS5600  {
      * @return  raw voltage from sensor
      */
     public double rawVoltage(){
-        lastKnownVoltage = bulkData.getAnalog(sensor, hubnum)/1000;
+        lastKnownVoltage = sensor.getVoltage();
         return lastKnownVoltage;
     }
 

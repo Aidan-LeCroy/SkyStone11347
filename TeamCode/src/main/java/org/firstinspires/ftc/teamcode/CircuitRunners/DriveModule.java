@@ -80,8 +80,7 @@ public class DriveModule {
             motor1 = robot.findMotor("topR");
             motor2 = robot.findMotor("bottomR");
             rotarySensor = new AS5600(
-                    robot.findAnalog("Rmagnet"),
-                    robot.bulkDataManager
+                    robot.findAnalog("Rmagnet")
             );
             positionVector = new Vector2d((double)18/2, 0);
             //points from robot center to right module
@@ -89,8 +88,7 @@ public class DriveModule {
             motor1 = robot.findMotor("topL");
             motor2 = robot.findMotor("bottomL");
             rotarySensor = new AS5600(
-                    robot.findAnalog("Lmagnet"),
-                    robot.bulkDataManager
+                    robot.findAnalog("Lmagnet")
             );
             positionVector = new Vector2d((double)-18/2, 0);
             //points from robot center to left module
@@ -275,8 +273,8 @@ public class DriveModule {
     public void updateTracking () {
         /*important to set these to a variable so getCurrentPosition()
          is not called multiple times in single cycle */
-        double currentMotor1Encoder = robot.bulkDataManager.getEncoder(motor1,5);
-        double currentMotor2Encoder = robot.bulkDataManager.getEncoder(motor2,5);
+        double currentMotor1Encoder = motor1.getCurrentPosition();
+        double currentMotor2Encoder = motor2.getCurrentPosition();
 
         double motor1Change = currentMotor1Encoder - lastMotor1Encoder;
         double motor2Change = currentMotor2Encoder - lastMotor2Encoder;
