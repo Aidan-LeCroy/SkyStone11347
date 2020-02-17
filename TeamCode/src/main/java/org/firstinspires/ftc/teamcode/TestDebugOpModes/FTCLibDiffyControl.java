@@ -100,7 +100,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
     };
 
     private DoubleSupplier headingSensorR = () -> {
-        double raw = (Lmagnet.getHeading() + L_MAGNET_OFFSET);
+        double raw = (Rmagnet.getHeading() + R_MAGNET_OFFSET);
         if(raw < 0) raw += 360;
         if(raw > 360) raw -= 360;
         return raw - 360;
@@ -108,7 +108,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
 
 
-    private final double driveCPR = 28 * 4 * 15.9;
+    private static final double driveCPR = 28 * 4 * 15.9;
 
     private ArrayList<MotorImplEx> driveMotors = new ArrayList<>();
 
