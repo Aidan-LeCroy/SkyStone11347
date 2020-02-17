@@ -16,7 +16,6 @@ public class AS5600  {
     private AnalogInput sensor;
     private double lastKnownHeading = 0;
     private double lastKnownVoltage = 0;
-    private static final int hubnum = 5;
     public AS5600(AnalogInput sensor){
         this.sensor = sensor;
 
@@ -41,21 +40,11 @@ public class AS5600  {
     }
 
     public Func<Double> getHeadingFunction(){
-        return new Func<Double>() {
-            @Override
-            public Double value() {
-                return getHeading();
-            }
-        };
+        return this::getHeading;
     }
 
     public Func<Double> getVoltageFunction(){
-        return new Func<Double>() {
-            @Override
-            public Double value() {
-                return rawVoltage();
-            }
-        };
+        return this::rawVoltage;
     }
 
     //Get the heading from 0 - 360

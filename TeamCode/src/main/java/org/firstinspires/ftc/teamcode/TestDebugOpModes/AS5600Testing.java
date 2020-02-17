@@ -5,15 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.AS5600;
-//import org.firstinspires.ftc.teamcode.CircuitRunners.BulkDataManager;
-import org.openftc.revextensions2.ExpansionHubEx;
 
 @TeleOp(name="Magnetic Sensor Testing",group="Test")
 public class AS5600Testing extends LinearOpMode {
 
-    AS5600 sensorLeft;
-    AS5600 sensorRight;
-//    BulkDataManager bulkDataManager;
+    private AS5600 sensorLeft;
+    private AS5600 sensorRight;
     Telemetry.Item magSensorLeft;
     Telemetry.Item magSensorRight;
     Telemetry.Item magSensorLeftRaw;
@@ -23,19 +20,11 @@ public class AS5600Testing extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-
-//        bulkDataManager = new BulkDataManager(
-//                hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 5"),
-//                hardwareMap.get(ExpansionHubEx.class, "Expansion Hub 7")
-//        );
-
         sensorLeft = new AS5600(
                 hardwareMap.analogInput.get("Lmagnet")
-
         );
         sensorRight = new AS5600(
                 hardwareMap.analogInput.get("Rmagnet")
-
         );
 
 
@@ -43,12 +32,8 @@ public class AS5600Testing extends LinearOpMode {
         initTelemetry();
 
 
-
-
         while(opModeIsActive()){
-//            bulkDataManager.update();
             telemetry.update();
-
         }
 
 
