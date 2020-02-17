@@ -31,7 +31,7 @@ public class VisionStream extends LinearOpMode {
         webcam.setPipeline(pipeline);
 
 
-        webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+        webcam.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
 
         while (opModeIsActive()){
 

@@ -162,16 +162,16 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
             if(!gamepad1.right_bumper) {
                 diffySwerveDrive.drive(
-                        gamepad1.left_stick_x,
+                        -gamepad1.left_stick_x,
                         -gamepad1.left_stick_y,
-                        gamepad1.right_stick_x,
+                        -gamepad1.right_stick_x,
                         gamepad1.right_stick_y
                 );
             } else {
                 diffySwerveDrive.drive(
-                        gamepad1.left_stick_x * slowModeConst,
+                        -gamepad1.left_stick_x * slowModeConst,
                         -gamepad1.left_stick_y * slowModeConst,
-                        gamepad1.right_stick_x * slowModeConst,
+                        -gamepad1.right_stick_x * slowModeConst,
                         gamepad1.right_stick_y * slowModeConst
                 );
             }
