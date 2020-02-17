@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.function.DoubleSupplier;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 @Config
 @TeleOp(group = "FTCLib TeleOP")
 public class FTCLibDiffyControl extends LinearOpMode {
@@ -96,14 +98,14 @@ public class FTCLibDiffyControl extends LinearOpMode {
         double raw = (Lmagnet.getHeading() + L_MAGNET_OFFSET);
         if(raw < 0) raw += 360;
         if(raw > 360) raw -= 360;
-        return raw - 360;
+        return AngleUnit.DEGREES.normalize(raw);
     };
 
     private DoubleSupplier headingSensorR = () -> {
         double raw = (Rmagnet.getHeading() + R_MAGNET_OFFSET);
         if(raw < 0) raw += 360;
         if(raw > 360) raw -= 360;
-        return raw - 360;
+        return AngleUnit.DEGREES.normalize(raw);
     };
 
 
