@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
+import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class Intake {
 
@@ -22,7 +24,6 @@ public class Intake {
 
 
     public Intake(Robot robot){
-        this.robot = robot;
         this.gamepad2 = robot.gamepad2;
 
         intake_left = robot.findMotor("leftIntake");
@@ -32,7 +33,18 @@ public class Intake {
 
 
         stop();
+    }
 
+    public Intake(LinearOpMode opMode){
+        this.gamepad2 = opMode.gamepad2;
+
+        intake_left = opMode.hardwareMap.get(ExpansionHubMotor.class, "leftIntake");
+        intake_right = opMode.hardwareMap.get(ExpansionHubMotor.class, "rightIntake");
+
+        intake_right.setDirection(DcMotor.Direction.REVERSE);
+
+
+        stop();
     }
 
     public void update(){

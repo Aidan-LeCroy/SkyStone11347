@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class Intake implements Subsystem {
+public class IntakeSubsystem implements Subsystem {
 
     private LinearOpMode opMode;
 
@@ -16,7 +16,7 @@ public class Intake implements Subsystem {
 
 
 
-    public Intake(LinearOpMode opMode){
+    public IntakeSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
     }
 

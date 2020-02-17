@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
 import com.qualcomm.hardware.motors.RevRobotics20HdHexMotor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -19,6 +21,13 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class LiftSystem {
+
+        /*
+    So the mentality behind this system is the following. The measured value (pv) is always updated,
+    and when there is manual control active the setpoint (sv) is also updated. When manual control stops,
+    the pv is still updated but the sv stops being updated. The output of the controller is only applied
+    when there is no manual controller
+     */
 
 
     class CachedMotor {
@@ -46,14 +55,9 @@ public class LiftSystem {
 
     private static final double motorCPR = 28 * 4 * 3.9;
     
-    
-    //The positional coefficients
-    private final double PCoefficient = 10;
-    
     //The positional tolerance
     private final double tolerance = 1;
 
-    private final double LIFT_HOLDING_POWER = 0.1;
 
     private final double LIFT_UP_POWER = 0.8;
 
@@ -62,10 +66,10 @@ public class LiftSystem {
     private final double TOP_POSITION = 0;
     private final double BOTTOM_POSITION = 330;
     
-    private double liftTarget = BOTTOM_POSITION;
+    private double currentPos = 0;
     
     //Not used for much by default in TeleOp, but good to have
-    private PController liftController = new PController(PCoefficient);
+    private PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 3});
 
 
 
@@ -73,13 +77,9 @@ public class LiftSystem {
     private final String[] liftMotorIds = {"lift_left", "lift_right"};
     private ExpansionHubMotor lift_left, lift_right;
     private CachedMotor left_cache, right_cache;
-    private BulkDataManager bulkDataManager;
     //private DigitalChannel left_bottom_switch;
     //private DigitalChannel right_bottom_switch;
 
-
-    private Robot robot;
-    private boolean atBottom;
 
 
 
@@ -107,10 +107,12 @@ public class LiftSystem {
     };
 
 
+    private Gamepad gamepad2;
 
 
     public LiftSystem(Robot robot){
-        this.robot = robot;
+        this.gamepad2 = robot.gamepad2;
+
         lift_left = robot.findMotor(liftMotorIds[0]);
         lift_right = robot.findMotor(liftMotorIds[1]);
 
@@ -121,47 +123,56 @@ public class LiftSystem {
         resetEncoders();
         setRUE();
         stoplift();
-
-
         liftController.setTolerance(tolerance);
-        liftController.setSetPoint(liftTarget);
-        
+    }
 
+    public LiftSystem(LinearOpMode opMode){
+        this.gamepad2 = opMode.gamepad2;
 
-        bulkDataManager = robot.bulkDataManager;
+        lift_left = opMode.hardwareMap.get(ExpansionHubMotor.class, liftMotorIds[0]);
+        lift_right = opMode.hardwareMap.get(ExpansionHubMotor.class, liftMotorIds[1]);
+
+        left_cache = new CachedMotor(0);
+        right_cache = new CachedMotor(0);
+        //reverse left side
+        lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
+        resetEncoders();
+        setRUE();
+        stoplift();
+        liftController.setTolerance(tolerance);
     }
 
 
     //Update and set power to lift
     public void update(){
+
+        //Update the known lift position
+        currentPos = liftPosition.value();
         
         //Power to be sent
         double finalPower = 0;
         
         //Gamepad controls
-        boolean goUp = robot.controls.liftUp.value();
-        boolean goDown = robot.controls.liftDown.value();
-        boolean goBottom = robot.controls.liftBottom.value();
+        boolean goUp = gamepad2.dpad_up;
+        boolean goDown = gamepad2.dpad_down;
 
         
         //Check all possibilities for manual control
-        if(!goBottom){
             if(goUp && !liftAtTop.value()){
                 finalPower = LIFT_UP_POWER;
+                //Update the setpoint
+                liftController.setSetPoint(currentPos);
             }
             else if(goDown && !liftAtBottom.value()){
                 finalPower = LIFT_DOWN_POWER;
+                //update the setpoint
+                liftController.setSetPoint(currentPos);
             }
-            else if(!liftAtBottom.value()){
-                finalPower = LIFT_HOLDING_POWER;
-            }   
             else {
-                finalPower = 0;
+                //This happens whenever the lift isn't being controlled
+                //Basically the pv is updated here. the sv isn't, so it holds it's position
+                finalPower = liftController.calculate(currentPos);
             }
-        }
-        else {
-             finalPower = liftController.calculate(BOTTOM_POSITION);
-        }
 
         setLiftPower(finalPower);
 
@@ -170,22 +181,13 @@ public class LiftSystem {
 
 
     private int getPosLeft(){
-        return (int) round( bulkDataManager.getEncoder(lift_left, 7));
+        return lift_left.getCurrentPosition();
     }
 
     private int getPosRight(){
-        return (int) round( bulkDataManager.getEncoder(lift_right, 7));
+        return lift_right.getCurrentPosition();
     }
-    
-    //Set a new target for the positional control
-    public void setLiftTargetPos(double target){
-           liftTarget = target;
-           liftController.setSetPoint(target);
-    }
-    
-    public boolean atTarget(){
-        return liftController.atSetPoint();
-    }
+
 
 
     private void resetEncoders(){

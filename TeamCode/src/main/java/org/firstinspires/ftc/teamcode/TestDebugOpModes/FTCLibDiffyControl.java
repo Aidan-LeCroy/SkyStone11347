@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import  com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveDrive;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
@@ -26,6 +27,8 @@ import java.util.Locale;
 import java.util.function.DoubleSupplier;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.Intake;
+import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.LiftSystem;
 
 @Config
 @TeleOp(group = "FTCLib TeleOP")
@@ -78,9 +81,17 @@ public class FTCLibDiffyControl extends LinearOpMode {
     PController defaultRevMotorPos = new PController(5);
 
 
+    //Controls
+    private boolean grabbing=false;
+    private boolean bounce1 = false;
+    private boolean bounce2 = false;
+    private boolean bounce3= false;
+    private boolean fbDrop=false;
+
 
     //HARDWARE
 
+    private Servo leftFB,rightFB,grab;
 
     private DiffySwerveDrive diffySwerveDrive; //Drive base object
 
@@ -114,6 +125,10 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private ArrayList<MotorImplEx> driveMotors = new ArrayList<>();
 
+    //Testing for mechanisms
+    private Intake intake = new Intake(this);
+    private LiftSystem lift = new LiftSystem(this);
+
 
     @Override
     public void runOpMode(){
@@ -126,6 +141,13 @@ public class FTCLibDiffyControl extends LinearOpMode {
         bottomLeft = new MotorImplEx(hardwareMap, driveMotorIds[1], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         topRight = new MotorImplEx(hardwareMap, driveMotorIds[2], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomRight = new MotorImplEx(hardwareMap, driveMotorIds[3], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
+
+        leftFB=hardwareMap.servo.get("leftFB");
+        rightFB=hardwareMap.servo.get("rightFB");
+        rightFB.setDirection(Servo.Direction.REVERSE);
+
+        grab=hardwareMap.servo.get("grab");
+        grab.setDirection(Servo.Direction.REVERSE);
 
         driveMotors.add(topLeft);
         driveMotors.add(bottomLeft);
@@ -179,6 +201,10 @@ public class FTCLibDiffyControl extends LinearOpMode {
             }
 
 
+            intake.update();
+            lift.update();
+
+
             packet.put("Left Module Vector X", gamepad1.left_stick_x);
             packet.put("Left Module Vector Y", -gamepad1.left_stick_y);
             packet.put("Right Module Vector X", gamepad1.right_stick_x);
@@ -193,11 +219,56 @@ public class FTCLibDiffyControl extends LinearOpMode {
         diffySwerveDrive.stopMotor();
         diffySwerveDrive.disable();
 
+    }
 
+    //Just so we don't take up space
+    private void moveThings(){
+        if(gamepad2.a&&!bounce3){
+            flip4B();
+            bounce3=true;
+        }
+        else if(!gamepad2.a){
+            bounce3=false;
+        }
 
+        if(gamepad2.left_bumper&&!bounce1){
+            grabToggle();
+            bounce1=true;
+        }
+        else if(!gamepad2.left_bumper){
+            bounce1=false;
+        }
 
+        if(gamepad2.y){
+            leftFB.setPosition(.95);
+            leftFB.setPosition(.95);
+        }
+    }
 
+    private void set4BPos(double pos){
+        leftFB.setPosition(pos);
+        rightFB.setPosition(pos);
+    }
 
+    private void flip4B(){
+        if(!fbDrop){
+            set4BPos(.03);
+            fbDrop=true;
+        }
+        else if(fbDrop){
+            set4BPos(.85);
+            fbDrop=false;
+        }
+    }
+    private void grabToggle(){
+        if(!grabbing){
+            grab.setPosition(0.5);
+            grabbing=true;
+        }
+        else if(grabbing){
+            grab.setPosition(0.6);
+            grabbing=false;
+        }
     }
 
     private void constructVariables(){
