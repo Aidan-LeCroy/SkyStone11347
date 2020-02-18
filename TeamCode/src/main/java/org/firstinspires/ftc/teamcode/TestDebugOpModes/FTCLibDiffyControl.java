@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import  com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveDrive;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -73,10 +74,6 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private double slowModeConst = 0.75;
 
-
-
-
-
     PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
     PController defaultRevMotorPos = new PController(5);
 
@@ -97,27 +94,19 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private MotorImplEx topLeft, bottomLeft, topRight, bottomRight;
 
-    private AS5600 Lmagnet;
-    private AS5600 Rmagnet;
+    private AnalogInput Lmagnet;
+    private AnalogInput Rmagnet;
 
     private DiffySwerveModuleEx moduleLeft, moduleRight;
 
     private static final double L_MAGNET_OFFSET = 0;
     private static final double R_MAGNET_OFFSET = 0;
 
-    private DoubleSupplier headingSensorL = () -> {
-        double raw = (Lmagnet.getHeading() + L_MAGNET_OFFSET);
-        if(raw < 0) raw += 360;
-        if(raw > 360) raw -= 360;
-        return AngleUnit.DEGREES.normalize(raw);
-    };
+    private DoubleSupplier headingSensorL = () ->
+           Lmagnet.getVoltage() + L_MAGNET_OFFSET;
 
-    private DoubleSupplier headingSensorR = () -> {
-        double raw = (Rmagnet.getHeading() + R_MAGNET_OFFSET);
-        if(raw < 0) raw += 360;
-        if(raw > 360) raw -= 360;
-        return AngleUnit.DEGREES.normalize(raw);
-    };
+    private DoubleSupplier headingSensorR = () ->
+            Rmagnet.getVoltage() + R_MAGNET_OFFSET;
 
 
 
@@ -126,16 +115,18 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private ArrayList<MotorImplEx> driveMotors = new ArrayList<>();
 
     //Testing for mechanisms
-    private Intake intake = new Intake(this);
-    private LiftSystem lift = new LiftSystem(this);
+    private Intake intake;
+    private LiftSystem lift;
 
 
     @Override
     public void runOpMode(){
-        Lmagnet = new AS5600(hardwareMap.analogInput.get("Lmagnet"));
-        Rmagnet = new AS5600(hardwareMap.analogInput.get("Rmagnet"));
 
+        intake = new Intake(this);
+        lift = new LiftSystem(this);
 
+        Lmagnet = hardwareMap.analogInput.get("Lmagnet");
+        Rmagnet = hardwareMap.analogInput.get("Rmagnet");
 
         topLeft = new MotorImplEx(hardwareMap, driveMotorIds[0], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomLeft = new MotorImplEx(hardwareMap, driveMotorIds[1], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
@@ -155,10 +146,9 @@ public class FTCLibDiffyControl extends LinearOpMode {
         driveMotors.add(bottomRight);
 
         for(MotorImplEx motor : driveMotors){
-            motor.setMode(MotorEx.RunMode.STOP_AND_RESET_ENCODER);
+            motor.resetEncoder();
             motor.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
         }
-
 
         moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft);
         moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rotationPRight);
@@ -179,8 +169,6 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
         benchmark.reset();
         while (opModeIsActive()){
-
-
 
             TelemetryPacket packet = new TelemetryPacket();
 
@@ -210,6 +198,12 @@ public class FTCLibDiffyControl extends LinearOpMode {
             packet.put("Right Module Vector X", gamepad1.right_stick_x);
             packet.put("Right Module Vector Y", gamepad1.right_stick_y);
             packet.put("Slow-Mode Active", gamepad1.right_bumper);
+            packet.put("Left Intake Wheel Power", intake.getLeftPower());
+            packet.put("Right Intake Wheel Power", intake.getRightPower());
+            packet.put("Left Intake Wheel Draw (Amps)", intake.getLeftDraw());
+            packet.put("Right Intake Wheel Draw (Amps)", intake.getRightDraw());
+            packet.put("Left Heading", headingSensorL.getAsDouble());
+            packet.put("Right Heading", headingSensorR.getAsDouble());
             packet.put("Loop Time", String.format(Locale.US ,"%.2f ms", benchmark.milliseconds()));
             benchmark.reset();
 
@@ -217,7 +211,6 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
         }
         diffySwerveDrive.stopMotor();
-        diffySwerveDrive.disable();
 
     }
 

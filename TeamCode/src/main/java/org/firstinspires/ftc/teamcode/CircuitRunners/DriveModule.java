@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.AS5600;
@@ -15,7 +16,7 @@ public class DriveModule {
     private ExpansionHubMotor motor1; //top motor
     private ExpansionHubMotor motor2; //bottom motor
     
-    private AS5600 rotarySensor; //the magnetic rotation sensor
+    private AnalogInput rotarySensor; //the magnetic rotation sensor
 
     private final ModuleSide moduleSide;
     private final Vector2d positionVector;
@@ -29,9 +30,9 @@ public class DriveModule {
     // a MODULE rev is when the orientation of the module changes by 360 degrees
     // a WHEEL rev is when the wheel drives a distance equal to its circumference
 
-    private static final double TICKS_PER_MODULE_REV = (1705.0 / 42.0) * 56;
+    public static final double TICKS_PER_MODULE_REV = 32 * 1.69;
     //TODO: if heading is wrong, change 56 to 28 on module rev+wheel rev
-    private static final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
+    public static final double DEGREES_PER_TICK = 360/TICKS_PER_MODULE_REV;
 
     //TODO: modify this variable to match drive gear ratio
     private static final double TICKS_PER_WHEEL_REV = TICKS_PER_MODULE_REV * ( 100.0 / 29.0 );
@@ -76,20 +77,16 @@ public class DriveModule {
         this.headless=headless;
         this.robot = robot;
         this.moduleSide = moduleSide;
-        if (moduleSide == ModuleSide.RIGHT) {
+        if (moduleSide == ModuleSide.LEFT) {
             motor1 = robot.findMotor("topR");
             motor2 = robot.findMotor("bottomR");
-            rotarySensor = new AS5600(
-                    robot.findAnalog("Rmagnet")
-            );
+            rotarySensor = robot.findAnalog("Rmagnet");
             positionVector = new Vector2d((double)18/2, 0);
             //points from robot center to right module
         } else {
             motor1 = robot.findMotor("topL");
             motor2 = robot.findMotor("bottomL");
-            rotarySensor = new AS5600(
-                    robot.findAnalog("Lmagnet")
-            );
+            rotarySensor = robot.findAnalog("Lmagnet");
             positionVector = new Vector2d((double)-18/2, 0);
             //points from robot center to left module
         }
@@ -261,7 +258,7 @@ public class DriveModule {
     public Angle getCurrentOrientation() {
 //        robot.telemetry.addData(moduleSide + "Motor 1 Encoder", motor1.getCurrentPosition());
 //        robot.telemetry.addData(moduleSide + "Motor 2 Encoder", motor2.getCurrentPosition());
-        double rawAngle = rotarySensor.getHeading();
+        double rawAngle = rotarySensor.getVoltage();
         //motor2-motor1 makes ccw positive (?)
         return new Angle(rawAngle, Angle.AngleType.ZERO_TO_360_HEADING);
     }

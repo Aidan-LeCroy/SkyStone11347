@@ -18,5 +18,7 @@ public class Zeroing extends OpMode {
     public void loop() {
         robot.driveController.moduleLeft.moduleRotate(.5*-gamepad1.left_stick_y);
         robot.driveController.moduleRight.moduleRotate(.5*-gamepad1.right_stick_y);
+        telemetry.addData("Left Sensor Heading",robot.driveController.moduleLeft.getCurrentOrientation().getAngle());
+        telemetry.addData("Right Sensor Heading",robot.driveController.moduleRight.getCurrentOrientation().getAngle());
     }
 }

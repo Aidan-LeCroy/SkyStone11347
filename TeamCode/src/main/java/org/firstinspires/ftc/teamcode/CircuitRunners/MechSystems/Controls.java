@@ -41,12 +41,6 @@ public class Controls {
     //Toggle for foundation grabber
     public final Func<Boolean> foundationMove = () -> gamepad2.x;
 
-    //Control for intake in
-    public final Func<Boolean> intakeIn = () -> gamepad2.left_trigger >= 0.05;
-
-    //Control for intake out
-    public final Func<Boolean> intakeOut = () -> gamepad2.right_trigger >= 0.05;
-
     //Control to move v4bar to .95 pos????
     public final Func<Boolean> v4barExternalMove = () -> gamepad2.y;
 

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
+import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class Intake {
@@ -15,11 +16,11 @@ public class Intake {
     Gamepad gamepad2;
     Robot robot;
 
-    private DcMotor intake_left, intake_right;
+    private ExpansionHubMotor intake_left, intake_right;
 
-    private final double INTAKE_IN_POWER = -1;
+    private final double INTAKE_IN_POWER = -.35;
 
-    private final double INTAKE_OUT_POWER = 1;
+    private final double INTAKE_OUT_POWER = .35;
 
 
 
@@ -57,6 +58,22 @@ public class Intake {
         }
     }
 
+    public double getLeftPower(){
+        return intake_left.getPower();
+    }
+
+    public double getLeftDraw(){
+        return intake_left.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
+    }
+
+    public double getRightDraw(){
+        return intake_right.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
+    }
+
+    public double getRightPower(){
+        return intake_right.getPower();
+    }
+
     public void in(){
         set(INTAKE_IN_POWER);
     }
@@ -69,9 +86,12 @@ public class Intake {
         set(0);
     }
 
+    private double getLowestCurrent(){
+        return Math.min(intake_left.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS), intake_right.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS));
+    }
 
     public void set(double power){
-        intake_left.setPower(power);
+        intake_left.setPower(power * 0.9);
         intake_right.setPower(power);
     }
 }

@@ -74,7 +74,7 @@ public class TeleOp extends OpMode {
         //Update the intake
         robot.intake.update();
 
-        telemetry.addData("Lift Encoders:", robot.liftSystem.liftPosition);
+        telemetry.addData("Lift Encoders:", robot.liftSystem.liftPosition.value());
 
         //Control lift
         robot.liftSystem.update();

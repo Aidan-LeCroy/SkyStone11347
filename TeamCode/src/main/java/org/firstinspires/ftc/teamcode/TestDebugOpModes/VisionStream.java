@@ -9,6 +9,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
+import java.util.Locale;
+
 @TeleOp
 public class VisionStream extends LinearOpMode {
 
@@ -38,7 +40,7 @@ public class VisionStream extends LinearOpMode {
             telemetry.addData("Skystone Position", pipeline.skystone);
 
             telemetry.addData("Frame Count", webcam.getFrameCount());
-            telemetry.addData("FPS", String.format("%.2f", webcam.getFps()));
+            telemetry.addData("FPS", String.format(Locale.US, "%.2f", webcam.getFps()));
             telemetry.addData("Total frame time ms", webcam.getTotalFrameTimeMs());
             telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
             telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());

@@ -69,7 +69,7 @@ public class LiftSystem {
     private double currentPos = 0;
     
     //Not used for much by default in TeleOp, but good to have
-    private PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 3});
+    private PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0});
 
 
 
@@ -140,6 +140,7 @@ public class LiftSystem {
         setRUE();
         stoplift();
         liftController.setTolerance(tolerance);
+        liftController.setSetPoint(0);
     }
 
 

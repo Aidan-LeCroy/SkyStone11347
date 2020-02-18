@@ -155,7 +155,6 @@ public class CheemsCVPipeline extends OpenCvPipeline {
         }
 
 
-
         skystone = maxPosition(numList);
 
         //Rect are rectangles
@@ -196,7 +195,6 @@ public class CheemsCVPipeline extends OpenCvPipeline {
         );
 
         Point[] detectedPoint = rectArr.get(skystone);
-
         //Draw Circle on the skystone
         Imgproc.circle(
                 input,
@@ -208,31 +206,18 @@ public class CheemsCVPipeline extends OpenCvPipeline {
                 new Scalar(0,255,0),
                 -1
         );
-
-
         //There is one more important thing to know.
         //To avoid memory leaks and to free up resources, you must release any
         //Mat objects that you create in the pipeline method (excluding those in the class, like
         //the yCbCr or the cBmat object) at the end
-
         //You can do this directly
         //myMat.release();
         //myMat2.release();
-
         //Or any way that works
         for(Mat m : submats){
             m.release();
         }
-
-
         //Return the frame to show on the viewport. Use the original (if altered) frame with the same dimensions
         return input;
-
     }
-
-
-
-
-
-
 }
