@@ -12,6 +12,8 @@ import java.util.Locale;
 
 public class VisionSubsytem implements Subsystem {
 
+
+
     //Dimensions of the stream
     private static final int HEIGTH = 480;
     private static final int WIDTH = 640;
@@ -93,10 +95,15 @@ public class VisionSubsytem implements Subsystem {
         webcam.stopStreaming();
     }
 
+    //Stops the stream
+    public void stopStreaming(){
+        webcam.stopStreaming();
+        webcam.closeCameraDevice();
+    }
+
 
     @Override
     public void onStop(){
-        webcam.stopStreaming();
-        webcam.closeCameraDevice();
+        //stopStreaming() is called wayyyy before stop(), so nothing happens here
     }
 }
