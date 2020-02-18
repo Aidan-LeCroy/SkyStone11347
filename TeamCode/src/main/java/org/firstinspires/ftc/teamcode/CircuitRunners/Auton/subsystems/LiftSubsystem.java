@@ -3,19 +3,26 @@ package org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.openftc.revextensions2.ExpansionHubMotor;
 
 public class LiftSubsystem implements Subsystem {
 
 
-    PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 3});
+    PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0});
 
-
+    //Lift motors
     private ExpansionHubMotor lift_left, lift_right;
 
+    //v4b servos
+    private Servo leftFB, rightFB;
 
-    private static final double TOLERANCE  = 1;
+    //Grabber servo
+    private Servo grab;
+
+
+    private static final double TOLERANCE  = 10;
 
     private LinearOpMode opMode;
     /*
@@ -43,6 +50,13 @@ public class LiftSubsystem implements Subsystem {
         setMode(ExpansionHubMotor.RunMode.RUN_USING_ENCODER);
         stoplift();
 
+        leftFB = opMode.hardwareMap.servo.get("leftFB");
+        rightFB = opMode.hardwareMap.servo.get("rightFB");
+        rightFB.setDirection(Servo.Direction.REVERSE);
+
+        grab = opMode.hardwareMap.servo.get("grab");
+        grab.setDirection(Servo.Direction.REVERSE);
+
         liftController.setTolerance(TOLERANCE);
     }
 
@@ -55,6 +69,15 @@ public class LiftSubsystem implements Subsystem {
         while(liftController.atSetPoint() && opMode.opModeIsActive()){
             liftController.calculate(currentPos());
         }
+    }
+
+    public void setGrabPos(double pos){
+        grab.setPosition(pos);
+    }
+
+    public void set4BPos(double pos){
+        leftFB.setPosition(pos);
+        rightFB.setPosition(pos);
     }
 
     @Override

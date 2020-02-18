@@ -5,10 +5,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class IntakeSubsystem implements Subsystem {
 
+    public enum Direction {
+        IN(-0.3),
+        OUT(0.3),
+        STOP(0);
+
+        public final double power;
+
+        Direction(double power){
+            this.power = power;
+        }
+    }
+
     private LinearOpMode opMode;
 
-    private static final double IN_POWER = 0.8;
-    private static final double OUT_POWER = 0.7;
 
 
     private DcMotor intake_left;
@@ -34,19 +44,22 @@ public class IntakeSubsystem implements Subsystem {
 
     //Makes the intake spin inwards
     public void in(){
-        setPower(IN_POWER);
+        setPower(Direction.IN.power);
     }
 
     //Makes the intake spin outwards
     public void out(){
-        setPower(OUT_POWER);
+        setPower(Direction.OUT.power);
     }
 
 
+    public void setDirection(Direction direction){
+        setPower(direction.power);
+    }
 
     //Stops the motors
     public void stop(){
-        setPower(0);
+        setDirection(Direction.STOP);
     }
 
     //Internal setting power

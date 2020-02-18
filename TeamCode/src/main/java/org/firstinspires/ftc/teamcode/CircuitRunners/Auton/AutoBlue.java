@@ -9,10 +9,63 @@ public class AutoBlue extends LinearOpMode {
 
 
 
+    IntakeSubsystem intake;
+    LiftSubsystem lift;
+    VisionSubsytem vision;
+
+
+    private static int skystonePos = -1;
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
 
+        addLog("Constructing Subsystems...");
+        telemetry.update();
 
+        intake = new IntakeSubsystem(this);
+        lift = new LiftSubsystem(this);
+        vision = new VisionSubsytem(this);
+
+        addLog("Subsystems Initializing...");
+        telemetry.update();
+
+        intake.onInit();
+        lift.onInit();
+        vision.onInit();
+
+        addLog("Initialized...");
+        addLog("Starting Vision...");
+        telemetry.update();
+
+        vision.startStreaming();
+        addLog("Started...");
+        while(!isStarted() && !isStopRequested()){
+            vision.addTelemetry();
+            telemetry.update();
+            //The use of the vision subsystem is special in that it's not used through a command
+            //(If you make a command for vision, there is something wrong with you)
+        }
+        vision.stopStreaming();
+        skystonePos = vision.getSkystonePos();
+
+
+
+        //Move intake out after sizing
+        new IntakeCommand(intake, IntakeSubsystem.Direction.IN).execute();
+        sleep(500);
+        new IntakeCommand(intake, IntakeSubsystem.Direction.STOP).execute();
+
+
+
+        //AT THE END
+        intake.onStop();
+        lift.onStop();
+        vision.onStop(); //<- Just for continuity
+    }
+
+    private void addLog(String data){
+        telemetry.log().add(data);
     }
 }
