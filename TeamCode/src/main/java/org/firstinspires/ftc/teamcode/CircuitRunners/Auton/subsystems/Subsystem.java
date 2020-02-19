@@ -7,7 +7,7 @@ package org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems;
 public interface Subsystem {
 
     /**
-     * Should be triggered on the initiation period.
+     * Should be triggered on the initialization period.
      */
     void initialize();
 

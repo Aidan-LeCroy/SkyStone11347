@@ -23,18 +23,7 @@ public class AutoBlue extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
 
-        intake = new IntakeSubsystem(this);
-        lift = new LiftSubsystem(this);
-        vision = new VisionSubsystem(this);
-        drive = new DriveSubsystem(this);
-
-        addLog("Subsystems Initializing...");
-        telemetry.update();
-
-        intake.initialize();
-        lift.initialize();
-        vision.initialize();
-        drive.initialize();
+        initializeSubsystems();
 
         //For intake
         IntakeCommand intakeCommand = new IntakeCommand(intake, IntakeSubsystem.Direction.IN);
@@ -175,5 +164,19 @@ public class AutoBlue extends LinearOpMode {
 
     private void addLog(String data){
         telemetry.log().add(data);
+    }
+    public void initializeSubsystems(){
+        intake = new IntakeSubsystem(this);
+        lift = new LiftSubsystem(this);
+        vision = new VisionSubsystem(this);
+        drive = new DriveSubsystem(this);
+
+        addLog("Subsystems Initializing...");
+        telemetry.update();
+
+        intake.initialize();
+        lift.initialize();
+        vision.initialize();
+        drive.initialize();
     }
 }
