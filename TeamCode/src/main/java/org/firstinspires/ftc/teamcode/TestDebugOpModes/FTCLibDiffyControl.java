@@ -72,10 +72,16 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private double rotationPLeft = 0.61923568104;
     private double rotationPRight = 0.61923568104;
 
+    private double[] leftCoefficients = {rotationPLeft, 0, 0, 0};
+    private double[] rightCoefficients = {rotationPRight, 0, 0, 0};
+
+    private PIDFController leftModuleController = new PIDFController(leftCoefficients);
+    private PIDFController rightModuleController = new PIDFController(rightCoefficients);
+
     private double slowModeConst = 0.75;
 
-    PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
-    PController defaultRevMotorPos = new PController(5);
+    private PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
+    private PController defaultRevMotorPos = new PController(5);
 
 
     //Controls
@@ -150,8 +156,8 @@ public class FTCLibDiffyControl extends LinearOpMode {
             motor.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
         }
 
-        moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft);
-        moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rotationPRight);
+        moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController);
+        moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController);
 
         moduleLeft.setHeadingInterpol(headingSensorL);
         moduleRight.setHeadingInterpol(headingSensorR);
@@ -202,8 +208,8 @@ public class FTCLibDiffyControl extends LinearOpMode {
             packet.put("Right Intake Wheel Power", intake.getRightPower());
             packet.put("Left Intake Wheel Draw (Amps)", intake.getLeftDraw());
             packet.put("Right Intake Wheel Draw (Amps)", intake.getRightDraw());
-            packet.put("Left Heading", headingSensorL.getAsDouble());
-            packet.put("Right Heading", headingSensorR.getAsDouble());
+            packet.put("Left Module Heading", headingSensorL.getAsDouble());
+            packet.put("Right Module Heading", headingSensorR.getAsDouble());
             packet.put("Loop Time", String.format(Locale.US ,"%.2f ms", benchmark.milliseconds()));
             benchmark.reset();
 
@@ -326,7 +332,6 @@ public class FTCLibDiffyControl extends LinearOpMode {
             public void set(Double value) {
                 kAngleRight = value;
                 moduleRight.kRevConstant = value;
-
             }
         }));
         slowModeMult.putVariable(SLOW_MODE_REDUCTION_NAME, new BasicVariable<>(new ValueProvider<Double>() {
@@ -348,8 +353,9 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
             @Override
             public void set(Double value) { //Unfortunately we have to do this
-                rotationPLeft = value;
-                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft); // I hate it too...
+                leftCoefficients[0] = value;
+                leftModuleController = new PIDFController(leftCoefficients);
+                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController); // I hate it too...
                 
             }
         }));
@@ -361,8 +367,9 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
             @Override
             public void set(Double value) { //Unfortunately we have to do this
-                rotationPRight = value;
-                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, rotationPRight); // I hate it too...
+                rightCoefficients[0] = value;
+                rightModuleController = new PIDFController(rightCoefficients);
+                moduleLeft = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController); // I hate it too...
                 
             }
         }));

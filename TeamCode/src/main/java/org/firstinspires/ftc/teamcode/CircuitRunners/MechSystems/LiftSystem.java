@@ -29,27 +29,6 @@ public class LiftSystem {
     when there is no manual controller
      */
 
-
-    class CachedMotor {
-
-        double lastReadPower;
-        private final double THRESHOLD = 0.05;
-
-        CachedMotor(double startingPower){
-            this.lastReadPower = startingPower;
-        }
-
-        public boolean checkPower(double newPower){
-            double power;
-            if(Math.abs(lastReadPower - newPower) >= THRESHOLD || newPower == 0){
-                lastReadPower = newPower;
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-    }
     
 
 
@@ -76,7 +55,6 @@ public class LiftSystem {
 
     private final String[] liftMotorIds = {"lift_left", "lift_right"};
     private ExpansionHubMotor lift_left, lift_right;
-    private CachedMotor left_cache, right_cache;
     //private DigitalChannel left_bottom_switch;
     //private DigitalChannel right_bottom_switch;
 
@@ -116,8 +94,6 @@ public class LiftSystem {
         lift_left = robot.findMotor(liftMotorIds[0]);
         lift_right = robot.findMotor(liftMotorIds[1]);
 
-        left_cache = new CachedMotor(0);
-        right_cache = new CachedMotor(0);
         //reverse left side
         lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
         resetEncoders();
@@ -131,9 +107,6 @@ public class LiftSystem {
 
         lift_left = opMode.hardwareMap.get(ExpansionHubMotor.class, liftMotorIds[0]);
         lift_right = opMode.hardwareMap.get(ExpansionHubMotor.class, liftMotorIds[1]);
-
-        left_cache = new CachedMotor(0);
-        right_cache = new CachedMotor(0);
         //reverse left side
         lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
         resetEncoders();
@@ -201,14 +174,9 @@ public class LiftSystem {
         lift_right.setMode(ExpansionHubMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    private void setLiftPower(double power){
-
-        if(left_cache.checkPower(power)) {
-            lift_left.setPower(power);
-        }
-        if(right_cache.checkPower(power)) {
-            lift_right.setPower(power);
-        }
+    private void setLiftPower(double power) {
+        lift_left.setPower(power);
+        lift_right.setPower(power);
     }
 
     //Is left motor over temp?

@@ -18,7 +18,6 @@ public class AS5600  {
     private double lastKnownVoltage = 0;
     public AS5600(AnalogInput sensor){
         this.sensor = sensor;
-
     }
 
     /**

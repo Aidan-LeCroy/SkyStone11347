@@ -43,8 +43,8 @@ public class ModuleTesting extends LinearOpMode {
         topRight = new MotorImplEx(hardwareMap, driveMotorIds[2], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomRight = new MotorImplEx(hardwareMap, driveMotorIds[3], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
 
-        left = new DiffySwerveModuleEx(topLeft, bottomLeft, kAngleLeft, kWheelLeft, rotationPLeft);
-        right = new DiffySwerveModuleEx(topRight, bottomRight, kAngleRight, kWheelRight, rotationPRight);
+        left = new DiffySwerveModuleEx(topLeft, bottomLeft, kAngleLeft, kWheelLeft, new PIDFController(new double[] { rotationPLeft,0,0,0}));
+        right = new DiffySwerveModuleEx(topRight, bottomRight, kAngleRight, kWheelRight, new PIDFController(new double[] { rotationPRight,0,0,0}));
 
         left.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(left.getRawHeading()));
         right.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(right.getRawHeading()));

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Robot;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.ExpansionHubMotor;
 
+@Config
 public class Intake {
 
 
@@ -18,9 +20,9 @@ public class Intake {
 
     private ExpansionHubMotor intake_left, intake_right;
 
-    private final double INTAKE_IN_POWER = -.35;
+    public static double INTAKE_IN_POWER = -.5;
 
-    private final double INTAKE_OUT_POWER = .35;
+    public static double INTAKE_OUT_POWER = .5;
 
 
 
