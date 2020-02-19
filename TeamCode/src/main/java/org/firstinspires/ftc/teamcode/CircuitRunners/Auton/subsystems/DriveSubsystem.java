@@ -4,9 +4,14 @@ import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveDrive;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveModuleEx;
+import com.arcrobotics.ftclib.geometry.Pose2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
+import com.arcrobotics.ftclib.hardware.RevIMU;
 import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
+import com.arcrobotics.ftclib.kinematics.DifferentialOdometry;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -19,6 +24,10 @@ public class DriveSubsystem implements Subsystem {
 
     private static final String[] driveMotorIds = {"topL", "bottomL", "topR", "bottomR"};
     private static final double driveCPR = 28 * 4 * 15.9;
+
+    public static final double TRACK_WIDTH = 14.5;
+
+    private RevIMU imu;
 
     private PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
     private PController defaultRevMotorPos = new PController(5);
@@ -34,17 +43,14 @@ public class DriveSubsystem implements Subsystem {
 
     private MotorImplEx topLeft, topRight, bottomLeft, bottomRight;
 
+    private DifferentialOdometry odometry;
+
     public enum Direction {
         FORWARD, BACKWARDS, LEFT, RIGHT,
-        COUNTERCLOCK, CLOCK
+        COUNTERCLOCK, CLOCK, STOP
     }
 
-    private LinearOpMode opMode;
-
-    public DriveSubsystem(LinearOpMode opMode) { this.opMode = opMode; }
-
-    @Override
-    public void initialize(){
+    public DriveSubsystem(LinearOpMode opMode) {
         topLeft = new MotorImplEx(
                 opMode.hardwareMap, driveMotorIds[0], driveCPR,
                 defaultRevMotorVelo, defaultRevMotorPos
@@ -62,6 +68,11 @@ public class DriveSubsystem implements Subsystem {
                 defaultRevMotorVelo, defaultRevMotorPos
         );
 
+        imu = new RevIMU(opMode.hardwareMap, "imu");
+    }
+
+    @Override
+    public void initialize(){
         leftModule = new DiffySwerveModuleEx(
                 topLeft, bottomLeft, kAngleLeft, kWheelLeft,
                 new PIDFController(new double[]{rotationPLeft,0,0,0})
@@ -80,7 +91,32 @@ public class DriveSubsystem implements Subsystem {
 
         drivebase = new DiffySwerveDrive(leftModule, rightModule);
 
+        odometry = new DifferentialOdometry(TRACK_WIDTH);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.init(parameters);
+
         stop();
+    }
+
+    public double[] getModulePositions() {
+        leftModule.updateTracking();
+        rightModule.updateTracking();
+        return new double[]{leftModule.getDistanceTravelled(), rightModule.getDistanceTravelled()};
+    }
+
+    public boolean atPosition(Pose2d position) {
+        odometry.update(imu.getHeading(), getModulePositions()[0], getModulePositions()[1]);
+        return odometry.robotPose.equals(position);
+    }
+
+    public Translation2d getTranslation() {
+        return odometry.robotPose.getTranslation();
+    }
+
+    public double getRotation() {
+        return odometry.robotPose.getHeading();
     }
 
     public void driveInDirection(Direction direction, double power) throws Exception {
@@ -117,7 +153,11 @@ public class DriveSubsystem implements Subsystem {
                     new Vector2d(0, -power),
                     new Vector2d(0, power)
             );
-        } else {
+        } else if (direction == Direction.STOP) {
+            stop();
+        }
+        else {
+            stop();
             throw new Exception("Unspecified Direction!");
         }
     }

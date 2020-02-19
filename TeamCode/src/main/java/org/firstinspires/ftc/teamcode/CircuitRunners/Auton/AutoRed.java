@@ -7,11 +7,9 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.commands.*;
 
 public class AutoRed extends LinearOpMode {
 
-
     IntakeSubsystem intake = new IntakeSubsystem(this);
     LiftSubsystem lift = new LiftSubsystem(this);
     VisionSubsystem vision = new VisionSubsystem(this);
-
 
     private static int skystonePos = -1;
 
@@ -39,8 +37,6 @@ public class AutoRed extends LinearOpMode {
         }
         vision.stopStreaming();
         skystonePos = vision.getSkystonePos();
-
-
 
         //Move intake out after sizing
         new IntakeCommand(intake, IntakeSubsystem.Direction.IN).execute();
