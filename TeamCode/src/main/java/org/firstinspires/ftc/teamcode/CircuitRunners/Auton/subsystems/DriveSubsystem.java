@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveDrive;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveModuleEx;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
 import com.arcrobotics.ftclib.geometry.Vector2d;
 
@@ -41,10 +42,8 @@ public class DriveSubsystem implements Subsystem {
 
     private LinearOpMode opMode;
 
-    public DriveSubsystem(LinearOpMode opMode) { this.opMode = opMode; }
-
-    @Override
-    public void initialize(){
+    public DriveSubsystem(LinearOpMode opMode) {
+        this.opMode = opMode;
         topLeft = new MotorImplEx(
                 opMode.hardwareMap, driveMotorIds[0], driveCPR,
                 defaultRevMotorVelo, defaultRevMotorPos
@@ -71,6 +70,15 @@ public class DriveSubsystem implements Subsystem {
                 new PIDFController(new double[]{rotationPRight,0,0,0})
         );
 
+        topLeft.resetEncoder();
+        bottomLeft.resetEncoder();
+        topRight.resetEncoder();
+        bottomRight.resetEncoder();
+        topLeft.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        bottomLeft.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        topRight.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        bottomRight.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+
         leftModule.setHeadingInterpol(
                 () -> AngleUnit.DEGREES.normalize(leftModule.getRawHeading())
         );
@@ -79,6 +87,10 @@ public class DriveSubsystem implements Subsystem {
         );
 
         drivebase = new DiffySwerveDrive(leftModule, rightModule);
+    }
+
+    @Override
+    public void initialize(){
 
         stop();
     }

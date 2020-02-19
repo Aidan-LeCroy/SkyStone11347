@@ -32,10 +32,7 @@ public class VisionSubsystem implements Subsystem {
 
     public VisionSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
-    }
 
-    @Override
-    public void initialize() {
         pipeline = new CheemsCVPipeline();
 
         //This is the view ID for the viewport
@@ -50,6 +47,11 @@ public class VisionSubsystem implements Subsystem {
                 opMode.hardwareMap.get(WebcamName.class, "Webcam 1"),
                 cameraMonitorViewId
         );
+    }
+
+    @Override
+    public void initialize() {
+
     }
 
     public void startStreaming(){

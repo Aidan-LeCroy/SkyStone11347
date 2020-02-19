@@ -24,15 +24,14 @@ public class IntakeSubsystem implements Subsystem {
 
     public IntakeSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
-    }
-
-    @Override
-    public void initialize(){
         intake_left = opMode.hardwareMap.dcMotor.get("leftIntake");
         intake_right = opMode.hardwareMap.dcMotor.get("rightIntake");
 
         intake_right.setDirection(DcMotor.Direction.REVERSE);
+    }
 
+    @Override
+    public void initialize(){
         stop();
     }
 
