@@ -20,9 +20,9 @@ public class Intake {
 
     private ExpansionHubMotor intake_left, intake_right;
 
-    public static double INTAKE_IN_POWER = -.5;
+    public static double INTAKE_IN_POWER = -.45;
 
-    public static double INTAKE_OUT_POWER = .5;
+    public static double INTAKE_OUT_POWER = .45;
 
 
 
