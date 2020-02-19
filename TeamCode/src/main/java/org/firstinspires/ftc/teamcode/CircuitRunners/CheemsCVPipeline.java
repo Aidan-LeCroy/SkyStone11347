@@ -100,7 +100,7 @@ public class CheemsCVPipeline extends OpenCvPipeline {
 
     private List<Double[]> sampleSpots = Arrays.asList(
 
-     new Double[][] {{.25,.5},{.5,.5},{.75,.5}}
+     new Double[][] {{.025,.5},{.25,.5},{.5,.5}}
     );
 
 
@@ -139,7 +139,7 @@ public class CheemsCVPipeline extends OpenCvPipeline {
 
         //Things:
         //Scalar represent colors in RGB format
-        Scalar circuitRunnersBlack= new Scalar(0.0, 0.0, 0.0); //R: 0, G: 255, B: 0
+        Scalar circuitRunnersBlack= new Scalar(0.0, 0.0, 0.0); //R: 0, G: 0, B: 0
 
         //Point is exactly what it sounds like. A point.
         //NOTE: x and y in OpenCv is from the top left corner of an image, and the unit are pixels
@@ -188,7 +188,7 @@ public class CheemsCVPipeline extends OpenCvPipeline {
 
         );
 
-        //Draw rectanles around the areas
+        //Draw rectangles around the areas
         // Draw rectangles around sample areas
         rectArr.forEach((Point[] it) ->
                      Imgproc.rectangle(input, it[0], it[1], new Scalar(255 , 0, 0), 2)
