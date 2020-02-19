@@ -17,15 +17,35 @@ public class GrabberCommand implements Command {
 
     private LiftSubsystem lift;
     private GrabberPos pos;
+    private boolean disabled = false;
 
     public GrabberCommand(LiftSubsystem lift, GrabberPos pos){
         this.lift = lift;
         this.pos = pos;
     }
 
+    @Override
+    public void initialize() {
+        lift.initialize();
+    }
 
     @Override
-    public void execute(){
-        lift.setGrabPos(pos.position);
+    public void execute() {
+        if (!disabled) lift.setGrabPos(pos.position);
     }
+
+    @Override
+    public void end() {
+        if (isFinished()) disable();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return lift.getGrabPos() == pos.position;
+    }
+
+    public void disable() {
+        disabled = true;
+    }
+
 }

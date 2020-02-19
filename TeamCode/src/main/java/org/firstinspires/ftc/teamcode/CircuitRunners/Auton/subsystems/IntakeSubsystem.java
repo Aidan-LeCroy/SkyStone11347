@@ -19,21 +19,15 @@ public class IntakeSubsystem implements Subsystem {
 
     private LinearOpMode opMode;
 
-
-
     private DcMotor intake_left;
     private DcMotor intake_right;
-
-
 
     public IntakeSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
     }
 
-
     @Override
-    public void onInit(){
-
+    public void initialize(){
         intake_left = opMode.hardwareMap.dcMotor.get("leftIntake");
         intake_right = opMode.hardwareMap.dcMotor.get("rightIntake");
 
@@ -52,12 +46,14 @@ public class IntakeSubsystem implements Subsystem {
         setPower(Direction.OUT.power);
     }
 
-
     public void setDirection(Direction direction){
         setPower(direction.power);
     }
 
+    public double getPower() { return (intake_left.getPower() + intake_right.getPower()) / 2; }
+
     //Stops the motors
+    @Override
     public void stop(){
         setDirection(Direction.STOP);
     }
@@ -66,11 +62,6 @@ public class IntakeSubsystem implements Subsystem {
     private void setPower(double p){
         intake_left.setPower(p);
         intake_right.setPower(p);
-    }
-
-    @Override
-    public void onStop(){
-        stop();
     }
 
 }

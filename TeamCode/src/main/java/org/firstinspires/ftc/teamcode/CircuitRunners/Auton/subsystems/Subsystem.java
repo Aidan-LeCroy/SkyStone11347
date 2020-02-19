@@ -9,13 +9,11 @@ public interface Subsystem {
     /**
      * Should be triggered on the initiation period.
      */
-    void onInit();
-
+    void initialize();
 
     /**
      * Should be triggered on the stop
      */
-    void onStop();
-
+    void stop();
 
 }

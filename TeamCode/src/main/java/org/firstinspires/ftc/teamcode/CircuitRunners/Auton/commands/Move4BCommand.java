@@ -24,7 +24,23 @@ public class Move4BCommand implements Command{
     }
 
     @Override
+    public void initialize() {
+        lift.initialize();
+    }
+
+    @Override
     public void execute(){
         lift.set4BPos(pos.position);
     }
+
+    @Override
+    public void end() {
+        if (isFinished()) lift.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return lift.get4BPos() == pos.position;
+    }
+
 }

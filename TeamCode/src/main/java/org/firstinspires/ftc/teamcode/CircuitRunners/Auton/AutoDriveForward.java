@@ -13,7 +13,7 @@ public class AutoDriveForward extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        intake.onInit();
+        intake.initialize();
 
         waitForStart();
 

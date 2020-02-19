@@ -10,7 +10,7 @@ import org.openftc.revextensions2.ExpansionHubMotor;
 public class LiftSubsystem implements Subsystem {
 
 
-    PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0});
+    PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0.7});
 
     //Lift motors
     private ExpansionHubMotor lift_left, lift_right;
@@ -21,25 +21,22 @@ public class LiftSubsystem implements Subsystem {
     //Grabber servo
     private Servo grab;
 
-
     private static final double TOLERANCE  = 10;
 
     private LinearOpMode opMode;
+
     /*
     So the mentality behind this system is the following. The measured value (pv) is always updated,
     and when there is manual control active the setpoint (sv) is also updated. When manual control stops,
     the pv is still updated but the sv stops being updated. The output of the controller is only applied
     when there is no manual controller
      */
-
     public LiftSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
     }
 
-
     @Override
-    public void onInit(){
-
+    public void initialize(){
         lift_left = opMode.hardwareMap.get(ExpansionHubMotor.class, "lift_left");
         lift_right = opMode.hardwareMap.get(ExpansionHubMotor.class, "lift_right");
 
@@ -66,7 +63,7 @@ public class LiftSubsystem implements Subsystem {
      */
     public void goTo(double pos){
         liftController.setSetPoint(pos);
-        while(liftController.atSetPoint() && opMode.opModeIsActive()){
+        while(!liftController.atSetPoint() && opMode.opModeIsActive()){
             setPower(liftController.calculate(currentPos()));
         }
         stoplift();
@@ -76,13 +73,21 @@ public class LiftSubsystem implements Subsystem {
         grab.setPosition(pos);
     }
 
+    public double getGrabPos() { return grab.getPosition(); }
+
     public void set4BPos(double pos){
         leftFB.setPosition(pos);
         rightFB.setPosition(pos);
     }
 
+    public double get4BPos() { return (leftFB.getPosition() + rightFB.getPosition()) / 2; }
+
+    public double getTolerance() {
+        return TOLERANCE;
+    }
+
     @Override
-    public void onStop(){
+    public void stop(){
         stoplift();
     }
 
@@ -96,8 +101,9 @@ public class LiftSubsystem implements Subsystem {
         lift_right.setPower(power);
     }
 
-    public void stoplift(){
+    private void stoplift(){
         setPower(0);
+        liftController.reset();
     }
 
     private void setMode(ExpansionHubMotor.RunMode mode){

@@ -17,9 +17,23 @@ public class LiftToEncoderPosCommand implements Command {
         this.encoderPos = encoderPos;
     }
 
+    @Override
+    public void initialize() {
+        lift.initialize();
+    }
 
     @Override
     public void execute(){
         lift.goTo(encoderPos);
+    }
+
+    @Override
+    public void end() {
+        lift.stop();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return Math.abs(lift.currentPos() - encoderPos) <= lift.getTolerance();
     }
 }

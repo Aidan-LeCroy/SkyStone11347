@@ -10,12 +10,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Locale;
 
-public class VisionSubsytem implements Subsystem {
-
-
+public class VisionSubsystem implements Subsystem {
 
     //Dimensions of the stream
-    private static final int HEIGTH = 480;
+    private static final int HEIGHT = 480;
     private static final int WIDTH = 640;
 
     //The orientation of the webcam
@@ -32,15 +30,12 @@ public class VisionSubsytem implements Subsystem {
 
     private LinearOpMode opMode;
 
-    public VisionSubsytem(LinearOpMode opMode){
+    public VisionSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
-
     }
 
-
-
     @Override
-    public void onInit() {
+    public void initialize() {
         pipeline = new CheemsCVPipeline();
 
         //This is the view ID for the viewport
@@ -63,8 +58,7 @@ public class VisionSubsytem implements Subsystem {
         webcam.setPipeline(pipeline);
 
         //Start!
-        webcam.startStreaming(WIDTH, HEIGTH, webcamRotation);
-
+        webcam.startStreaming(WIDTH, HEIGHT, webcamRotation);
     }
 
 
@@ -80,7 +74,6 @@ public class VisionSubsytem implements Subsystem {
         opMode.telemetry.addData("Pipeline time ms", webcam.getPipelineTimeMs());
         opMode.telemetry.addData("Overhead time ms", webcam.getOverheadTimeMs());
         opMode.telemetry.addData("Theoretical max FPS", webcam.getCurrentPipelineMaxFps());
-
     }
 
     //Returns the last known skystone position
@@ -88,7 +81,6 @@ public class VisionSubsytem implements Subsystem {
         skystonePos = pipeline.skystone;
         return skystonePos;
     }
-
 
     //Basically pauses the stream
     public void disable(){
@@ -101,9 +93,8 @@ public class VisionSubsytem implements Subsystem {
         webcam.closeCameraDevice();
     }
 
-
     @Override
-    public void onStop(){
+    public void stop(){
         //stopStreaming() is called wayyyy before stop(), so nothing happens here
     }
 }

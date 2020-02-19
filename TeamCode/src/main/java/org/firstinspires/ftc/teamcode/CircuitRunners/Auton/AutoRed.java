@@ -10,7 +10,7 @@ public class AutoRed extends LinearOpMode {
 
     IntakeSubsystem intake = new IntakeSubsystem(this);
     LiftSubsystem lift = new LiftSubsystem(this);
-    VisionSubsytem vision = new VisionSubsytem(this);
+    VisionSubsystem vision = new VisionSubsystem(this);
 
 
     private static int skystonePos = -1;
@@ -21,9 +21,9 @@ public class AutoRed extends LinearOpMode {
         addLog("Subsystems Initializing...");
         telemetry.update();
 
-        intake.onInit();
-        lift.onInit();
-        vision.onInit();
+        intake.initialize();
+        lift.initialize();
+        vision.initialize();
 
         addLog("Initialized...");
         addLog("Starting Vision...");
@@ -51,9 +51,9 @@ public class AutoRed extends LinearOpMode {
 
 
         //AT THE END
-        intake.onStop();
-        lift.onStop();
-        vision.onStop(); //<- Just for continuity
+        intake.stop();
+        lift.stop();
+        vision.stop(); //<- Just for continuity
 
     }
 
