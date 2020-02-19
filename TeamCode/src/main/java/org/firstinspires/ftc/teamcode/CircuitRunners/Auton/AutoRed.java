@@ -7,14 +7,22 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.commands.*;
 
 public class AutoRed extends LinearOpMode {
 
-    IntakeSubsystem intake = new IntakeSubsystem(this);
-    LiftSubsystem lift = new LiftSubsystem(this);
-    VisionSubsystem vision = new VisionSubsystem(this);
+
+    private IntakeSubsystem intake;// = new IntakeSubsystem(this);
+    private LiftSubsystem lift;// = new LiftSubsystem(this);
+    private VisionSubsystem vision;// = new VisionSubsystem(this);
+    private DriveSubsystem drive; // = new DriveSubsystem(this);
+
 
     private static int skystonePos = -1;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        intake = new IntakeSubsystem(this);
+        lift = new LiftSubsystem(this);
+        vision = new VisionSubsystem(this);
+        drive = new DriveSubsystem(this);
 
         addLog("Subsystems Initializing...");
         telemetry.update();
@@ -37,6 +45,8 @@ public class AutoRed extends LinearOpMode {
         }
         vision.stopStreaming();
         skystonePos = vision.getSkystonePos();
+
+
 
         //Move intake out after sizing
         new IntakeCommand(intake, IntakeSubsystem.Direction.IN).execute();

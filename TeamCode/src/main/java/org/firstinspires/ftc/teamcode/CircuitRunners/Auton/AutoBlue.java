@@ -9,9 +9,10 @@ public class AutoBlue extends LinearOpMode {
 
 
 
-    IntakeSubsystem intake = new IntakeSubsystem(this);
-    LiftSubsystem lift = new LiftSubsystem(this);
-    VisionSubsystem vision = new VisionSubsystem(this);
+    IntakeSubsystem intake;// = new IntakeSubsystem(this);
+    LiftSubsystem lift;// = new LiftSubsystem(this);
+    VisionSubsystem vision;// = new VisionSubsystem(this);
+    DriveSubsystem drive; // = new DriveSubsystem(this);
 
 
     private static int skystonePos = -1;
@@ -20,6 +21,11 @@ public class AutoBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        intake = new IntakeSubsystem(this);
+        lift = new LiftSubsystem(this);
+        vision = new VisionSubsystem(this);
+        drive = new DriveSubsystem(this);
 
         addLog("Subsystems Initializing...");
         telemetry.update();

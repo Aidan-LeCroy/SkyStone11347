@@ -33,10 +33,6 @@ public class LiftSubsystem implements Subsystem {
      */
     public LiftSubsystem(LinearOpMode opMode){
         this.opMode = opMode;
-    }
-
-    @Override
-    public void initialize(){
         lift_left = opMode.hardwareMap.get(ExpansionHubMotor.class, "lift_left");
         lift_right = opMode.hardwareMap.get(ExpansionHubMotor.class, "lift_right");
 
@@ -55,6 +51,11 @@ public class LiftSubsystem implements Subsystem {
         grab.setDirection(Servo.Direction.REVERSE);
 
         liftController.setTolerance(TOLERANCE);
+    }
+
+    @Override
+    public void initialize(){
+        stoplift();
     }
 
     /**
