@@ -8,22 +8,15 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.commands.*;
 public class AutoRed extends LinearOpMode {
 
 
-    IntakeSubsystem intake;
-    LiftSubsystem lift;
-    VisionSubsytem vision;
+    IntakeSubsystem intake = new IntakeSubsystem(this);
+    LiftSubsystem lift = new LiftSubsystem(this);
+    VisionSubsytem vision = new VisionSubsytem(this);
 
 
     private static int skystonePos = -1;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        addLog("Constructing Subsystems...");
-        telemetry.update();
-
-        intake = new IntakeSubsystem(this);
-        lift = new LiftSubsystem(this);
-        vision = new VisionSubsytem(this);
 
         addLog("Subsystems Initializing...");
         telemetry.update();

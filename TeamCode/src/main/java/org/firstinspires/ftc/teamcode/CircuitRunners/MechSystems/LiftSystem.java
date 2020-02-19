@@ -42,8 +42,8 @@ public class LiftSystem {
 
     private final double LIFT_DOWN_POWER = -0.1;
 
-    private final double TOP_POSITION = 0;
-    private final double BOTTOM_POSITION = 330;
+    private final double TOP_POSITION = 11110;
+    private final double BOTTOM_POSITION = 0;
     
     private double currentPos = 0;
     

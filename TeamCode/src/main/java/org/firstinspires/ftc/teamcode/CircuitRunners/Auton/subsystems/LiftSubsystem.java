@@ -43,7 +43,7 @@ public class LiftSubsystem implements Subsystem {
         lift_left = opMode.hardwareMap.get(ExpansionHubMotor.class, "lift_left");
         lift_right = opMode.hardwareMap.get(ExpansionHubMotor.class, "lift_right");
 
-        lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
+        lift_right.setDirection(ExpansionHubMotor.Direction.REVERSE);
         lift_left.setZeroPowerBehavior(ExpansionHubMotor.ZeroPowerBehavior.BRAKE);
         lift_right.setZeroPowerBehavior(ExpansionHubMotor.ZeroPowerBehavior.BRAKE);
         resetEncoders();
@@ -67,8 +67,9 @@ public class LiftSubsystem implements Subsystem {
     public void goTo(double pos){
         liftController.setSetPoint(pos);
         while(liftController.atSetPoint() && opMode.opModeIsActive()){
-            liftController.calculate(currentPos());
+            setPower(liftController.calculate(currentPos()));
         }
+        stoplift();
     }
 
     public void setGrabPos(double pos){

@@ -9,9 +9,9 @@ public class AutoBlue extends LinearOpMode {
 
 
 
-    IntakeSubsystem intake;
-    LiftSubsystem lift;
-    VisionSubsytem vision;
+    IntakeSubsystem intake = new IntakeSubsystem(this);
+    LiftSubsystem lift = new LiftSubsystem(this);
+    VisionSubsytem vision = new VisionSubsytem(this);
 
 
     private static int skystonePos = -1;
@@ -20,13 +20,6 @@ public class AutoBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        addLog("Constructing Subsystems...");
-        telemetry.update();
-
-        intake = new IntakeSubsystem(this);
-        lift = new LiftSubsystem(this);
-        vision = new VisionSubsytem(this);
 
         addLog("Subsystems Initializing...");
         telemetry.update();
