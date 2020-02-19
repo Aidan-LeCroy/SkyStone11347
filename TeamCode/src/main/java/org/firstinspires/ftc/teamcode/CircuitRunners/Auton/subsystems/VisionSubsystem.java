@@ -22,7 +22,7 @@ public class VisionSubsystem implements Subsystem {
     //The skystone position
     private static int skystonePos = -1;
 
-    //The pipeline
+    //The custom pipeline
     private CheemsCVPipeline pipeline;
 
     //The webcam
