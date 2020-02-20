@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems.LiftSubsys
 public class GrabberCommand implements Command {
 
     public enum GrabberPos {
-        CLOSE(.5),
-        OPEN(.6);
+        CLOSE(0),
+        OPEN(1);
 
         public final double position;
 

@@ -158,6 +158,7 @@ public class DriveSubsystem implements Subsystem {
         }
         else {
             stop();
+            //this should never happen...
             throw new Exception("Unspecified Direction!");
         }
     }

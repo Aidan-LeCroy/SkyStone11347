@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.Auton;
 
+import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems.*;
@@ -33,6 +34,8 @@ public class AutoBlue extends LinearOpMode {
 
         //For 4bar
         Move4BCommand move4BCommand = new Move4BCommand(lift, Move4BCommand.v4BPos.IN);
+
+        DriveTranslationCommand driveForward = new DriveTranslationCommand(drive, DriveSubsystem.Direction.FORWARD,new Translation2d(0,10),.6);
 
         //Things to be moved on init
         addLog("Moving grabber to init position...");
@@ -70,7 +73,11 @@ public class AutoBlue extends LinearOpMode {
         switch(skystonePos){
             case 0: //Left
                 //Drive to get there
+                driveForward.initialize();
 
+                driveForward.execute();
+
+                sleep(3000);
                 //Start up intake
                 intakeCommand.initialize();
                 intakeCommand.execute();

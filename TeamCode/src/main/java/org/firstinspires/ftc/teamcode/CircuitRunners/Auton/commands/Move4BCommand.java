@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems.LiftSubsys
 public class Move4BCommand implements Command{
 
     public enum v4BPos {
-        OUT(.85),
-        IN(.03);
+        OUT(.6),
+        IN(0);
 
         public final double position;
 

@@ -10,7 +10,7 @@ import org.openftc.revextensions2.ExpansionHubMotor;
 public class LiftSubsystem implements Subsystem {
 
 
-    PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0.7});
+    private PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0.7});
 
     //Lift motors
     private ExpansionHubMotor lift_left, lift_right;
@@ -21,7 +21,7 @@ public class LiftSubsystem implements Subsystem {
     //Grabber servo
     private Servo grab;
 
-    private static final double TOLERANCE  = 10;
+    private static final double TOLERANCE  = 50;
 
     private LinearOpMode opMode;
 
@@ -45,10 +45,10 @@ public class LiftSubsystem implements Subsystem {
 
         leftFB = opMode.hardwareMap.servo.get("leftFB");
         rightFB = opMode.hardwareMap.servo.get("rightFB");
-        rightFB.setDirection(Servo.Direction.REVERSE);
+        leftFB.setDirection(Servo.Direction.REVERSE);
 
-        grab = opMode.hardwareMap.servo.get("grab");
-        grab.setDirection(Servo.Direction.REVERSE);
+        grab = opMode.hardwareMap.servo.get("grabber");
+
 
         liftController.setTolerance(TOLERANCE);
     }

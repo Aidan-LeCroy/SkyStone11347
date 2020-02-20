@@ -26,12 +26,13 @@ public class ModuleTesting extends LinearOpMode {
 
     private static final double driveCPR = 28 * 4 * 15.9;
 
-    PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
-    PController defaultRevMotorPos = new PController(5);
+    private PIDFController defaultRevMotorVelo = new PIDFController(new double[] {1.17, 0.117, 0, 11.7});
+    private PController defaultRevMotorPos = new PController(5);
+    private DiffySwerveModuleEx left, right;
+    private DiffySwerveDrive drive;
 
-    DiffySwerveModuleEx left, right;
-
-    DiffySwerveDrive drive;
+    private PIDFController leftController = new PIDFController(new double[] {rotationPLeft, 0, 0, 0});
+    private PIDFController rightController = new PIDFController(new double[] {rotationPRight, 0, 0, 0});
 
     private static final String[] driveMotorIds = {"topL", "bottomL", "topR", "bottomR"};
 
@@ -42,9 +43,8 @@ public class ModuleTesting extends LinearOpMode {
         bottomLeft = new MotorImplEx(hardwareMap, driveMotorIds[1], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         topRight = new MotorImplEx(hardwareMap, driveMotorIds[2], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomRight = new MotorImplEx(hardwareMap, driveMotorIds[3], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
-
-        left = new DiffySwerveModuleEx(topLeft, bottomLeft, kAngleLeft, kWheelLeft, new PIDFController(new double[] { rotationPLeft,0,0,0}));
-        right = new DiffySwerveModuleEx(topRight, bottomRight, kAngleRight, kWheelRight, new PIDFController(new double[] { rotationPRight,0,0,0}));
+        left = new DiffySwerveModuleEx(topLeft, bottomLeft, kAngleLeft, kWheelLeft, leftController);
+        right = new DiffySwerveModuleEx(topRight, bottomRight, kAngleRight, kWheelRight, rightController);
 
         left.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(left.getRawHeading()));
         right.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(right.getRawHeading()));
@@ -56,7 +56,7 @@ public class ModuleTesting extends LinearOpMode {
         bottomLeft.resetEncoder();
         bottomRight.resetEncoder();
 
-        drive.setRightSideInverted(true);
+        //drive.setRightSideInverted(true);
 
         waitForStart();
 

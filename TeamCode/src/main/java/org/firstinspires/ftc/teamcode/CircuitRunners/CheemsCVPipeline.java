@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import android.graphics.Bitmap;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import org.opencv.core.Core;
@@ -7,7 +9,9 @@ import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.android.Utils;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
@@ -17,6 +21,9 @@ import java.util.List;
 
 public class CheemsCVPipeline extends OpenCvPipeline {
 
+
+    public boolean showPic = false;
+    public Bitmap initBit;
 
     public int skystone = -1;
 
@@ -104,6 +111,7 @@ public class CheemsCVPipeline extends OpenCvPipeline {
     );
 
 
+    private Mat initPicture = new Mat();
 
 
     //This is the process the frames from the camera go through (the pipeline)
@@ -113,6 +121,12 @@ public class CheemsCVPipeline extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input){
 
+
+        if(showPic){
+            Utils.bitmapToMat(initBit, initPicture);
+            Imgproc.resize(initPicture, initPicture, new Size(input.width(), input.height()));
+            return initPicture;
+        }
 
 
         //First thing to do (for vision at least) is to convert the raw frame to a different color sspace

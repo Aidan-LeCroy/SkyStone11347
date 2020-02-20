@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.TestDebugOpModes;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.config.ValueProvider;
@@ -30,10 +33,13 @@ import java.util.function.DoubleSupplier;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.Intake;
 import org.firstinspires.ftc.teamcode.CircuitRunners.MechSystems.LiftSystem;
+import org.firstinspires.ftc.teamcode.R;
 
 @Config
 @TeleOp(group = "FTCLib TeleOP")
 public class FTCLibDiffyControl extends LinearOpMode {
+
+    private static int robotPicId;
 
     //Dashboard IP: 192.168.49.1:8080/dash
 
@@ -127,6 +133,11 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     @Override
     public void runOpMode(){
+
+
+        robotPicId = R.drawable.cheems;
+        Bitmap cheemsPic = BitmapFactory.decodeResource(hardwareMap.appContext.getResources(), robotPicId);
+        dashboard.sendImage(cheemsPic);
 
 
         intake = new Intake(this);
@@ -241,7 +252,7 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
         if(gamepad2.y){
             leftFB.setPosition(.95);
-            leftFB.setPosition(.95);
+            rightFB.setPosition(.95);
         }
     }
 
@@ -252,21 +263,21 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     private void flip4B(){
         if(!fbDrop){
-            set4BPos(.03);
+            set4BPos(1);
             fbDrop=true;
         }
         else if(fbDrop){
-            set4BPos(.85);
+            set4BPos(.65);
             fbDrop=false;
         }
     }
     private void grabToggle(){
         if(!grabbing){
-            grab.setPosition(0.5);
+            grab.setPosition(0);
             grabbing=true;
         }
         else if(grabbing){
-            grab.setPosition(0.6);
+            grab.setPosition(1);
             grabbing=false;
         }
     }

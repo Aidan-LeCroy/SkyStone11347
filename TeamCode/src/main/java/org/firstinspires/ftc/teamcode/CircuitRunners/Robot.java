@@ -80,20 +80,15 @@ public class Robot {
 
         leftFB=hardwareMap.servo.get("leftFB");
         rightFB=hardwareMap.servo.get("rightFB");
-        rightFB.setDirection(Servo.Direction.REVERSE);
+        leftFB.setDirection(Servo.Direction.REVERSE);
 
         grab=hardwareMap.servo.get("grab");
-        grab.setDirection(Servo.Direction.REVERSE);
 
         liftSystem = new LiftSystem(this);
         intake = new Intake(this);
 
     }
 
-    public void init4b(){
-        leftFB.setPosition(0.03);
-        rightFB.setPosition(0.03);
-    }
 
     public Angle getRobotHeading () {
         //heading is of NEG_180_TO_180_HEADING type by default (no need for conversion)
