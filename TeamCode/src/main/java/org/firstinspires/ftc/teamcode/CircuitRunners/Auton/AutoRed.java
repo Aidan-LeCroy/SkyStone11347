@@ -56,10 +56,45 @@ public class AutoRed extends LinearOpMode {
         DriveTurnCommand turnCommand = new DriveTurnCommand(
                 drive,
                 DriveSubsystem.Direction.COUNTERCLOCK,
-                new Rotation2d(90),
+                new Rotation2d(Math.PI / 2),
                 0.9
         );
 
+        DriveTranslationCommand driveToFirstStone = new DriveTranslationCommand(
+                drive,
+                DriveSubsystem.Direction.RIGHT,
+                new Translation2d(0, RobotUtil.toCm(24 * 2 - 27)),
+                0.8
+        );
+
+        DriveTurnCommand turnToFirstStone = new DriveTurnCommand(
+                drive,
+                DriveSubsystem.Direction.CLOCK,
+                new Rotation2d(Math.toRadians(60)),
+                0.3
+        );
+
+        DriveTranslationCommand driveIntoFirstStone = new DriveTranslationCommand(
+                drive,
+                DriveSubsystem.Direction.FORWARD,
+                new Translation2d(-3 * Math.cos(Math.toRadians(60)),
+                        RobotUtil.toCm(24 * 2 - 27) * Math.toRadians(60)),
+                0.2
+        );
+
+        DriveTurnCommand turnFromFirstStone = new DriveTurnCommand(
+                drive,
+                DriveSubsystem.Direction.COUNTERCLOCK,
+                new Rotation2d(Math.PI / 2),
+                0.3
+        );
+
+        DriveTranslationCommand backAwayFromFirstStone = new DriveTranslationCommand(
+                drive,
+                DriveSubsystem.Direction.BACKWARDS,
+                new Translation2d(0, RobotUtil.toCm(24 * 2 - 27)),
+                0.2
+        );
 
         //Things to be moved on init
         addLog("Moving grabber to init position...");
@@ -82,8 +117,6 @@ public class AutoRed extends LinearOpMode {
         vision.stopStreaming();
         skystonePos = vision.getSkystonePos();
 
-
-
         //Move intake out after sizing
 
         intakeCommand.initialize();
@@ -105,14 +138,19 @@ public class AutoRed extends LinearOpMode {
         switch(skystonePos){
             case 0: //Left
                 //Drive to get there
+                driveToFirstStone.initialize();
+                waitForDrive(driveToFirstStone);
 
+                turnToFirstStone.initialize();
+                waitForDrive(turnToFirstStone);
 
                 //Start up intake
                 intakeCommand.initialize();
                 intakeCommand.execute();
 
                 //Drive forward to intake stone
-
+                driveIntoFirstStone.initialize();
+                waitForDrive(driveIntoFirstStone);
 
                 sleep(500); //Wait a second to ensure stone is in
                 intakeCommand.end();
@@ -121,7 +159,14 @@ public class AutoRed extends LinearOpMode {
                 grabberCommand.initialize();
                 doAndEnd(grabberCommand);
 
+                turnFromFirstStone.initialize();
+                waitForDrive(turnFromFirstStone);
+
+                backAwayFromFirstStone.initialize();
+                waitForDrive(backAwayFromFirstStone);
+
                 //Drive under bridge (maybe to foundation)
+
                 break;
             case 1: //Center
                 //Drive to get there

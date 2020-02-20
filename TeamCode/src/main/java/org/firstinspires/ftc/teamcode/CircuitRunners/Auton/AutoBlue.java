@@ -47,8 +47,8 @@ public class AutoBlue extends LinearOpMode {
 
         DriveTurnCommand turnCommand = new DriveTurnCommand(
                 drive,
-                DriveSubsystem.Direction.COUNTERCLOCK,
-                new Rotation2d(90),
+                DriveSubsystem.Direction.CLOCK,
+                new Rotation2d(-Math.PI / 2),
                 0.9
         );
 
