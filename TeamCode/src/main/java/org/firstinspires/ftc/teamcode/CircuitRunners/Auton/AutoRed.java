@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners.Auton;
 
+import com.arcrobotics.ftclib.geometry.Rotation2d;
+import com.arcrobotics.ftclib.geometry.Translation2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.subsystems.*;
 import org.firstinspires.ftc.teamcode.CircuitRunners.Auton.commands.*;
+import org.firstinspires.ftc.teamcode.CircuitRunners.RobotUtil;
 
 public class AutoRed extends LinearOpMode {
 
@@ -42,6 +45,21 @@ public class AutoRed extends LinearOpMode {
         //For 4bar
         Move4BCommand move4BCommand = new Move4BCommand(lift, Move4BCommand.v4BPos.IN);
 
+        //For drive base
+        DriveTranslationCommand translationCommand = new DriveTranslationCommand(
+                drive,
+                DriveSubsystem.Direction.FORWARD,
+                new Translation2d(0, RobotUtil.toCm(12)),
+                0.9
+        );
+
+        DriveTurnCommand turnCommand = new DriveTurnCommand(
+                drive,
+                DriveSubsystem.Direction.COUNTERCLOCK,
+                new Rotation2d(90),
+                0.9
+        );
+
 
         //Things to be moved on init
         addLog("Moving grabber to init position...");
@@ -72,6 +90,14 @@ public class AutoRed extends LinearOpMode {
         intakeCommand.execute();
         sleep(500);
         intakeCommand.end();
+
+        //Move forward a little
+        translationCommand.initialize();
+        waitForDrive(translationCommand);
+
+        //Turn to face left parallel to stones
+        turnCommand.initialize();
+        waitForDrive(turnCommand);
 
         //No matter where the stone is, the grabber is going to close. Might as well set it up
         grabberCommand = new GrabberCommand(lift, GrabberCommand.GrabberPos.CLOSE);
@@ -149,11 +175,13 @@ public class AutoRed extends LinearOpMode {
         grabberCommand = new GrabberCommand(lift, GrabberCommand.GrabberPos.OPEN);
         grabberCommand.initialize();
         doAndEnd(grabberCommand);
+        sleep(500);
 
         //Move 4bar back inside
         move4BCommand = new Move4BCommand(lift, Move4BCommand.v4BPos.IN);
         move4BCommand.initialize();
         doAndEnd(move4BCommand);
+        sleep(500);
 
         //Drive back to bridge
 
@@ -165,6 +193,14 @@ public class AutoRed extends LinearOpMode {
         lift.stop();
         drive.stop();
         vision.stop(); //<- Just for continuity
+    }
+    private void waitForDrive(Command command){
+        while (opModeIsActive()){
+            if(command.isFinished()){
+                command.end();
+                break;
+            }
+        }
     }
 
     private void doAndEnd(Command command){

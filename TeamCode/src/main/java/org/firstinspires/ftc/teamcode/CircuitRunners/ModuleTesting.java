@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.CircuitRunners;
 
+import android.media.MediaPlayer;
+
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveDrive;
@@ -9,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.R;
 
 @TeleOp(name="Kill Me Please")
 public class ModuleTesting extends LinearOpMode {
@@ -38,6 +41,14 @@ public class ModuleTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        MediaPlayer mp;
+        try {
+            mp = MediaPlayer.create(hardwareMap.appContext, R.raw.shutdown);
+            mp.start();
+        } catch (Exception e) {
+            telemetry.addData("Exception Thrown! ", e);
+        }
 
         topLeft = new MotorImplEx(hardwareMap, driveMotorIds[0], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
         bottomLeft = new MotorImplEx(hardwareMap, driveMotorIds[1], driveCPR, defaultRevMotorVelo, defaultRevMotorPos);
