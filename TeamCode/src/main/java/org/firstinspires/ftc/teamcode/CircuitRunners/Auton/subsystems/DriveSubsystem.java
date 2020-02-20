@@ -69,10 +69,7 @@ public class DriveSubsystem implements Subsystem {
         );
 
         imu = new RevIMU(opMode.hardwareMap, "imu");
-    }
 
-    @Override
-    public void initialize(){
         leftModule = new DiffySwerveModuleEx(
                 topLeft, bottomLeft, kAngleLeft, kWheelLeft,
                 new PIDFController(new double[]{rotationPLeft,0,0,0})
@@ -90,12 +87,18 @@ public class DriveSubsystem implements Subsystem {
         );
 
         drivebase = new DiffySwerveDrive(leftModule, rightModule);
+        drivebase.setRightSideInverted(true);
 
         odometry = new DifferentialOdometry(TRACK_WIDTH);
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.init(parameters);
+    }
+
+    @Override
+    public void initialize(){
+
 
         stop();
     }

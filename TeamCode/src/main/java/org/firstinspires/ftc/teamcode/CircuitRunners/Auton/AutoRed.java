@@ -42,6 +42,7 @@ public class AutoRed extends LinearOpMode {
         //For 4bar
         Move4BCommand move4BCommand = new Move4BCommand(lift, Move4BCommand.v4BPos.IN);
 
+
         //Things to be moved on init
         addLog("Moving grabber to init position...");
         telemetry.update();
@@ -78,6 +79,7 @@ public class AutoRed extends LinearOpMode {
         switch(skystonePos){
             case 0: //Left
                 //Drive to get there
+
 
                 //Start up intake
                 intakeCommand.initialize();
