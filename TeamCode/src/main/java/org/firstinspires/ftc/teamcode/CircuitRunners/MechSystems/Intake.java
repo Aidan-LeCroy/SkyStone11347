@@ -15,14 +15,13 @@ public class Intake {
 
 
 
-    Gamepad gamepad2;
-    Robot robot;
+    private Gamepad gamepad2;
 
     private ExpansionHubMotor intake_left, intake_right;
 
-    public static double INTAKE_IN_POWER = -.45;
+    public static double INTAKE_IN_POWER = .45;
 
-    public static double INTAKE_OUT_POWER = .45;
+    public static double INTAKE_OUT_POWER = -.45;
 
 
 
@@ -33,7 +32,6 @@ public class Intake {
         intake_right = robot.findMotor("rightIntake");
 
         intake_right.setDirection(DcMotor.Direction.REVERSE);
-
 
         stop();
     }
@@ -72,6 +70,14 @@ public class Intake {
         return intake_right.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS);
     }
 
+    public boolean isLeftOverTemp(){
+        return intake_left.isBridgeOverTemp();
+    }
+
+    public boolean isRightOverTemp(){
+        return intake_right.isBridgeOverTemp();
+    }
+
     public double getRightPower(){
         return intake_right.getPower();
     }
@@ -86,10 +92,6 @@ public class Intake {
 
     public void stop(){
         set(0);
-    }
-
-    private double getLowestCurrent(){
-        return Math.min(intake_left.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS), intake_right.getCurrentDraw(ExpansionHubEx.CurrentDrawUnits.AMPS));
     }
 
     public void set(double power){

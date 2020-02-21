@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestDebugOpModes;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -39,7 +40,6 @@ import org.firstinspires.ftc.teamcode.R;
 @TeleOp(group = "FTCLib TeleOP")
 public class FTCLibDiffyControl extends LinearOpMode {
 
-    private static int robotPicId;
 
     //Dashboard IP: 192.168.49.1:8080/dash
 
@@ -72,11 +72,11 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private double kWheelLeft = DriveModule.CM_PER_TICK;
     private double kWheelRight = DriveModule.CM_PER_TICK;
 
-    private double kAngleLeft = 0.8;
-    private double kAngleRight = 0.8;
+    private double kAngleLeft = DriveModule.DEGREES_PER_TICK;
+    private double kAngleRight = DriveModule.DEGREES_PER_TICK;
     
-    private double rotationPLeft = 0.61923568104;
-    private double rotationPRight = 0.61923568104;
+    private double rotationPLeft = 1;
+    private double rotationPRight = 1;
 
     private double[] leftCoefficients = {rotationPLeft, 0, 0, 0};
     private double[] rightCoefficients = {rotationPRight, 0, 0, 0};
@@ -96,11 +96,15 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private boolean bounce2 = false;
     private boolean bounce3= false;
     private boolean fbDrop=false;
+    private boolean moverDown = false;
+    private boolean bounce4 = false;
 
 
     //HARDWARE
 
     private Servo leftFB,rightFB,grab;
+
+    private Servo leftMover, rightMover;
 
     private DiffySwerveDrive diffySwerveDrive; //Drive base object
 
@@ -130,13 +134,24 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private Intake intake;
     private LiftSystem lift;
 
+    private static int loopCount = 1;
+
 
     @Override
     public void runOpMode(){
 
+        MediaPlayer mp1;
+        try {
+            mp1 = MediaPlayer.create(hardwareMap.appContext, R.raw.shutdown);
+            mp1.setOnCompletionListener(MediaPlayer::release);
+            mp1.start();
+        } catch (Exception e) {
+            telemetry.addData("Exception Thrown! ", e);
+        }
 
-        robotPicId = R.drawable.cheems;
-        Bitmap cheemsPic = BitmapFactory.decodeResource(hardwareMap.appContext.getResources(), robotPicId);
+        dashboard.setTelemetryTransmissionInterval(20);
+
+        Bitmap cheemsPic = BitmapFactory.decodeResource(hardwareMap.appContext.getResources(), R.drawable.cheems);
         dashboard.sendImage(cheemsPic);
 
 
@@ -153,31 +168,32 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
         leftFB=hardwareMap.servo.get("leftFB");
         rightFB=hardwareMap.servo.get("rightFB");
-        rightFB.setDirection(Servo.Direction.REVERSE);
+        leftFB.setDirection(Servo.Direction.REVERSE);
 
         grab=hardwareMap.servo.get("grab");
-        grab.setDirection(Servo.Direction.REVERSE);
+
+        leftMover = hardwareMap.servo.get("leftMover");
+        rightMover = hardwareMap.servo.get("rightMover");
+        leftMover.setDirection(Servo.Direction.REVERSE);
 
         driveMotors.add(topLeft);
         driveMotors.add(bottomLeft);
         driveMotors.add(topRight);
         driveMotors.add(bottomRight);
 
-        for(MotorImplEx motor : driveMotors){
-            motor.resetEncoder();
-            motor.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
-        }
+        topLeft.resetEncoder();
+        bottomRight.resetEncoder();
+        topRight.resetEncoder();
+        bottomRight.resetEncoder();
 
-        moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController);
-        moduleRight = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController);
+        //Switched because of config
+        moduleRight = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController);
+        moduleLeft = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController);
 
-        moduleLeft.setHeadingInterpol(headingSensorL);
-        moduleRight.setHeadingInterpol(headingSensorR);
+        moduleLeft.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(moduleLeft.getRawHeading()));
+        moduleRight.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(moduleRight.getRawHeading()));
 
         diffySwerveDrive = new DiffySwerveDrive(moduleLeft, moduleRight);
-
-        diffySwerveDrive.setRightSideInverted(true);
-        diffySwerveDrive.stopMotor();
 
         constructVariables();
 
@@ -192,41 +208,40 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
             if(!gamepad1.right_bumper) {
                 diffySwerveDrive.drive(
-                        -gamepad1.left_stick_x,
+                        gamepad1.left_stick_x,
                         -gamepad1.left_stick_y,
-                        -gamepad1.right_stick_x,
-                        gamepad1.right_stick_y
+                        gamepad1.right_stick_x,
+                        -gamepad1.right_stick_y
                 );
             } else {
                 diffySwerveDrive.drive(
-                        -gamepad1.left_stick_x * slowModeConst,
+                        gamepad1.left_stick_x * slowModeConst,
                         -gamepad1.left_stick_y * slowModeConst,
-                        -gamepad1.right_stick_x * slowModeConst,
-                        gamepad1.right_stick_y * slowModeConst
+                        gamepad1.right_stick_x * slowModeConst,
+                        -gamepad1.right_stick_y * slowModeConst
                 );
             }
 
-
             intake.update();
-            lift.update();
-
+            //lift.update();
+            moveThings();
 
             packet.put("Left Module Vector X", gamepad1.left_stick_x);
             packet.put("Left Module Vector Y", -gamepad1.left_stick_y);
             packet.put("Right Module Vector X", gamepad1.right_stick_x);
-            packet.put("Right Module Vector Y", gamepad1.right_stick_y);
+            packet.put("Right Module Vector Y", -gamepad1.right_stick_y);
             packet.put("Slow-Mode Active", gamepad1.right_bumper);
-            packet.put("Left Intake Wheel Power", intake.getLeftPower());
-            packet.put("Right Intake Wheel Power", intake.getRightPower());
             packet.put("Left Intake Wheel Draw (Amps)", intake.getLeftDraw());
             packet.put("Right Intake Wheel Draw (Amps)", intake.getRightDraw());
-            packet.put("Left Module Heading", headingSensorL.getAsDouble());
-            packet.put("Right Module Heading", headingSensorR.getAsDouble());
+            staggerUpdate(packet);
+//            packet.put("Left Module Heading", headingSensorL.getAsDouble());
+//            packet.put("Right Module Heading", headingSensorR.getAsDouble());
             packet.put("Loop Time", String.format(Locale.US ,"%.2f ms", benchmark.milliseconds()));
             benchmark.reset();
 
             dashboard.sendTelemetryPacket(packet);
 
+            loopCount++;
         }
         diffySwerveDrive.stopMotor();
 
@@ -234,11 +249,11 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
     //Just so we don't take up space
     private void moveThings(){
-        if(gamepad2.a&&!bounce3){
+        if(gamepad2.right_bumper&&!bounce3){
             flip4B();
             bounce3=true;
         }
-        else if(!gamepad2.a){
+        else if(!gamepad2.right_bumper){
             bounce3=false;
         }
 
@@ -250,9 +265,29 @@ public class FTCLibDiffyControl extends LinearOpMode {
             bounce1=false;
         }
 
-        if(gamepad2.y){
-            leftFB.setPosition(.95);
-            rightFB.setPosition(.95);
+        if (gamepad1.x && !bounce4) {
+            toggleMovers();
+            bounce4=true;
+        }
+        else if(!gamepad1.x){
+            bounce4=false;
+        }
+    }
+
+    private void staggerUpdate(TelemetryPacket packet){
+        switch (loopCount % 4){
+            case 0:
+                if(lift.isLeftOverTemp()) packet.addLine("Left Lift Over-Temp");
+                break;
+            case 1:
+                if(lift.isRightOverTemp()) packet.addLine("Right Lift Over-Temp");
+                break;
+            case 2:
+                if(intake.isLeftOverTemp()) packet.addLine("Left Intake Over-Temp");
+                break;
+            case 3:
+                if(intake.isRightOverTemp()) packet.addLine("Right Intake Over-Temp");
+                break;
         }
     }
 
@@ -261,13 +296,29 @@ public class FTCLibDiffyControl extends LinearOpMode {
         rightFB.setPosition(pos);
     }
 
+    private void setMoverPos(double pos){
+        leftMover.setPosition(pos);
+        rightMover.setPosition(pos);
+    }
+
+    private void toggleMovers(){
+        if(!moverDown){
+            setMoverPos(0);
+            moverDown=true;
+        }
+        else if(moverDown){
+            setMoverPos(1);
+            moverDown=false;
+        }
+    }
+
     private void flip4B(){
         if(!fbDrop){
-            set4BPos(1);
+            set4BPos(0.65);
             fbDrop=true;
         }
         else if(fbDrop){
-            set4BPos(.65);
+            set4BPos(1);
             fbDrop=false;
         }
     }

@@ -29,61 +29,23 @@ public class LiftSystem {
     when there is no manual controller
      */
 
-    
-
-
     private static final double motorCPR = 28 * 4 * 3.9;
     
     //The positional tolerance
-    private final double tolerance = 1;
+    private final double tolerance = 30;
 
 
-    private final double LIFT_UP_POWER = 0.8;
+    private final double LIFT_UP_POWER = 0.5;
 
-    private final double LIFT_DOWN_POWER = -0.1;
+    private final double LIFT_DOWN_POWER = -0.2;
 
-    private final double TOP_POSITION = 11110;
-    private final double BOTTOM_POSITION = 0;
-    
-    private double currentPos = 0;
     
     //Not used for much by default in TeleOp, but good to have
     private PIDFController liftController = new PIDFController(new double[] {1, .2, 0, 0});
 
 
-
-
     private final String[] liftMotorIds = {"lift_left", "lift_right"};
     private ExpansionHubMotor lift_left, lift_right;
-    //private DigitalChannel left_bottom_switch;
-    //private DigitalChannel right_bottom_switch;
-
-
-
-
-    //Get current lift position from encoders
-    public final Func<Integer> liftPosition = () -> (int) Math.round((getPosLeft() + getPosRight())/2.0);
-
-    //Is lift at bottom?
-    private final Func<Boolean> liftAtBottom = () -> {
-        if(liftPosition.value() <= BOTTOM_POSITION){
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-
-    //Is lift at top?
-    private final Func<Boolean> liftAtTop = () -> {
-        if(liftPosition.value() >= TOP_POSITION){
-            return true;
-        }
-        else {
-            return false;
-        }
-    };
-
 
     private Gamepad gamepad2;
 
@@ -97,7 +59,7 @@ public class LiftSystem {
         //reverse left side
         lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
         resetEncoders();
-        setRUE();
+        setRWE();
         stoplift();
         liftController.setTolerance(tolerance);
     }
@@ -110,7 +72,7 @@ public class LiftSystem {
         //reverse left side
         lift_left.setDirection(ExpansionHubMotor.Direction.REVERSE);
         resetEncoders();
-        setRUE();
+        setRWE();
         stoplift();
         liftController.setTolerance(tolerance);
         liftController.setSetPoint(0);
@@ -121,10 +83,10 @@ public class LiftSystem {
     public void update(){
 
         //Update the known lift position
-        currentPos = liftPosition.value();
+        //currentPos = liftPosition.value();
         
         //Power to be sent
-        double finalPower = 0;
+        double finalPower;
         
         //Gamepad controls
         boolean goUp = gamepad2.dpad_up;
@@ -132,20 +94,21 @@ public class LiftSystem {
 
         
         //Check all possibilities for manual control
-            if(goUp && !liftAtTop.value()){
+            if(goUp){
                 finalPower = LIFT_UP_POWER;
                 //Update the setpoint
-                liftController.setSetPoint(currentPos);
+                //liftController.setSetPoint(currentPos);
             }
-            else if(goDown && !liftAtBottom.value()){
+            else if(goDown){// && !liftAtBottom.value()){
                 finalPower = LIFT_DOWN_POWER;
                 //update the setpoint
-                liftController.setSetPoint(currentPos);
+                //liftController.setSetPoint(currentPos);
             }
             else {
                 //This happens whenever the lift isn't being controlled
                 //Basically the pv is updated here. the sv isn't, so it holds it's position
-                finalPower = liftController.calculate(currentPos);
+                //finalPower = liftController.calculate(currentPos);
+                finalPower = 0.15;
             }
 
         setLiftPower(finalPower);
@@ -169,9 +132,9 @@ public class LiftSystem {
         lift_right.setMode(ExpansionHubMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    private void setRUE(){
-        lift_left.setMode(ExpansionHubMotor.RunMode.RUN_USING_ENCODER);
-        lift_right.setMode(ExpansionHubMotor.RunMode.RUN_USING_ENCODER);
+    private void setRWE(){
+        lift_left.setMode(ExpansionHubMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift_right.setMode(ExpansionHubMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     private void setLiftPower(double power) {

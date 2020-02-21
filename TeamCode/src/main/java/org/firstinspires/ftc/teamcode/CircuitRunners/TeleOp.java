@@ -51,12 +51,10 @@ public class TeleOp extends OpMode {
 
     public void start() {
         if (willResetIMU) robot.initIMU();
-        robot.set4BPos(.5);
     }
 
     public void loop() {
         //Refresh all the bulk data
-        robot.bulkDataManager.update();
 
         Vector2d joystick1 = new Vector2d(gamepad1.left_stick_x, -gamepad1.left_stick_y);
         //LEFT joystick
@@ -72,12 +70,11 @@ public class TeleOp extends OpMode {
 
 
         //Update the intake
-        robot.intake.update();
+//        robot.intake.update();
 
-        telemetry.addData("Lift Encoders:", robot.liftSystem.liftPosition.value());
 
         //Control lift
-        robot.liftSystem.update();
+//        robot.liftSystem.update();
 
 
 //        //uncomment for live tuning of ROT_ADVANTAGE constant
@@ -90,25 +87,22 @@ public class TeleOp extends OpMode {
 //            robot.driveController.moduleLeft.ROT_ADVANTAGE -= 0.01;
 //        }
 //        telemetry.addData("ROT_ADVANTAGE: ", robot.driveController.moduleLeft.ROT_ADVANTAGE);
-        if(robot.controls.v4barMove.value()&&!bounce3){
-            flip4B();
-            bounce3=true;
-        }
-        else if(!robot.controls.v4barMove.value()){
-            bounce3=false;
-        }
+//        if(gamepad2.right_bumper&&!bounce3){
+//            flip4B();
+//            bounce3=true;
+//        }
+//        else if(!gamepad2.right_bumper){
+//            bounce3=false;
+//        }
+//
+//        if(gamepad2.left_bumper&&!bounce1){
+//            grabToggle();
+//            bounce1=true;
+//        }
+//        else if(!gamepad2.left_bumper){
+//            bounce1=false;
+//        }
 
-        if(robot.controls.grabberMove.value()&&!bounce1){
-            grabToggle();
-            bounce1=true;
-        }
-        else if(!robot.controls.grabberMove.value()){
-            bounce1=false;
-        }
-
-        if(robot.controls.v4barExternalMove.value()){
-            robot.set4BPos(.95);
-        }
 
         //to confirm that joysticks are operating properly
         telemetry.addData("Joystick 1", joystick1);
@@ -121,8 +115,8 @@ public class TeleOp extends OpMode {
 
     @Override
     public void stop(){
-        robot.liftSystem.stoplift();
-        robot.intake.stop();
+//        robot.liftSystem.stoplift();
+//        robot.intake.stop();
     }
 
     //returns zero vector if joystick is within deadband
