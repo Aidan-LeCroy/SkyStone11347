@@ -12,6 +12,7 @@ import com.acmerobotics.dashboard.config.variable.CustomVariable;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.controller.PController;
 import com.arcrobotics.ftclib.controller.PIDFController;
+import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveModule;
 import com.arcrobotics.ftclib.drivebase.swerve.DiffySwerveModuleEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.arcrobotics.ftclib.hardware.motors.MotorImplEx;
@@ -113,22 +114,28 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private AnalogInput Lmagnet;
     private AnalogInput Rmagnet;
 
-    private DiffySwerveModuleEx moduleLeft, moduleRight;
+    private DiffySwerveModule moduleLeft, moduleRight;
 
     private static final double L_MAGNET_OFFSET = 0;
     private static final double R_MAGNET_OFFSET = 0;
 
-    private DoubleSupplier headingSensorL = () ->
-           Lmagnet.getVoltage() + L_MAGNET_OFFSET;
+    private DoubleSupplier headingL = () ->
+           DriveModule.DEGREES_PER_TICK * (topRight.getEncoderPulses() + bottomRight.getEncoderPulses());
 
-    private DoubleSupplier headingSensorR = () ->
-            Rmagnet.getVoltage() + R_MAGNET_OFFSET;
+    private DoubleSupplier headingR = () ->
+            DriveModule.DEGREES_PER_TICK * (topLeft.getEncoderPulses() + bottomLeft.getEncoderPulses());
+
+
+    //So this controller keeps the heading at zero
+
+    private PIDFController controllerL = new PIDFController(new double[] {1/180, 0, 0, 0});
+
+    private PIDFController controllerR = new PIDFController(new double[] {1/180, 0, 0, 0});
+
 
 
 
     private static final double driveCPR = 28 * 4 * 15.9;
-
-    private ArrayList<MotorImplEx> driveMotors = new ArrayList<>();
 
     //Testing for mechanisms
     private Intake intake;
@@ -176,26 +183,40 @@ public class FTCLibDiffyControl extends LinearOpMode {
         rightMover = hardwareMap.servo.get("rightMover");
         leftMover.setDirection(Servo.Direction.REVERSE);
 
-        driveMotors.add(topLeft);
-        driveMotors.add(bottomLeft);
-        driveMotors.add(topRight);
-        driveMotors.add(bottomRight);
-
         topLeft.resetEncoder();
         bottomRight.resetEncoder();
         topRight.resetEncoder();
         bottomRight.resetEncoder();
 
-        //Switched because of config
-        moduleRight = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController);
-        moduleLeft = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController);
+        topLeft.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        bottomLeft.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        topRight.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
+        bottomRight.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
 
-        moduleLeft.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(moduleLeft.getRawHeading()));
-        moduleRight.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(moduleRight.getRawHeading()));
+        //Using regular Module
+        moduleLeft = new DiffySwerveModule(topRight, bottomRight);
+        moduleRight = new DiffySwerveModule(topLeft, bottomLeft);
+
+        controllerL.setSetPoint(0);
+        controllerR.setSetPoint(0);
+
+        controllerL.setTolerance(1);
+        controllerR.setTolerance(1);
+
+
+
+
+
+//        //Switched because of config
+//        moduleRight = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController);
+//        moduleLeft = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController);
+
+//        moduleLeft.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(moduleLeft.getRawHeading()));
+//        moduleRight.setHeadingInterpol(() -> AngleUnit.DEGREES.normalize(moduleRight.getRawHeading()));
 
         diffySwerveDrive = new DiffySwerveDrive(moduleLeft, moduleRight);
 
-        constructVariables();
+        //constructVariables();
 
         ElapsedTime benchmark = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
@@ -206,36 +227,40 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
             TelemetryPacket packet = new TelemetryPacket();
 
+            double leftHeadingCorrection = headingL.getAsDouble();
+            double rightHeadingCorrection = headingR.getAsDouble();
+
             if(!gamepad1.right_bumper) {
                 diffySwerveDrive.drive(
-                        gamepad1.left_stick_x,
+                        leftHeadingCorrection,
                         -gamepad1.left_stick_y,
-                        gamepad1.right_stick_x,
+                        rightHeadingCorrection,
                         -gamepad1.right_stick_y
                 );
             } else {
                 diffySwerveDrive.drive(
-                        gamepad1.left_stick_x * slowModeConst,
+                        leftHeadingCorrection,
                         -gamepad1.left_stick_y * slowModeConst,
-                        gamepad1.right_stick_x * slowModeConst,
+                        rightHeadingCorrection,
                         -gamepad1.right_stick_y * slowModeConst
                 );
             }
+
 
             intake.update();
             //lift.update();
             moveThings();
 
-            packet.put("Left Module Vector X", gamepad1.left_stick_x);
+            packet.put("Left Module Vector X", 0);
             packet.put("Left Module Vector Y", -gamepad1.left_stick_y);
-            packet.put("Right Module Vector X", gamepad1.right_stick_x);
+            packet.put("Right Module Vector X", 0);
             packet.put("Right Module Vector Y", -gamepad1.right_stick_y);
             packet.put("Slow-Mode Active", gamepad1.right_bumper);
             packet.put("Left Intake Wheel Draw (Amps)", intake.getLeftDraw());
             packet.put("Right Intake Wheel Draw (Amps)", intake.getRightDraw());
             staggerUpdate(packet);
-//            packet.put("Left Module Heading", headingSensorL.getAsDouble());
-//            packet.put("Right Module Heading", headingSensorR.getAsDouble());
+            packet.put("Left Module Heading Correction", leftHeadingCorrection);
+            packet.put("Right Module Heading Correction", rightHeadingCorrection);
             packet.put("Loop Time", String.format(Locale.US ,"%.2f ms", benchmark.milliseconds()));
             benchmark.reset();
 
@@ -333,113 +358,113 @@ public class FTCLibDiffyControl extends LinearOpMode {
         }
     }
 
-    private void constructVariables(){
-        className = getClass().getSimpleName();
-        classVar = (CustomVariable) dashboard.getConfigRoot().getVariable(className);
-        if (classVar == null) {
-            // this should never happen...
-            classVar = new CustomVariable();
-            dashboard.getConfigRoot().putVariable(className, classVar);
-
-            RobotLog.w("Unable to find top-level category %s", className);
-        }
-
-        CustomVariable kWheels = new CustomVariable();
-        CustomVariable kAngles = new CustomVariable();
-        CustomVariable rotationalP = new CustomVariable();
-        CustomVariable slowModeMult = new CustomVariable();
-
-        kWheels.putVariable(LEFT_MODULE_K_WHEEL_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get() {
-                return kWheelLeft;
-            }
-
-            @Override
-            public void set(Double value) {
-                kWheelLeft = value;
-                moduleLeft.kWheelConstant = value;
-            }
-        }));
-        kWheels.putVariable(RIGHT_MODULE_K_WHEEL_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get() {
-                return kWheelRight;
-            }
-
-            @Override
-            public void set(Double value){
-                kWheelRight = value;
-                moduleRight.kWheelConstant = value;
-            }
-        }));
-        kAngles.putVariable(LEFT_MODULE_K_ANGLE_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get(){
-                return kAngleLeft;
-            }
-
-            @Override
-            public void set(Double value){
-                kAngleLeft = value;
-                moduleLeft.kRevConstant = value;
-            }
-        }));
-        kAngles.putVariable(RIGHT_MODULE_K_ANGLE_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get() {
-                return kAngleRight;
-            }
-
-            @Override
-            public void set(Double value) {
-                kAngleRight = value;
-                moduleRight.kRevConstant = value;
-            }
-        }));
-        slowModeMult.putVariable(SLOW_MODE_REDUCTION_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get() {
-                return slowModeConst;
-            }
-
-            @Override
-            public void set(Double value) {
-                slowModeConst = value;
-            }
-        }));
-        rotationalP.putVariable(LEFT_MODULE_ROTATION_P_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get() {
-                return rotationPLeft;
-            }
-
-            @Override
-            public void set(Double value) { //Unfortunately we have to do this
-                leftCoefficients[0] = value;
-                leftModuleController = new PIDFController(leftCoefficients);
-                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController); // I hate it too...
-                
-            }
-        }));
-        rotationalP.putVariable(RIGHT_MODULE_ROTATION_P_NAME, new BasicVariable<>(new ValueProvider<Double>() {
-            @Override
-            public Double get() {
-                return rotationPRight;
-            }
-
-            @Override
-            public void set(Double value) { //Unfortunately we have to do this
-                rightCoefficients[0] = value;
-                rightModuleController = new PIDFController(rightCoefficients);
-                moduleLeft = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController); // I hate it too...
-                
-            }
-        }));
-        classVar.putVariable(MODULE_K_WHEEL_NAME, kWheels);
-        classVar.putVariable(MODULE_K_ANGLE_NAME, kAngles);
-        classVar.putVariable(MODULE_ROTATION_P_NAME, rotationalP);
-        classVar.putVariable(SLOW_MODE_REDUCTION_NAME, slowModeMult);
-        dashboard.updateConfig();
-    }
+//    private void constructVariables(){
+//        className = getClass().getSimpleName();
+//        classVar = (CustomVariable) dashboard.getConfigRoot().getVariable(className);
+//        if (classVar == null) {
+//            // this should never happen...
+//            classVar = new CustomVariable();
+//            dashboard.getConfigRoot().putVariable(className, classVar);
+//
+//            RobotLog.w("Unable to find top-level category %s", className);
+//        }
+//
+//        CustomVariable kWheels = new CustomVariable();
+//        CustomVariable kAngles = new CustomVariable();
+//        CustomVariable rotationalP = new CustomVariable();
+//        CustomVariable slowModeMult = new CustomVariable();
+//
+//        kWheels.putVariable(LEFT_MODULE_K_WHEEL_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get() {
+//                return kWheelLeft;
+//            }
+//
+//            @Override
+//            public void set(Double value) {
+//                kWheelLeft = value;
+//                moduleLeft.kWheelConstant = value;
+//            }
+//        }));
+//        kWheels.putVariable(RIGHT_MODULE_K_WHEEL_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get() {
+//                return kWheelRight;
+//            }
+//
+//            @Override
+//            public void set(Double value){
+//                kWheelRight = value;
+//                moduleRight.kWheelConstant = value;
+//            }
+//        }));
+//        kAngles.putVariable(LEFT_MODULE_K_ANGLE_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get(){
+//                return kAngleLeft;
+//            }
+//
+//            @Override
+//            public void set(Double value){
+//                kAngleLeft = value;
+//                moduleLeft.kRevConstant = value;
+//            }
+//        }));
+//        kAngles.putVariable(RIGHT_MODULE_K_ANGLE_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get() {
+//                return kAngleRight;
+//            }
+//
+//            @Override
+//            public void set(Double value) {
+//                kAngleRight = value;
+//                moduleRight.kRevConstant = value;
+//            }
+//        }));
+//        slowModeMult.putVariable(SLOW_MODE_REDUCTION_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get() {
+//                return slowModeConst;
+//            }
+//
+//            @Override
+//            public void set(Double value) {
+//                slowModeConst = value;
+//            }
+//        }));
+//        rotationalP.putVariable(LEFT_MODULE_ROTATION_P_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get() {
+//                return rotationPLeft;
+//            }
+//
+//            @Override
+//            public void set(Double value) { //Unfortunately we have to do this
+//                leftCoefficients[0] = value;
+//                leftModuleController = new PIDFController(leftCoefficients);
+//                moduleLeft = new DiffySwerveModuleEx(topLeft,bottomLeft, kAngleLeft, kWheelLeft, leftModuleController); // I hate it too...
+//
+//            }
+//        }));
+//        rotationalP.putVariable(RIGHT_MODULE_ROTATION_P_NAME, new BasicVariable<>(new ValueProvider<Double>() {
+//            @Override
+//            public Double get() {
+//                return rotationPRight;
+//            }
+//
+//            @Override
+//            public void set(Double value) { //Unfortunately we have to do this
+//                rightCoefficients[0] = value;
+//                rightModuleController = new PIDFController(rightCoefficients);
+//                moduleLeft = new DiffySwerveModuleEx(topRight,bottomRight, kAngleRight, kWheelRight, rightModuleController); // I hate it too...
+//
+//            }
+//        }));
+//        classVar.putVariable(MODULE_K_WHEEL_NAME, kWheels);
+//        classVar.putVariable(MODULE_K_ANGLE_NAME, kAngles);
+//        classVar.putVariable(MODULE_ROTATION_P_NAME, rotationalP);
+//        classVar.putVariable(SLOW_MODE_REDUCTION_NAME, slowModeMult);
+//        dashboard.updateConfig();
+//    }
 }
