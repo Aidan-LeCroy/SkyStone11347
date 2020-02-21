@@ -35,9 +35,11 @@ public class LiftSystem {
     private final double tolerance = 30;
 
 
-    private final double LIFT_UP_POWER = 0.5;
+    private final double LIFT_UP_POWER = -0.5;
 
-    private final double LIFT_DOWN_POWER = -0.2;
+    private final double LIFT_DOWN_POWER = 0.1;
+
+    private final double LIFT_HOLDING_POWER = -0.15;
 
     
     //Not used for much by default in TeleOp, but good to have
@@ -108,7 +110,7 @@ public class LiftSystem {
                 //This happens whenever the lift isn't being controlled
                 //Basically the pv is updated here. the sv isn't, so it holds it's position
                 //finalPower = liftController.calculate(currentPos);
-                finalPower = 0.15;
+                finalPower = LIFT_HOLDING_POWER;
             }
 
         setLiftPower(finalPower);

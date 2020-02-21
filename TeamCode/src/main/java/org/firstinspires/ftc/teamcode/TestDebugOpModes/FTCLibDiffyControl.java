@@ -119,18 +119,24 @@ public class FTCLibDiffyControl extends LinearOpMode {
     private static final double L_MAGNET_OFFSET = 0;
     private static final double R_MAGNET_OFFSET = 0;
 
+    private double getTicks(MotorImplEx motor){
+        return motor.encoder.getCurrentTicks();
+    }
+
     private DoubleSupplier headingL = () ->
-           DriveModule.DEGREES_PER_TICK * (topRight.getEncoderPulses() + bottomRight.getEncoderPulses());
+           AngleUnit.DEGREES.normalize(kAngleLeft*(getTicks(topRight) + getTicks(bottomRight)));
 
     private DoubleSupplier headingR = () ->
-            DriveModule.DEGREES_PER_TICK * (topLeft.getEncoderPulses() + bottomLeft.getEncoderPulses());
+            AngleUnit.DEGREES.normalize(kAngleRight*(getTicks(topLeft) + getTicks(bottomLeft)));
 
 
     //So this controller keeps the heading at zero
 
-    private PIDFController controllerL = new PIDFController(new double[] {1/180, 0, 0, 0});
+    private double OneoverOneEighty = 1/180;
 
-    private PIDFController controllerR = new PIDFController(new double[] {1/180, 0, 0, 0});
+    private PIDFController controllerL = new PIDFController(new double[] {OneoverOneEighty, 0.0001, 0, 0});
+
+    private PIDFController controllerR = new PIDFController(new double[] {OneoverOneEighty, 0.0001, 0, 0});
 
 
 
@@ -188,10 +194,6 @@ public class FTCLibDiffyControl extends LinearOpMode {
         topRight.resetEncoder();
         bottomRight.resetEncoder();
 
-        topLeft.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
-        bottomLeft.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
-        topRight.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
-        bottomRight.setMode(MotorEx.RunMode.RUN_USING_ENCODER);
 
         //Using regular Module
         moduleLeft = new DiffySwerveModule(topRight, bottomRight);
@@ -200,8 +202,8 @@ public class FTCLibDiffyControl extends LinearOpMode {
         controllerL.setSetPoint(0);
         controllerR.setSetPoint(0);
 
-        controllerL.setTolerance(1);
-        controllerR.setTolerance(1);
+        controllerL.setTolerance(20);
+        controllerR.setTolerance(20);
 
 
 
@@ -227,28 +229,28 @@ public class FTCLibDiffyControl extends LinearOpMode {
 
             TelemetryPacket packet = new TelemetryPacket();
 
-            double leftHeadingCorrection = headingL.getAsDouble();
-            double rightHeadingCorrection = headingR.getAsDouble();
+            double leftHeadingCorrection = controllerL.calculate(headingL.getAsDouble());
+            double rightHeadingCorrection = controllerR.calculate(headingR.getAsDouble());
 
             if(!gamepad1.right_bumper) {
                 diffySwerveDrive.drive(
                         leftHeadingCorrection,
-                        -gamepad1.left_stick_y,
+                        -gamepad1.right_stick_y,
                         rightHeadingCorrection,
-                        -gamepad1.right_stick_y
+                        -gamepad1.left_stick_y
                 );
             } else {
                 diffySwerveDrive.drive(
                         leftHeadingCorrection,
-                        -gamepad1.left_stick_y * slowModeConst,
+                        -gamepad1.right_stick_y * slowModeConst,
                         rightHeadingCorrection,
-                        -gamepad1.right_stick_y * slowModeConst
+                        -gamepad1.left_stick_y * slowModeConst
                 );
             }
 
 
             intake.update();
-            //lift.update();
+            lift.update();
             moveThings();
 
             packet.put("Left Module Vector X", 0);
@@ -261,6 +263,8 @@ public class FTCLibDiffyControl extends LinearOpMode {
             staggerUpdate(packet);
             packet.put("Left Module Heading Correction", leftHeadingCorrection);
             packet.put("Right Module Heading Correction", rightHeadingCorrection);
+            packet.put("Left Module Reported Heading", headingL.getAsDouble());
+            packet.put("Right Module Reported Heading", headingR.getAsDouble());
             packet.put("Loop Time", String.format(Locale.US ,"%.2f ms", benchmark.milliseconds()));
             benchmark.reset();
 
